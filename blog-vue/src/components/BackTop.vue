@@ -6,7 +6,7 @@
     <div class="setting-container" @click="show">
       <i class="iconfont iconshezhi setting" />
     </div>
-    <i @click="backTop" class="iconfont rightside-icon iconziyuanldpi" />
+    <i @click="backTop" class="iconfont rightside-icon icon-huojian" />
   </div>
 </template>
 

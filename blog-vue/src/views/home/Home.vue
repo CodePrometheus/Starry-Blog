@@ -143,8 +143,7 @@
           </v-card>
           <!-- 网站信息 -->
           <v-card class="blog-card animated zoomIn mt-5 big">
-            <div class="web-info-title">
-              <v-icon size="18">mdi-bell</v-icon>
+            <div class="web-info-title iconfont icon-tongzhi">
               公告
             </div>
             <div style="font-size:0.875rem">
@@ -153,8 +152,7 @@
           </v-card>
           <!-- 网站信息 -->
           <v-card class="blog-card animated zoomIn mt-5">
-            <div class="web-info-title">
-              <v-icon size="18">mdi-chart-line</v-icon>
+            <div class="web-info-title iconfont icon-qushi">
               网站资讯
             </div>
             <div class="web-info">
@@ -230,12 +228,12 @@ export default {
       });
     },
     runTime() {
-      var timeold =
+      let timeold =
           new Date().getTime() - new Date("January 01,2021").getTime();
-      var msPerDay = 24 * 60 * 60 * 1000;
-      var daysold = Math.floor(timeold / msPerDay);
-      var str = "";
-      var day = new Date();
+      let msPerDay = 24 * 60 * 60 * 1000;
+      let daysold = Math.floor(timeold / msPerDay);
+      let str = "";
+      let day = new Date();
       str += daysold + "天";
       str += day.getHours() + "时";
       str += day.getMinutes() + "分";

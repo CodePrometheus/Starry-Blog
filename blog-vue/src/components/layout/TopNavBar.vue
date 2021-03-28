@@ -45,11 +45,10 @@
             <i class="iconfont iconbiaoqian" /> 标签
           </router-link>
         </div>
-<!--        <div class="menus-item">-->
-<!--          <router-link to="/moment">-->
-<!--            <i class="iconfont icon-dongtaiweixuanzhong" /> 动态-->
-<!--          </router-link>-->
-<!--        </div>-->
+        <div class="menus-item">
+          <a href="https://codeprometheus.github.io/Starry-Notes/#/" target="_blank">
+            <i class="iconfont icon-biji" /> 笔记</a>
+        </div>
         <div class="menus-item">
           <router-link to="/links">
             <i class="iconfont iconlianjie" /> 友链
@@ -57,7 +56,7 @@
         </div>
         <div class="menus-item">
           <router-link to="/about">
-            <i class="iconfont iconzhifeiji" /> 关于
+            <i class="iconfont icon-xin" /> 关于
           </router-link>
         </div>
         <div class="menus-item">
