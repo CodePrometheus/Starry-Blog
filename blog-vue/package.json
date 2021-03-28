@@ -17,6 +17,7 @@
     "element-ui": "^2.14.1",
     "highlight.js": "^10.0.3",
     "jsonp": "^0.2.1",
+    "live2d-vue": "^0.2.5",
     "markdown-it": "^11.0.0",
     "moment": "^2.26.0",
     "semantic-ui-css": "^2.4.1",

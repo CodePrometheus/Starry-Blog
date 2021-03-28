@@ -23,6 +23,7 @@ import Toast from "./components/toast/index";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import APlayer from "@moefe/vue-aplayer";
+import live2d from 'live2d-vue'
 
 Vue.prototype.config = config;
 Vue.config.productionTip = false;
@@ -36,6 +37,7 @@ Vue.use(Toast);
 Vue.use(ElementUI);
 Vue.use(APlayer, { productionTip: false });
 Vue.use(VueHighlightJS);
+Vue.use(live2d)
 
 Vue.filter("date", function(value) {
   return moment(value).format("YYYY-MM-DD HH:mm");

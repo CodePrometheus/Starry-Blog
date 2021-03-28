@@ -21,6 +21,7 @@
     <!-- 忘记密码模态框 -->
     <ForgetModel/>
     <Note/>
+    <Live2D/>
   </v-app>
 </template>
 
@@ -34,6 +35,7 @@ import LoginModel from "./components/model/LoginModel";
 import RegisterModel from "./components/model/RegisterModel";
 import ForgetModel from "./components/model/ForgetModel";
 import Note from "./components/Notification";
+import Live2D from "@/components/Live2D";
 
 export default {
   components: {
@@ -46,6 +48,19 @@ export default {
     RegisterModel,
     ForgetModel,
     Note,
+    Live2D
+  },
+  beforeCreate() {
+    console.log("%c Starry-Blog | 你的美好，我都记得 %c v".concat("1.5", " %c"),
+        'background: #35495e;' +
+        ' padding: 1px;' +
+        ' border-radius: 3px 0 0 3px;' +
+        ' color: #fff',
+        'background: #483d8b; ' +
+        'padding: 1px; ' +
+        'border-radius: 0 3px 3px 0; ' +
+        'color: #fff',
+        'background: transparent');
   }
 };
 </script>
