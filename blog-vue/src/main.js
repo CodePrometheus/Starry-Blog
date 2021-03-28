@@ -10,12 +10,11 @@ import "./assets/css/markdown.css";
 import config from "./assets/js/config";
 import Share from "vue-social-share";
 import "vue-social-share/dist/client.css";
-import { vueBaberrage } from "vue-baberrage";
+import {vueBaberrage} from "vue-baberrage";
 import axios from "axios";
 import VueAxios from "vue-axios";
 import moment from "moment";
 import InfiniteLoading from "vue-infinite-loading";
-import VueHighlightJS from "vue-highlight.js";
 import "highlight.js/styles/atom-one-dark.css";
 import VueImageSwipe from "vue-image-swipe";
 import "vue-image-swipe/dist/vue-image-swipe.css";
@@ -23,7 +22,9 @@ import Toast from "./components/toast/index";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import APlayer from "@moefe/vue-aplayer";
-import live2d from 'live2d-vue'
+import live2d from 'live2d-vue';
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 Vue.prototype.config = config;
 Vue.config.productionTip = false;
@@ -35,20 +36,52 @@ Vue.use(VueAxios, axios);
 Vue.use(VueImageSwipe);
 Vue.use(Toast);
 Vue.use(ElementUI);
-Vue.use(APlayer, { productionTip: false });
-Vue.use(VueHighlightJS);
+Vue.use(APlayer, {productionTip: false});
 Vue.use(live2d)
 
-Vue.filter("date", function(value) {
+Vue.filter("date", function (value) {
   return moment(value).format("YYYY-MM-DD HH:mm");
 });
 
-Vue.filter("num", function(value) {
+Vue.filter("hour", function (value) {
+  return moment(value).format("HH:mm")
+})
+
+Vue.filter("num", function (value) {
   if (value >= 1000) {
     return (value / 1000).toFixed(1) + "k";
   }
   return value;
 });
+
+router.beforeEach((to, from, next) => {
+  NProgress.start()
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  next()
+})
+
+router.afterEach(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "instant"
+  });
+  NProgress.done()
+})
+
+axios.interceptors.response.use(
+  function (response) {
+    switch (response.data.code) {
+      case 5000:
+        Vue.prototype.$toast({type: "error", message: "系统异常"})
+    }
+    return response
+  },
+  function (error) {
+    return Promise.reject(error)
+  }
+)
 
 new Vue({
   router,
@@ -56,10 +89,3 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount("#app");
-
-router.afterEach(() => {
-  window.scrollTo({
-    top: 0,
-    behavior: "instant"
-  });
-});

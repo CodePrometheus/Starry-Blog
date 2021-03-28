@@ -243,23 +243,23 @@ export default {
     },
     checkReplies(index, item) {
       this.axios
-        .get("/api/comments/replies", {
-          params: { current: 1, commentId: item.id }
+        .get("/api/comments/replies/" + item.id, {
+          params: { current: 1 }
         })
         .then(({ data }) => {
           this.$refs.check[index].style.display = "none";
           item.replyDTOList = data.data;
-          //超过1页才显示分页
+          // 超过1页才显示分页
           if (Math.ceil(item.replyCount / 5) > 1) {
             this.$refs.paging[index].style.display = "flex";
           }
         });
     },
     changeReplyCurrent(current, index, commentId) {
-      //查看下一页回复
+      // 查看下一页回复
       this.axios
-        .get("/api/comments/replies", {
-          params: { current: current, commentId: commentId }
+        .get("/api/comments/replies/" + commentId,{
+          params: { current: current }
         })
         .then(({ data }) => {
           this.commentList[index].replyDTOList = data.data;
@@ -301,7 +301,7 @@ export default {
       //发送请求
       const path = this.$route.path;
       const arr = path.split("/");
-      var comment = {
+      let comment = {
         articleId: arr[2],
         commentContent: this.commentContent
       };
@@ -339,10 +339,9 @@ export default {
     },
     reloadReply(index) {
       this.axios
-        .get("/api/comments/replies", {
+        .get("/api/comments/replies/" + this.commentList[index].id, {
           params: {
-            current: this.$refs.page[index].current,
-            commentId: this.commentList[index].id
+            current: this.$refs.page[index].current
           }
         })
         .then(({ data }) => {
@@ -360,7 +359,7 @@ export default {
   computed: {
     isLike() {
       return function(commentId) {
-        var commentLikeSet = this.$store.state.commentLikeSet;
+        let commentLikeSet = this.$store.state.commentLikeSet;
         return commentLikeSet.indexOf(commentId) != -1 ? "like-active" : "like";
       };
     }
@@ -406,7 +405,7 @@ p {
 }
 
 .comment-input-wrapper {
-  border: 1px solid #f0f0f0;
+  border: 1px solid #90939950;
   border-radius: 4px;
   padding: 10px;
   margin: 0 0 10px;
@@ -460,7 +459,6 @@ p {
 }
 
 .comment-content {
-  display: flex;
   font-size: 0.875rem;
   line-height: 1.75;
   padding-top: 0.625rem;

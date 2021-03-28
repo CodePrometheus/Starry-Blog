@@ -16,23 +16,35 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: Home
+    component: Home,
+    meta: {
+      title: "zzStar's Blog"
+    }
   },
   {
-    path: "/articles/*",
+    path: "/articles/:articleId",
     component: Article
   },
   {
     path: "/archives",
-    component: Archive
+    component: Archive,
+    meta: {
+      title: "归档"
+    }
   },
   {
     path: "/tags",
-    component: Tag
+    component: Tag,
+    meta: {
+      title: "标签"
+    }
   },
   {
     path: "/categories",
-    component: Category
+    component: Category,
+    meta: {
+      title: "分类"
+    }
   },
   {
     path: "/categories/*",
@@ -40,15 +52,24 @@ const routes = [
   },
   {
     path: "/links",
-    component: Link
+    component: Link,
+    meta: {
+      title: "友链列表"
+    }
   },
   {
     path: "/about",
-    component: About
+    component: About,
+    meta: {
+      title: "关于我"
+    }
   },
   {
     path: "/message",
-    component: Message
+    component: Message,
+    meta: {
+      title: "留言板"
+    }
   },
   {
     path: "/tags/*",
@@ -56,7 +77,10 @@ const routes = [
   },
   {
     path: "/user",
-    component: User
+    component: User,
+    meta: {
+      title: "个人中心"
+    }
   },
 ];
 

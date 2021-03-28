@@ -6,7 +6,7 @@
     <SideNavBar/>
     <!-- 内容 -->
     <v-content>
-      <router-view :key="$route.fullPath"></router-view>
+      <router-view :key="$route.fullPath"/>
     </v-content>
     <!-- 页脚 -->
     <Footer/>

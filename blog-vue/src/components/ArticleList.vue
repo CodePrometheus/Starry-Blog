@@ -98,6 +98,8 @@ export default {
           if (data.data.articlePreviewDTOList.length) {
             this.current++;
             this.name = data.data.name;
+            // 修改标题
+            document.titile = this.title + " - " + this.name;
             this.articleList.push(...data.data.articlePreviewDTOList);
             $state.loaded();
           } else {
