@@ -1,4 +1,4 @@
-${AnsiColor.YELLOW}
+${AnsiColor.BRIGHT_YELLOW}
 Starry Blog Version: 1.5
 Spring Boot Version: ${spring-boot.version}
  _____  _                              ______  _

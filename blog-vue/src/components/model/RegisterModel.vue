@@ -111,7 +111,7 @@ export default {
       }, 1000);
     },
     register() {
-      var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
       if (!reg.test(this.username)) {
         this.$toast({ type: "error", message: "邮箱格式不正确" });
         return false;

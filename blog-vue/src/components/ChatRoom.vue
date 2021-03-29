@@ -449,7 +449,7 @@ export default {
 
     // 头像
     avatar() {
-      return this.$store.state != null
+      return this.$store.state.avatar != null
         ? this.$store.state.avatar
         : "https://gravatar.loli.net/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mp&v=1.4.14"
     },
