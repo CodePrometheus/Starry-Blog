@@ -232,7 +232,7 @@ export default {
     // 建立连接
     connect() {
       console.log("建立连接")
-      this.webSocket = new WebSocket("ws://127.0.0.1:8080/websocket")
+      this.webSocket = new WebSocket("ws://127.0.0.1:8989/websocket")
       // 连接发生错误回调
       this.webSocket.onerror = function (event) {
         console.log(event)
