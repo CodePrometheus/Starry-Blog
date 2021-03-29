@@ -26,7 +26,6 @@
         <java.version>1.8</java.version>
         <mp.version>3.4.1</mp.version>
         <swagger.version>3.0.0</swagger.version>
-        <knife4j.version>2.0.5</knife4j.version>
         <druid.version>1.2.4</druid.version>
         <mysql.version>8.0.22</mysql.version>
         <fastjson.version>1.2.75</fastjson.version>
@@ -75,12 +74,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
@@ -100,10 +93,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

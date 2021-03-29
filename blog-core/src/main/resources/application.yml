@@ -67,3 +67,10 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
 
+
+swagger:
+  enable: true
+  application-name:  Starry-Blog | 你的美好，我都记得
+  application-version: 1.5
+  application-description: Starry-Blog | 你的美好，我都记得
+  try-host: http://localhost:${server.port}
