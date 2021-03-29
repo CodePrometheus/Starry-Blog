@@ -17,6 +17,7 @@ module.exports = {
     disableHostCheck: true
   },
 
+/*
   configureWebpack: {
     plugins: [
       new CompressionPlugin({
@@ -26,5 +27,6 @@ module.exports = {
       })
     ]
   }
+*/
 
 };

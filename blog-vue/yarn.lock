@@ -828,7 +828,7 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/runtime@^7.11.0", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.11.0", "@babel/runtime@^7.4.4", "@babel/runtime@^7.8.4":
   version "7.13.10"
   resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.13.10.tgz?cache=0&sync_timestamp=1615243220467&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.13.10.tgz#47d42a57b6095f4468da440388fdbad8bebf0d7d"
   integrity sha1-R9QqV7YJX0Ro2kQDiP262L6/DX0=
@@ -7405,6 +7405,13 @@ rechoir@^0.6.2:
   integrity sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=
   dependencies:
     resolve "^1.1.6"
+
+recorderx@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.npm.taobao.org/recorderx/download/recorderx-2.0.2.tgz#6410df5c73342fa2cbc1af224572b2d8d7c97632"
+  integrity sha1-ZBDfXHM0L6LLwa8iRXKy2NfJdjI=
+  dependencies:
+    "@babel/runtime" "^7.4.4"
 
 redent@^2.0.0:
   version "2.0.0"

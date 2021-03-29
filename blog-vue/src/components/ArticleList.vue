@@ -113,7 +113,7 @@ export default {
 
 <style scoped>
 .tag-banner {
-  background: url(https://tva1.sinaimg.cn/large/832afe33ly1gbi1ve03e7j21hc0xaabj.jpg)
+  background: url(https://p.pstatp.com/origin/13812000114accf0f004e)
     center center / cover no-repeat;
   background-color: #49b1f5;
 }

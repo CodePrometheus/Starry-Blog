@@ -44,7 +44,7 @@ Vue.filter("date", function (value) {
 });
 
 Vue.filter("hour", function (value) {
-  return moment(value).format("HH:mm")
+  return moment(value).format("HH:mm:ss")
 })
 
 Vue.filter("num", function (value) {
