@@ -70,6 +70,7 @@ public class WebSocketServiceImpl {
 
         Map<String, Object> recordMap = new HashMap<>(16);
         String ipAddr = endpointConfig.getUserProperties().get(ChatConfigurator.HEADER_NAME).toString();
+        log.info("新的连接加入ipAddr = ", ipAddr);
         recordMap.put("chatRecordList", chatRecordList);
         recordMap.put("ipAddr", ipAddr);
         recordMap.put("ipSource", IpUtil.getIpSource(ipAddr));
@@ -94,6 +95,7 @@ public class WebSocketServiceImpl {
         }
     }
 
+
     /**
      * 获取ip
      */
@@ -106,7 +108,7 @@ public class WebSocketServiceImpl {
                 String firstHeader = request.getHeaders().get(HEADER_NAME.toLowerCase()).get(0);
                 sec.getUserProperties().put(HEADER_NAME, firstHeader);
             } catch (Exception e) {
-                sec.getUserProperties().put(HEADER_NAME, "未知IP");
+                sec.getUserProperties().put(HEADER_NAME, "未知ip");
             }
         }
     }
@@ -177,7 +179,5 @@ public class WebSocketServiceImpl {
     public void onError(Throwable throwable) {
         throwable.printStackTrace();
     }
-
-
 
 }

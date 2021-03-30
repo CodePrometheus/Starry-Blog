@@ -156,7 +156,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //判断是否第一次访问，增加浏览量
         Set<Integer> set = (Set<Integer>) session.getAttribute("articleSet");
         if (set == null) {
-            set = new HashSet<Integer>();
+            set = new HashSet<>();
         }
         if (!set.contains(articleId)) {
             set.add(articleId);

@@ -9,7 +9,7 @@ public class IpTest {
 
     @Test
     public void ipTest() {
-        String ipSource = IpUtil.getIpSource("8.8.8.8");
+        String ipSource = IpUtil.getIpSource("120.212.129.101");
         System.out.println(ipSource);
     }
 }

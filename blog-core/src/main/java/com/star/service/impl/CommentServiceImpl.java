@@ -49,7 +49,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .eq("is_delete", DeleteConst.NORMAL);
         Integer commentCount = commentMapper.selectCount(queryWrapper);
         if (commentCount == 0) {
-            return new PageDTO<CommentDTO>();
+            return new PageDTO<>();
         }
         //查询评论集合
         List<CommentDTO> commentDTOList = commentMapper.listComments(articleId, (current - 1) * 10);
@@ -156,7 +156,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //统计后台评论量
         Integer count = commentMapper.countCommentBack(condition);
         if (count == 0) {
-            return new PageDTO<CommentBackDTO>();
+            return new PageDTO<>();
         }
         //查询后台评论集合
         List<CommentBackDTO> commentBackDTOList = commentMapper.listCommentBackDTO(condition);
