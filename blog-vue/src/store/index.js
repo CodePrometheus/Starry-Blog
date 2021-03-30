@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
+export const SET_IS_BLOG_RENDER_COMPLETE = 'setIsBlogRenderComplete'
 
 export default new Vuex.Store({
   state: {
@@ -19,7 +20,8 @@ export default new Vuex.Store({
     webSite: null,
     articleLikeSet: [],
     commentLikeSet: [],
-    blogInfo: {}
+    blogInfo: {},
+    isBlogRenderComplete: false
   },
   mutations: {
     login(state, user) {
@@ -68,15 +70,22 @@ export default new Vuex.Store({
       }
     },
     commentLike(state, commentId) {
-      var commentLikeSet = state.commentLikeSet;
+      let commentLikeSet = state.commentLikeSet;
       if (commentLikeSet.indexOf(commentId) != -1) {
         commentLikeSet.splice(commentLikeSet.indexOf(commentId), 1);
       } else {
         commentLikeSet.push(commentId);
       }
     },
+    [SET_IS_BLOG_RENDER_COMPLETE](state, {ok}) {
+      state.isBlogRenderComplete = ok
+    }
   },
-  actions: {},
+  actions: {
+    setIsBlogRenderComplete({commit}, ok) {
+      commit(SET_IS_BLOG_RENDER_COMPLETE, {ok})
+    }
+  },
   modules: {},
   plugins: [
     createPersistedState({
