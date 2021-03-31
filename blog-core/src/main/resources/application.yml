@@ -31,10 +31,7 @@ spring:
     port: 6379
     password:
   #es配置
-  data:
-    elasticsearch:
-      cluster-name: elasticsearch
-      cluster-nodes: 127.0.0.1:9300
+
   #mq配置
   rabbitmq:
     host: 127.0.0.1
@@ -59,18 +56,25 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 10MB
+elasticsearch:
+  host: localhost
+  port: 9200
 
 #配置MybatisPlus
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+
+logging:
+  level:
+    org.springframework.data.convert.CustomConversions: ERROR
+
 
 
 swagger:
   enable: true
-  application-name:  Starry-Blog | 你的美好，我都记得
+  application-name: Starry-Blog | 你的美好，我都记得
   application-version: 1.5
   application-description: Starry-Blog | 你的美好，我都记得
   try-host: http://localhost:${server.port}

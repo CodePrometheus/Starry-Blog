@@ -1,8 +1,7 @@
 package com.star.service.impl;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -27,29 +26,26 @@ import com.star.util.BeanCopyUtil;
 import com.star.util.HTMLUtil;
 import com.star.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.text.Text;
+import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.SearchResultMapper;
-import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
-import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.star.constant.CommonConst.FALSE;
+import static com.star.constant.RedisConst.ARTICLE_LIKE_COUNT;
+import static com.star.constant.RedisConst.ARTICLE_VIEWS_COUNT;
 
 /**
  * @Author: zzStar
@@ -72,7 +68,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private ArticleTagMapper articleTagMapper;
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Autowired
     private HttpSession session;
@@ -87,6 +83,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private ArticleTagService articleTagService;
 
     @Override
+    public List<ArticleRecommendDTO> listNewestArticles() {
+        // newest
+        List<Article> articleList = articleMapper.selectList(new LambdaQueryWrapper<Article>()
+                .select(Article::getId, Article::getArticleTitle, Article::getArticleCover, Article::getCreateTime)
+                .eq(Article::getIsDelete, FALSE)
+                .eq(Article::getIsDraft, FALSE)
+                .orderByDesc(Article::getId)
+                .last("limit 4"));
+        return BeanCopyUtil.copyList(articleList, ArticleRecommendDTO.class);
+    }
+
+    @Override
     public PageDTO<ArchiveDTO> listArchives(Long current) {
         Page<Article> page = new Page<>(current, 10);
         QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
@@ -95,7 +103,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
         //拷贝dto集合
         List<ArchiveDTO> archiveDTOList = BeanCopyUtil.copyList(articlePage.getRecords(), ArchiveDTO.class);
-        return new PageDTO<ArchiveDTO>(archiveDTOList, (int) articlePage.getTotal());
+        return new PageDTO<>(archiveDTOList, (int) articlePage.getTotal());
     }
 
     @Override
@@ -117,7 +125,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleBackDTO.setViewsCount(viewsCountMap.get(articleBackDTO.getId().toString()));
             articleBackDTO.setLikeCount(likeCountMap.get(articleBackDTO.getId().toString()));
         }
-        return new PageDTO<ArticleBackDTO>(articleBackDTOList, count);
+        return new PageDTO<>(articleBackDTOList, count);
     }
 
     @Override
@@ -153,23 +161,58 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleDTO getArticleById(Integer articleId) {
-        //判断是否第一次访问，增加浏览量
-        Set<Integer> set = (Set<Integer>) session.getAttribute("articleSet");
-        if (set == null) {
-            set = new HashSet<>();
-        }
-        if (!set.contains(articleId)) {
-            set.add(articleId);
-            session.setAttribute("articleSet", set);
-            //浏览量+1
-            redisTemplate.boundHashOps("article_views_count").increment(articleId.toString(), 1);
-        }
-        //查询id对应的文章
+        //  更新文章浏览量
+        updateArticleViewsCount(articleId);
+        // 查询id对应的文章
         ArticleDTO article = articleMapper.getArticleById(articleId);
+
+        // 查询上一篇下一篇文章
+        Article lastArticle = articleMapper.selectOne(new LambdaQueryWrapper<Article>()
+                .select(Article::getId, Article::getArticleTitle, Article::getArticleCover)
+                .eq(Article::getIsDelete, FALSE)
+                .eq(Article::getIsDraft, FALSE)
+                .lt(Article::getId, articleId)
+                .orderByDesc(Article::getId)
+                .last("limit 1"));
+
+        Article nextArticle = articleMapper.selectOne(new LambdaQueryWrapper<Article>()
+                .select(Article::getId, Article::getArticleTitle, Article::getArticleCover)
+                .eq(Article::getIsDelete, FALSE)
+                .eq(Article::getIsDraft, FALSE)
+                .gt(Article::getId, articleId)
+                .orderByAsc(Article::getId)
+                .last("limit 1"));
+
+        article.setLastArticle(BeanCopyUtil.copyObject(lastArticle, ArticlePaginationDTO.class));
+        article.setNextArticle(BeanCopyUtil.copyObject(nextArticle, ArticlePaginationDTO.class));
+
+        // 查询相关推荐文章
+        article.setArticleRecommendList(articleMapper.listArticleRecommends(articleId));
+
         //封装点赞量和浏览量封装
-        article.setViewsCount((Integer) redisTemplate.boundHashOps("article_views_count").get(articleId.toString()));
-        article.setLikeCount((Integer) redisTemplate.boundHashOps("article_like_count").get(articleId.toString()));
+        article.setViewsCount((Integer) redisTemplate.boundHashOps(ARTICLE_VIEWS_COUNT).get(articleId.toString()));
+        article.setLikeCount((Integer) redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).get(articleId.toString()));
         return article;
+    }
+
+    /**
+     * 更新文章浏览量
+     *
+     * @param articleId 文章id
+     */
+    @Async
+    public void updateArticleViewsCount(Integer articleId) {
+        // 判断是否第一次访问，增加浏览量
+        Set<Integer> articleSet = (Set<Integer>) session.getAttribute("articleSet");
+        if (Objects.isNull(articleSet)) {
+            articleSet = new HashSet<>();
+        }
+        if (!articleSet.contains(articleId)) {
+            articleSet.add(articleId);
+            session.setAttribute("articleSet", articleSet);
+            // +1
+            redisTemplate.boundHashOps(ARTICLE_VIEWS_COUNT).increment(articleId.toString(), 1);
+        }
     }
 
     @Override
@@ -314,68 +357,35 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @return 搜索结果
      */
     private List<ArticleSearchDTO> searchArticle(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
-        //添加文章标题高亮
+        // 添加文章标题高亮
         HighlightBuilder.Field titleField = new HighlightBuilder.Field("articleTitle");
         titleField.preTags("<span style='color:#f47466'>");
         titleField.postTags("</span>");
-        //添加文章内容高亮
+        // 添加文章内容高亮
         HighlightBuilder.Field contentField = new HighlightBuilder.Field("articleContent");
         contentField.preTags("<span style='color:#f47466'>");
         contentField.postTags("</span>");
         contentField.fragmentSize(200);
         nativeSearchQueryBuilder.withHighlightFields(titleField, contentField);
-        //搜索
-        AggregatedPage<ArticleSearchDTO> page = elasticsearchTemplate.queryForPage(nativeSearchQueryBuilder.build(), ArticleSearchDTO.class, new SearchResultMapper() {
-            @Override
-            public <T> AggregatedPage<T> mapResults(SearchResponse response, Class<T> aClass, Pageable pageable) {
-                List list = new ArrayList();
-                for (SearchHit hit : response.getHits()) {
-                    //获取所有数据
-                    ArticleSearchDTO article = JSON.parseObject(hit.getSourceAsString(), ArticleSearchDTO.class);
-                    //获取文章标题高亮数据
-                    HighlightField titleField = hit.getHighlightFields().get("articleTitle");
-                    if (titleField != null && titleField.getFragments() != null) {
-                        //替换标题数据
-                        article.setArticleTitle(titleField.getFragments()[0].toString());
-                    }
-                    //获取文章内容高亮数据
-                    HighlightField contentField = hit.getHighlightFields().get("articleContent");
-                    if (contentField != null && contentField.getFragments() != null) {
-                        //替换内容数据
-                        article.setArticleContent(contentField.getFragments()[0].toString());
-                    }
-                    list.add(article);
-                }
-                return new AggregatedPageImpl<T>(list, pageable, response.getHits().getTotalHits());
-            }
+        // 搜索
+        SearchHits<ArticleSearchDTO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), ArticleSearchDTO.class);
 
-            @Override
-            public <T> T mapSearchHit(SearchHit searchHit, Class<T> clazz) {
-                List<T> results = new ArrayList<>();
-                for (HighlightField field : searchHit.getHighlightFields().values()) {
-                    T result = null;
-                    if (StringUtils.hasText(searchHit.getSourceAsString())) {
-                        result = JSONObject.parseObject(searchHit.getSourceAsString(), clazz);
-                    }
-                    try {
-                        PropertyUtils.setProperty(result, field.getName(), concat(field.fragments()));
-                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                        log.error("设置高亮字段异常：{}", e.getMessage(), e);
-                    }
-                    results.add(result);
-                }
-                return null;
+        return search.getSearchHits().stream().map(hit -> {
+            ArticleSearchDTO article = hit.getContent();
+            // 获取文章标题高亮数据
+            List<String> titleHighList = hit.getHighlightFields().get("articleTitle");
+            if (CollectionUtils.isNotEmpty(titleHighList)) {
+                // 替换标题数据
+                article.setArticleTitle(titleHighList.get(0));
             }
-        });
-        return page.getContent();
-    }
-
-    private String concat(Text[] texts) {
-        StringBuffer sb = new StringBuffer();
-        for (Text text : texts) {
-            sb.append(text.toString());
-        }
-        return sb.toString();
+            // 获取文章内容高亮数据
+            List<String> contentHighList = hit.getHighlightFields().get("articleContent");
+            if (CollectionUtils.isNotEmpty(contentHighList)) {
+                // 替换内容数据
+                article.setArticleContent(contentHighList.get(0));
+            }
+            return article;
+        }).collect(Collectors.toList());
     }
 
 }

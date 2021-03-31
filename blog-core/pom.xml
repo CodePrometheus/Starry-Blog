@@ -5,7 +5,7 @@
     <parent>
         <artifactId>starry-blog</artifactId>
         <groupId>com.star</groupId>
-        <version>1.0</version>
+        <version>1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.star</groupId>
             <artifactId>blog-common</artifactId>
-            <version>1.0</version>
+            <version>1.5</version>
         </dependency>
     </dependencies>
 
