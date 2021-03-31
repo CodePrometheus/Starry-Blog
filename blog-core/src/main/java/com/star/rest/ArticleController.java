@@ -29,21 +29,28 @@ import java.util.List;
 @Api(tags = "文章模块")
 @RestController
 public class ArticleController {
+
     @Autowired
     private ArticleService articleService;
 
     @ApiOperation(value = "查看文章归档")
-    @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long")
+    @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long", dataTypeClass = Long.class)
     @GetMapping("/articles/archives")
     private Result<PageDTO<ArchiveDTO>> listArchives(Long current) {
         return new Result(true, StatusConst.OK, "查询成功", articleService.listArchives(current));
     }
 
     @ApiOperation(value = "查看首页文章")
-    @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long")
+    @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long", dataTypeClass = Long.class)
     @GetMapping("/articles")
     private Result<List<ArticleHomeDTO>> listArticles(Long current) {
         return new Result(true, StatusConst.OK, "查询成功", articleService.listArticles(current));
+    }
+
+    @ApiOperation(value = "查看最新文章")
+    @GetMapping("/articles/newest")
+    public Result<List<ArticleRecommendDTO>> listNewestArticles() {
+        return new Result<>(true, StatusConst.OK, "查询成功", articleService.listNewestArticles());
     }
 
     @ApiOperation(value = "查看后台文章")
@@ -73,7 +80,7 @@ public class ArticleController {
     }
 
     @ApiOperation(value = "上传文章图片")
-    @ApiImplicitParam(name = "file", value = "文章图片", required = true, dataType = "MultipartFile")
+    @ApiImplicitParam(name = "file", value = "文章图片", required = true, dataType = "MultipartFile", dataTypeClass = MultipartFile.class)
     @PostMapping("/admin/articles/images")
     private Result<String> saveArticleImages(MultipartFile file) {
         return new Result(true, StatusConst.OK, "上传成功", ImageUtil.upload(file, PathConst.ARTICLE));
@@ -94,14 +101,14 @@ public class ArticleController {
     }
 
     @ApiOperation(value = "根据id查看后台文章")
-    @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer")
+    @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class)
     @GetMapping("/admin/articles/{articleId}")
     private Result<ArticleVO> getArticleBackById(@PathVariable("articleId") Integer articleId) {
         return new Result(true, StatusConst.OK, "查询成功", articleService.getArticleBackById(articleId));
     }
 
     @ApiOperation(value = "根据id查看文章")
-    @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer")
+    @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class)
     @GetMapping("/articles/{articleId}")
     private Result<ArticleDTO> getArticleById(@PathVariable("articleId") Integer articleId) {
         return new Result(true, StatusConst.OK, "查询成功", articleService.getArticleById(articleId));
@@ -114,7 +121,7 @@ public class ArticleController {
     }
 
     @ApiOperation(value = "点赞文章")
-    @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer")
+    @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class)
     @PostMapping("/articles/like")
     private Result saveArticleLike(Integer articleId) {
         articleService.saveArticleLike(articleId);

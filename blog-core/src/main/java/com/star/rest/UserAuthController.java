@@ -30,7 +30,7 @@ public class UserAuthController {
     private UserAuthService userAuthService;
 
     @ApiOperation(value = "发送邮箱验证码")
-    @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String")
+    @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", dataTypeClass = String.class)
     @GetMapping("/users/code")
     private Result sendCode(String username) {
         userAuthService.sendCode(username);
@@ -63,27 +63,6 @@ public class UserAuthController {
         userAuthService.updateAdminPassword(passwordVO);
         return new Result(true, StatusConst.OK, "修改成功！");
     }
-
-/*
-    @ApiOperation(value = "微博登录")
-    @ApiImplicitParam(name = "code", value = "code", required = true, dataType = "String")
-    @PostMapping("/users/oauth/weibo")
-    private Result<UserInfoDTO> qqLogin(String code) {
-        return new Result(true, StatusConst.OK, "登录成功！", userAuthService.weiboLogin(code));
-    }
-*/
-
-/*
-    @ApiOperation(value = "qq登录")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "openId", value = "openId", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "accessToken", value = "accessToken", required = true, dataType = "String")
-    })
-    @PostMapping("/users/oauth/qq")
-    private Result<UserInfoDTO> qqLogin(String openId, String accessToken) {
-        return new Result(true, StatusConst.OK, "登录成功！", userAuthService.qqLogin(openId, accessToken));
-    }
-*/
 
 }
 

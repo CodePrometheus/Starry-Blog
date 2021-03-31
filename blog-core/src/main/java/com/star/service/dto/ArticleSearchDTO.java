@@ -1,6 +1,7 @@
 package com.star.service.dto;
 
 import com.star.domain.entity.Article;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -14,7 +15,8 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
  * @Date: 12-19-2020 14:14
  */
 @Data
-@Document(indexName = "article", type = "_doc")
+@Builder
+@Document(indexName = "article")
 public class ArticleSearchDTO {
 
     /**
@@ -40,15 +42,5 @@ public class ArticleSearchDTO {
      */
     @Field(type = FieldType.Integer)
     private Integer isDelete;
-
-    public ArticleSearchDTO(Article article) {
-        this.id = article.getId();
-        this.articleTitle = article.getArticleTitle();
-        this.articleContent = article.getArticleContent();
-        this.isDelete = article.getIsDelete();
-    }
-
-    public ArticleSearchDTO() {
-    }
 
 }

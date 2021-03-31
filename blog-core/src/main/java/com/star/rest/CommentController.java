@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +36,8 @@ public class CommentController {
 
     @ApiOperation(value = "查询评论")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long")
+            @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long", dataTypeClass = Long.class)
     })
     @GetMapping("/comments")
     private Result<PageDTO<CommentDTO>> listComments(Integer articleId, Long current) {
@@ -52,8 +53,8 @@ public class CommentController {
 
     @ApiOperation(value = "查询评论下的回复")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "commentId", value = "文章id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long")
+            @ApiImplicitParam(name = "commentId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long", dataTypeClass = Long.class)
     })
     @GetMapping("/comments/replies")
     private Result<List<ReplyDTO>> listRepliesByCommentId(Integer commentId, Long current) {

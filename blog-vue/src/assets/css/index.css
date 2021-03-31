@@ -1,11 +1,10 @@
+
 body {
   cursor: url(https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/img/default.cur),default;
 }
-
 a, button, img {
   cursor: url(https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@latest/Hexo/img/pointer.cur),default;
 }
-
 ul{
   padding:0 !important;
 }
@@ -130,10 +129,10 @@ canvas {
     opacity: 0;
     filter: alpha(opacity=0);
   }
-100% {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
   }
 }
 
@@ -144,7 +143,6 @@ p {
 .login-container {
   background: #fff !important;
 }
-
 @media (min-width: 760px) {
   .v-toolbar__content, .v-toolbar__extension {
     padding: 10px 36px;
@@ -174,7 +172,6 @@ p {
     padding: 50px 40px;
     margin: 380px auto 40px auto;
   }
-
   .article-container{
     animation: main 1s;
     max-width: 1200px;
@@ -183,15 +180,14 @@ p {
   .article-wrapper{
     padding: 50px 40px;
   }
-
   .login-container {
     padding: 1rem;
     border-radius: 4px;
     height: 500px;
   }
   .login-wrapper {
-   padding: 3.5rem 1.5rem 0 1.5rem;
-   }
+    padding: 3.5rem 1.5rem 0 1.5rem;
+  }
 }
 
 @media (max-width: 759px) {
@@ -211,7 +207,6 @@ p {
     margin: 240px 5px 20px 5px;
     padding: 36px 14px;
   }
-
   .article-container{
     animation: main 1s;
     margin: 312.5px 0px 8px 0px;
@@ -219,7 +214,6 @@ p {
   .article-wrapper{
     padding: 36px 14px;
   }
-
   .banner-title {
     position: absolute;
     top: 8.5rem;
@@ -238,7 +232,7 @@ p {
   }
   .login-wrapper {
     padding: 18vh 0.5em 0 0.5rem;
-   }
+  }
 }
 
 ::-webkit-scrollbar {
@@ -254,14 +248,14 @@ p {
 ::-webkit-scrollbar-thumb {
   background-color: #49b1f5;
   background-image: -webkit-linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0.4) 75%,
-    transparent 75%,
-    transparent
+          45deg,
+          rgba(255, 255, 255, 0.4) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.4) 50%,
+          rgba(255, 255, 255, 0.4) 75%,
+          transparent 75%,
+          transparent
   );
   border-radius: 2em;
 }

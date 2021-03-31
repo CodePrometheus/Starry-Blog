@@ -35,7 +35,7 @@ public class UserInfoController {
     }
 
     @ApiOperation(value = "修改用户头像")
-    @ApiImplicitParam(name = "file", value = "用户头像", required = true, dataType = "MultipartFile")
+    @ApiImplicitParam(name = "file", value = "用户头像", required = true, dataType = "MultipartFile", dataTypeClass = MultipartFile.class)
     @PostMapping("/users/avatar")
     private Result<String> updateUserInfo(MultipartFile file) {
         return new Result(true, StatusConst.OK, "修改成功！", userInfoService.updateUserAvatar(file));

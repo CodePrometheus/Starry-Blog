@@ -69,4 +69,19 @@ public class ArticleDTO {
      */
     private List<TagDTO> tagDTOList;
 
+    /**
+     * 上一篇文章
+     */
+    private ArticlePaginationDTO lastArticle;
+
+    /**
+     * 下一篇文章
+     */
+    private ArticlePaginationDTO nextArticle;
+
+    /**
+     * 推荐文章
+     */
+    private List<ArticleRecommendDTO> articleRecommendList;
+
 }

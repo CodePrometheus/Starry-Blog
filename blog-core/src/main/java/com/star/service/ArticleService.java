@@ -113,4 +113,10 @@ public interface ArticleService extends IService<Article> {
      */
     void deleteArticles(List<Integer> articleIdList);
 
+    /**
+     * 查看最新文章
+     * @return 最新文章
+     */
+    List<ArticleRecommendDTO> listNewestArticles();
+
 }

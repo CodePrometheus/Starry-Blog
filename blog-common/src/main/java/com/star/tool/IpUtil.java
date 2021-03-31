@@ -28,9 +28,8 @@ import java.util.List;
  * @Author: zzStar
  * @Date: 12-23-2020 17:25
  */
-@SuppressWarnings("all")
 @Slf4j
-@Component
+@SuppressWarnings("all")
 public class IpUtil {
 
     private static boolean ipLocal = false;
