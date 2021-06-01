@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.star.domain.mapper.ArticleMapper">
+<mapper namespace="com.star.core.domain.mapper.ArticleMapper">
     <resultMap id="articleHomeResultMap" type="com.star.core.service.dto.ArticleHomeDTO">
         <id column="id" property="id"/>
         <result column="article_cover" property="articleCover"/>

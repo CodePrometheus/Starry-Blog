@@ -27,7 +27,6 @@ import java.util.List;
  * @Author: zzStar
  * @Date: 12-23-2020 17:25
  */
-@Slf4j
 @SuppressWarnings("all")
 public class IpUtil {
 

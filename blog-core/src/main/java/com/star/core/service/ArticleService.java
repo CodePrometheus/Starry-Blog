@@ -2,11 +2,10 @@ package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.domain.entity.Article;
-import com.star.core.service.dto.*;
 import com.star.core.domain.vo.ArticleVO;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.DeleteVO;
-import com.star.service.dto.*;
+import com.star.core.service.dto.*;
 
 import java.util.List;
 
@@ -116,6 +115,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 查看最新文章
+     *
      * @return 最新文章
      */
     List<ArticleRecommendDTO> listNewestArticles();

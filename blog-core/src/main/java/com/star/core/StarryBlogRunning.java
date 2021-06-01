@@ -13,8 +13,8 @@ import org.springframework.web.client.RestTemplate;
  * @Author: zzStar
  * @Date: 12-16-2020 19:37
  */
-@SpringBootApplication
 @EnableScheduling
+@SpringBootApplication
 public class StarryBlogRunning {
 
     public static void main(String[] args) {
