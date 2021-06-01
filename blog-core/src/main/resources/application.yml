@@ -34,7 +34,7 @@ spring:
 
   #mq配置
   rabbitmq:
-    host: 127.0.0.1
+    host: 192.168.43.131
     port: 5672
     username: guest
     password: guest
@@ -69,8 +69,6 @@ mybatis-plus:
 logging:
   level:
     org.springframework.data.convert.CustomConversions: ERROR
-
-
 
 swagger:
   enable: true

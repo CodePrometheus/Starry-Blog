@@ -1,58 +1,62 @@
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-import vuetify from "./plugins/vuetify";
-import animated from "animate.css";
-import "./assets/css/index.css";
-import "./assets/css/iconfont.css";
-import "./assets/css/markdown.css";
-import config from "./assets/js/config";
-import Share from "vue-social-share";
-import "vue-social-share/dist/client.css";
-import {vueBaberrage} from "vue-baberrage";
-import axios from "axios";
-import VueAxios from "vue-axios";
-import moment from "moment";
-import InfiniteLoading from "vue-infinite-loading";
-import "highlight.js/styles/atom-one-dark.css";
-import VueImageSwipe from "vue-image-swipe";
-import "vue-image-swipe/dist/vue-image-swipe.css";
-import Toast from "./components/toast/index";
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
-import APlayer from "@moefe/vue-aplayer";
-import live2d from 'live2d-vue';
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import vuetify from './plugins/vuetify'
+import animated from 'animate.css'
+import './assets/css/index.css'
+import './assets/css/iconfont.css'
+import './assets/css/markdown.css'
+import config from './assets/js/config'
+import Share from 'vue-social-share'
+import 'vue-social-share/dist/client.css'
+import { vueBaberrage } from 'vue-baberrage'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+import moment from 'moment'
+import InfiniteLoading from 'vue-infinite-loading'
+import 'highlight.js/styles/atom-one-dark.css'
+import VueImageSwipe from 'vue-image-swipe'
+import 'vue-image-swipe/dist/vue-image-swipe.css'
+import Toast from './components/toast/index'
+import APlayer from '@moefe/vue-aplayer'
+import live2d from 'live2d-vue'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import hls from 'videojs-contrib-hls'
+import 'view-design/dist/styles/iview.css';
+import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
-Vue.prototype.config = config;
-Vue.config.productionTip = false;
-Vue.use(animated);
-Vue.use(Share);
-Vue.use(vueBaberrage);
-Vue.use(InfiniteLoading);
-Vue.use(VueAxios, axios);
-Vue.use(VueImageSwipe);
-Vue.use(Toast);
-Vue.use(ElementUI);
-Vue.use(APlayer, {productionTip: false});
+
+Vue.prototype.config = config
+Vue.config.productionTip = false
+Vue.use(animated)
+Vue.use(Share)
+Vue.use(vueBaberrage)
+Vue.use(InfiniteLoading)
+Vue.use(VueAxios, axios)
+Vue.use(VueImageSwipe)
+Vue.use(Toast)
+Vue.use(APlayer, { productionTip: false })
 Vue.use(live2d)
+Vue.use(hls)
+Vue.use(Element)
 
-Vue.filter("date", function (value) {
-  return moment(value).format("YYYY-MM-DD HH:mm");
-});
-
-Vue.filter("hour", function (value) {
-  return moment(value).format("HH:mm:ss")
+Vue.filter('date', function (value) {
+  return moment(value).format('YYYY-MM-DD HH:mm')
 })
 
-Vue.filter("num", function (value) {
+Vue.filter('hour', function (value) {
+  return moment(value).format('HH:mm:ss')
+})
+
+Vue.filter('num', function (value) {
   if (value >= 1000) {
-    return (value / 1000).toFixed(1) + "k";
+    return (value / 1000).toFixed(1) + 'k'
   }
-  return value;
-});
+  return value
+})
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
@@ -65,8 +69,8 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   window.scrollTo({
     top: 0,
-    behavior: "instant"
-  });
+    behavior: 'instant',
+  })
   NProgress.done()
 })
 
@@ -74,18 +78,18 @@ axios.interceptors.response.use(
   function (response) {
     switch (response.data.code) {
       case 5000:
-        Vue.prototype.$toast({type: "error", message: "系统异常"})
+        Vue.prototype.$toast({ type: 'error', message: '系统异常' })
     }
     return response
   },
   function (error) {
     return Promise.reject(error)
-  }
+  },
 )
 
 new Vue({
   router,
   store,
   vuetify,
-  render: h => h(App)
-}).$mount("#app");
+  render: h => h(App),
+}).$mount('#app')

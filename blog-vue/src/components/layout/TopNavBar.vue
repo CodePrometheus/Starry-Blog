@@ -55,6 +55,11 @@
           </router-link>
         </div>
         <div class="menus-item">
+          <router-link to="/video">
+            <i class="iconfont iconlianjie" /> 影院
+          </router-link>
+        </div>
+        <div class="menus-item">
           <router-link to="/about">
             <i class="iconfont icon-xin" /> 关于
           </router-link>

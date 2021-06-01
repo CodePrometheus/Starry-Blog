@@ -19,7 +19,7 @@
 
 <script>
 
-import custom from "@/assets/js/custom";
+import custom from "../assets/js/custom";
 
 export default {
   name: "Live2D",

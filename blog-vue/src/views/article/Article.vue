@@ -255,7 +255,7 @@
 <script>
 import Clipboard from "clipboard";
 import Comment from "../../components/Comment";
-import Tocbot from "@/components/Tocbot";
+import Tocbot from "../../components/Tocbot";
 import tocbot from "tocbot";
 
 export default {

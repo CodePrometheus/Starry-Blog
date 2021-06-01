@@ -3,7 +3,7 @@
 <mapper namespace="com.star.domain.mapper.UniqueViewMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.star.domain.entity.UniqueView">
+    <resultMap id="BaseResultMap" type="com.star.core.domain.entity.UniqueView">
         <id column="id" property="id" />
         <result column="create_time" property="createTime" />
         <result column="views_count" property="viewsCount" />

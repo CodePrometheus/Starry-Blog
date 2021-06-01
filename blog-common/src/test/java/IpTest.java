@@ -1,4 +1,4 @@
-import com.star.tool.IpUtil;
+import com.star.common.tool.IpUtil;
 import org.junit.Test;
 
 /**

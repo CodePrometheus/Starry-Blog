@@ -3,7 +3,7 @@
 <mapper namespace="com.star.domain.mapper.CategoryMapper">
 
 
-    <select id="listCategoryDTO" resultType="com.star.service.dto.CategoryDTO">
+    <select id="listCategoryDTO" resultType="com.star.core.service.dto.CategoryDTO">
      SELECT
 	 c.id,
 	 c.category_name,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.star.domain.mapper.ArticleMapper">
-    <resultMap id="articleHomeResultMap" type="com.star.service.dto.ArticleHomeDTO">
+    <resultMap id="articleHomeResultMap" type="com.star.core.service.dto.ArticleHomeDTO">
         <id column="id" property="id"/>
         <result column="article_cover" property="articleCover"/>
         <result column="article_title" property="articleTitle"/>
@@ -10,26 +10,26 @@
         <result column="is_top" property="isTop"/>
         <result column="category_id" property="categoryId"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="tagDTOList" ofType="com.star.service.dto.TagDTO">
+        <collection property="tagDTOList" ofType="com.star.core.service.dto.TagDTO">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="tagName"/>
         </collection>
     </resultMap>
 
-    <resultMap id="articlePreviewResultMap" type="com.star.service.dto.ArticlePreviewDTO">
+    <resultMap id="articlePreviewResultMap" type="com.star.core.service.dto.ArticlePreviewDTO">
         <id column="id" property="id"/>
         <result column="article_cover" property="articleCover"/>
         <result column="article_title" property="articleTitle"/>
         <result column="create_time" property="createTime"/>
         <result column="category_id" property="categoryId"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="tagDTOList" ofType="com.star.service.dto.TagDTO">
+        <collection property="tagDTOList" ofType="com.star.core.service.dto.TagDTO">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="tagName"/>
         </collection>
     </resultMap>
 
-    <resultMap id="articleResultMap" type="com.star.service.dto.ArticleDTO">
+    <resultMap id="articleResultMap" type="com.star.core.service.dto.ArticleDTO">
         <id column="id" property="id"/>
         <result column="article_cover" property="articleCover"/>
         <result column="article_title" property="articleTitle"/>
@@ -38,13 +38,13 @@
         <result column="update_time" property="updateTime"/>
         <result column="category_id" property="categoryId"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="tagDTOList" ofType="com.star.service.dto.TagDTO">
+        <collection property="tagDTOList" ofType="com.star.core.service.dto.TagDTO">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="tagName"/>
         </collection>
     </resultMap>
 
-    <resultMap id="articleBackResultMap" type="com.star.service.dto.ArticleBackDTO">
+    <resultMap id="articleBackResultMap" type="com.star.core.service.dto.ArticleBackDTO">
         <id column="id" property="id"/>
         <result column="article_title" property="articleTitle"/>
         <result column="create_time" property="createTime"/>
@@ -53,7 +53,7 @@
         <result column="is_draft" property="isDraft"/>
         <result column="is_delete" property="isDelete"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="tagDTOList" ofType="com.star.service.dto.TagDTO">
+        <collection property="tagDTOList" ofType="com.star.core.service.dto.TagDTO">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="tagName"/>
         </collection>
@@ -204,7 +204,7 @@
         </where>
     </select>
 
-    <select id="listArticleRank" resultType="com.star.domain.entity.Article">
+    <select id="listArticleRank" resultType="com.star.core.domain.entity.Article">
         SELECT id,
                article_title
         FROM tb_article
@@ -219,7 +219,7 @@
         </foreach>
     </select>
 
-    <select id="listArticleRecommends" resultType="com.star.service.dto.ArticleRecommendDTO">
+    <select id="listArticleRecommends" resultType="com.star.core.service.dto.ArticleRecommendDTO">
         SELECT
             id,
             article_title,

@@ -10,6 +10,7 @@ import About from "../views/about/About.vue";
 import Message from "../views/message/Messsage.vue";
 import ArticleList from "../components/ArticleList.vue";
 import User from "../views/user/User.vue";
+import Video from '../views/video/Video'
 
 Vue.use(VueRouter);
 
@@ -62,6 +63,13 @@ const routes = [
     component: About,
     meta: {
       title: "关于我"
+    }
+  },
+  {
+    path: "/video",
+    component: Video,
+    meta: {
+      title: "Video"
     }
   },
   {
