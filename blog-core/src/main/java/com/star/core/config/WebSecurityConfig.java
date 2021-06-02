@@ -1,7 +1,6 @@
 package com.star.core.config;
 
 
-import com.star.config.handler.*;
 import com.star.core.config.handler.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

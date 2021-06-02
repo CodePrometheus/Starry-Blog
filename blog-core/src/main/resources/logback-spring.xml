@@ -14,6 +14,17 @@
         </encoder>
     </appender>
 
+    <!--  日志发送至logstash  -->
+<!--    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+<!--        &lt;!&ndash; logstash的服务器地址和通信端口 &ndash;&gt;-->
+<!--        <destination>192.168.43.115:5043</destination>-->
+<!--        &lt;!&ndash; encoder is required &ndash;&gt;-->
+<!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder">-->
+<!--            &lt;!&ndash; 在elasticsearch的index中追加applicationName字段  &ndash;&gt;-->
+<!--            <customFields>{"applicationName":"${applicationName}"}</customFields>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
     <!--输出到文件-->
     <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

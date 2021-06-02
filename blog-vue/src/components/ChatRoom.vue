@@ -1,14 +1,16 @@
 <template>
   <div>
     <div class="chat-container animated bounceInUp"
-         v-show="isShow" @click="closeAll" @contextmenu.prevent.stop="closeAll">
+         v-show="isShow"
+         @click="closeAll"
+         @contextmenu.prevent.stop="closeAll">
 
       <!-- 标题 -->
       <div class="header">
         <img src="https://gitee.com/codeprometheus/MyPicBed/raw/master/img/star.png"
              width="32" height="32"/>
         <div style="margin-left:12px">
-          <div style="font-family: 'Fira Code'">星空树洞</div>
+          <div style="font-family: 'Fira Code'">Starry Tree Hole</div>
           <div style="font-size:12px">{{ count }}人在线</div>
         </div>
         <v-icon class="close" @click="isShow = false">
@@ -28,8 +30,8 @@
 
         <!-- content -->
         <div :class="isMyMessage(item)"
-             v-for="(item,index) of chatRecordList" :key="index">
-
+             v-for="(item,index) of chatRecordList"
+             :key="index">
           <!-- 头像 -->
           <img :src="item.avatar" :class="isLeft(item)"/>
           <div>
@@ -40,7 +42,8 @@
             </div>
 
             <!-- 内容 -->
-            <div ref="content" @contextmenu.prevent.stop="showBack(item, index, $event)"
+            <div ref="content"
+                 @contextmenu.prevent.stop="showBack(item, index, $event)"
                  :class="isMyContent(item)">
               <!-- 文字消息 -->
               <div v-if="item.type == 3" v-html="item.content"/>
@@ -110,7 +113,6 @@
           @keydown.enter="saveMessage($event)"
           placeholder="想吐槽些什么呢~~~"/>
 
-
         <!-- 语音输入 -->
         <button
           class="voice-btn"
@@ -148,36 +150,46 @@
 </template>
 
 <script>
-import Emoji from "./Emoji"
-import EmojiList from "../assets/js/emoji";
-import Recorderx, {ENCODE_TYPE} from "recorderx";
+import Emoji from './Emoji'
+import EmojiList from '../assets/js/emoji'
+import Recorderx, { ENCODE_TYPE } from 'recorderx'
 
 export default {
-  name: "ChatRoom",
+  name: 'ChatRoom',
   components: {
-    Emoji
+    Emoji,
   },
   updated() {
-    let ele = document.getElementById("message")
+    let ele = document.getElementById('message')
     // 设置滚动条到最底部
     ele.scrollTop = ele.scrollHeight
   },
+
+  beforeDestroy() {
+    clearInterval(this.heartBeat)
+  },
+
   data: function () {
     return {
       isEmoji: false,
       webSocket: null,
-      content: "",
+      content: '',
       chatRecordList: [],
       voiceList: [],
       voiceActive: false,
       rc: null,
       startVoiceTime: null,
-      ipAddr: "",
-      ipSource: "",
+      ipAddr: '',
+      ipSource: '',
       isShow: false,
       unreadCount: 0,
       count: 0,
-      isVoice: false
+      isVoice: false,
+      WebsocketMessage: {
+        type: null,
+        data: null,
+      },
+      heartBeat: null,
     }
   },
 
@@ -186,17 +198,17 @@ export default {
     // 输入文字内容
     saveMessage(e) {
       e.preventDefault()
-      if (this.content.trim() == "") {
-        this.$toast({type: "error", message: "内容不能为空"})
+      if (this.content.trim() == '') {
+        this.$toast({ type: 'error', message: '内容不能为空' })
         return false
       }
       // emoji处理
-      let reg = /\[.+?\]/g;
+      let reg = /\[.+?\]/g
       this.content = this.content.replace(reg, function (str) {
         return (
-          "<img style='vertical-align: middle' src= '" +
+          '<img style=\'vertical-align: middle\' src= \'' +
           EmojiList[str] +
-          "' width='22'height='20' style='padding: 0 1px'/>"
+          '\' width=\'22\'height=\'20\' style=\'padding: 0 1px\'/>'
         )
       })
       let socketMsg = {
@@ -207,11 +219,13 @@ export default {
         userId: this.userId,
         ipAddr: this.ipAddr,
         ipSource: this.ipSource,
-        createTime: new Date()
+        createTime: new Date(),
       }
-      this.webSocket.send(JSON.stringify(socketMsg))
+      this.WebsocketMessage.type = 3
+      this.WebsocketMessage.data = socketMsg
+      this.webSocket.send(JSON.stringify(this.WebsocketMessage))
       // 发送之后置空
-      this.content = ""
+      this.content = ''
     },
 
     // 点击表情显示文字输入框
@@ -231,56 +245,67 @@ export default {
 
     // 建立连接
     connect() {
-      console.log("建立连接")
-      this.webSocket = new WebSocket("ws://127.0.0.1:8989/websocket")
+      let that = this
+      console.log('建立连接')
+      this.webSocket = new WebSocket('ws://127.0.0.1:8989/websocket')
       // 连接发生错误回调
       this.webSocket.onerror = function (event) {
         console.log(event)
-        alert("连接失败")
+        alert('连接失败')
       }
       // 连接成功回调
       this.webSocket.onopen = function (event) {
-        console.log(event);
+        console.log(event)
+        // 成功则发送心跳消息
+        that.heartBeat = setInterval(function () {
+          let beatMessage = {
+            type: 6,
+            data: 'ping',
+          }
+          that.webSocket.send(JSON.stringify(beatMessage))
+        }, 30 * 1000)
       }
 
       // 接收消息回调
-      let that = this
       this.webSocket.onmessage = function (event) {
         const data = JSON.parse(event.data)
         switch (data.type) {
           case 1:
-            that.count = data.count
+            that.count = data.data
             break
           case 2:
-            that.chatRecordList = data.chatRecordList
+            that.chatRecordList = data.data.chatRecordList
             that.chatRecordList.forEach(item => {
               if (item.type == 5) {
                 that.voiceActive.push(item.id)
               }
             })
-            that.ipAddr = data.ipAddr
-            that.ipSource = data.ipSource
+            that.ipAddr = data.data.ipAddr
+            that.ipSource = data.data.ipSource
             break
           case 3:
-            that.chatRecordList.push(data)
+            // 文字
+            that.chatRecordList.push(data.data)
             if (!that.isShow) {
               that.unreadCount++
             }
             break
           case 4:
-            if (data.isVoice) {
-              that.voiceList.splice(that.voiceList.indexOf(data.id), 1)
+            // 撤回
+            if (data.data.isVoice) {
+              that.voiceList.splice(that.voiceList.indexOf(data.data.id), 1)
             }
             for (let i = 0; i < that.chatRecordList.length; i++) {
-              if (that.chatRecordList[i].id == data.id) {
+              if (that.chatRecordList[i].id == data.data.id) {
                 that.chatRecordList.splice(i, 1)
                 i--
               }
             }
             break
           case 5:
-            that.voiceList.push(data.id)
-            that.chatRecordList.push(data)
+            // 语音消息
+            that.voiceList.push(data.data.id)
+            that.chatRecordList.push(data.data)
             if (!that.isShow) {
               that.unreadCount++
             }
@@ -297,7 +322,7 @@ export default {
       this.isEmoji = false
       if (this.chatRecordList.length > 0) {
         this.$refs.backBtn.forEach(item => {
-          item.style.display = "none"
+          item.style.display = 'none'
         })
       }
     },
@@ -312,58 +337,55 @@ export default {
       that.rc = new Recorderx()
       // 当数据更新了，在dom中渲染后，自动执行该函数
       that.$nextTick(() => {
-        that.rc
-          .start()
-          .then(() => {
-            that.startVoiceTime = new Date()
-            console.log("start recording")
-          })
-          .catch(error => {
-            console.log("Recording failed.", error)
-          })
+        that.rc.start().then(() => {
+          that.startVoiceTime = new Date()
+          console.log('Start Recording')
+        }).catch(error => {
+          console.log('Recording Failed.', error)
+        })
       })
     },
 
     // 录音结束
     translationEnd() {
-      console.log("录音结束")
+      console.log('录音结束')
       this.voiceActive = false
       // 暂停录音
       this.rc.pause()
       if (new Date() - this.startVoiceTime < 1000) {
-        this.$toast({type: "error", message: "按键时间太短了，请再次试试吧"})
+        this.$toast({ type: 'error', message: '按键时间太短了，请再次试试吧' })
         return false
       }
       // 获取录音
       let wav = this.rc.getRecord({
-        encodeTo: ENCODE_TYPE.WAV
+        encodeTo: ENCODE_TYPE.WAV,
       })
 
-      let file = new File([wav], "voice.wav", {
-        type: wav.type
+      let file = new File([wav], 'voice.wav', {
+        type: wav.type,
       })
 
       // 通过append方法添加数据
       let formData = new window.FormData()
-      formData.append("file", file)
-      formData.append("type", 5)
-      formData.append("nickname", this.nickname)
-      formData.append("avatar", this.avatar)
+      formData.append('file', file)
+      formData.append('type', 5)
+      formData.append('nickname', this.nickname)
+      formData.append('avatar', this.avatar)
 
       if (this.userId != null) {
-        formData.append("userId", this.userId)
+        formData.append('userId', this.userId)
       }
 
-      formData.append("ipAddr", this.ipAddr)
-      formData.append("ipSource", this.ipSource)
-      formData.append("createTime", new Date())
+      formData.append('ipAddr', this.ipAddr)
+      formData.append('ipSource', this.ipSource)
+      formData.append('createTime', new Date())
       let options = {
-        url: "/api/voice",
+        url: '/api/voice',
         data: formData,
-        methods: "post",
+        methods: 'post',
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       }
       this.axios(options)
     },
@@ -371,13 +393,13 @@ export default {
     // 展示菜单
     showBack(item, index, e) {
       this.$refs.backBtn.forEach(item => {
-        item.style.display = "none"
+        item.style.display = 'none'
       })
       if (item.ipAddr == this.ipAddr ||
         (item.userId != null && item.userId == this.userId)) {
-        this.$refs.backBtn[index].style.left = e.offsetX + "px";
-        this.$refs.backBtn[index].style.bottom = e.offsetY + "px";
-        this.$refs.backBtn[index].style.display = "block";
+        this.$refs.backBtn[index].style.left = e.offsetX + 'px'
+        this.$refs.backBtn[index].style.bottom = e.offsetY + 'px'
+        this.$refs.backBtn[index].style.display = 'block'
       }
     },
 
@@ -386,13 +408,13 @@ export default {
       let player = this.$refs.voices[this.voiceList.indexOf(item.id)]
       if (player.paused) {
         player.play()
-        this.$refs.plays[this.voiceList.indexOf(item.id)].$el.style.display = "none"
-        this.$refs.pauses[this.voiceList.indexOf(item.id)].$el.style.display = "inline-flex"
+        this.$refs.plays[this.voiceList.indexOf(item.id)].$el.style.display = 'none'
+        this.$refs.pauses[this.voiceList.indexOf(item.id)].$el.style.display = 'inline-flex'
       } else {
         this.$refs.plays[this.voiceList.indexOf(item.id)].$el.style.display =
-          "inline-flex"
+          'inline-flex'
         this.$refs.pauses[this.voiceList.indexOf(item.id)].$el.style.display =
-          "none"
+          'none'
         player.pause()
       }
     },
@@ -400,9 +422,9 @@ export default {
     // 结束语音
     endVoice(item) {
       this.$refs.plays[this.voiceList.indexOf(item.id)].$el.style.display =
-        "inline-flex"
+        'inline-flex'
       this.$refs.pauses[this.voiceList.indexOf(item.id)].$el.style.display =
-        "none"
+        'none'
     },
 
     // 获取语音时长
@@ -410,25 +432,26 @@ export default {
       let time = this.$refs.voices[this.voiceList.indexOf(item.id)].duration
       // 向上取整
       time = Math.ceil(time)
-      let str = "⬝⬝⬝"
+      let str = '⬝⬝⬝'
       for (let i = 0; i < time; i++) {
         if (i % 2 == 0) {
-          str += "⬝"
+          str += '⬝'
         }
       }
       this.$refs.voiceTimes[this.voiceList.indexOf(item.id)].innerHTML =
-        " " + str + " " + time + " ''"
+        ' ' + str + ' ' + time + ' \'\''
     },
 
     // 消息撤回
     back(item, index) {
       let socketMsg = {
         id: item.id,
-        type: 4,
-        isVoice: item.type == 5
+        isVoice: item.type == 5,
       }
-      this.webSocket.send(JSON.stringify(socketMsg))
-      this.$refs.backBtn[index].style.display = "none"
+      this.WebsocketMessage.type = 4
+      this.WebsocketMessage.data = socketMsg
+      this.webSocket.send(JSON.stringify(this.WebsocketMessage))
+      this.$refs.backBtn[index].style.display = 'none'
     },
 
     // 添加表情
@@ -436,7 +459,7 @@ export default {
       this.isEmoji = false
       this.$refs.chatInput.focus()
       this.content += key
-    }
+    },
   },
 
   computed: {
@@ -451,7 +474,7 @@ export default {
     avatar() {
       return this.$store.state.avatar != null
         ? this.$store.state.avatar
-        : "https://gravatar.loli.net/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mp&v=1.4.14"
+        : 'https://gravatar.loli.net/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mp&v=1.4.14'
     },
 
     userId() {
@@ -460,36 +483,38 @@ export default {
 
     isMyMessage() {
       return function (item) {
-        return this.isSelf(item) ? "my-message" : "user-message"
+        return this.isSelf(item) ? 'my-message' : 'user-message'
       }
     },
     isSelf() {
       return function (item) {
         return (
-          item.ipAddr == this.ipAddr || (item.userId != null && item.userId == this.userId)
+          item.ipAddr == this.ipAddr ||
+          (item.userId != null && item.userId == this.userId)
         )
       }
     },
 
     isLeft() {
       return function (item) {
-        return this.isSelf(item) ?
-          "user-avatar right-avatar" : "user-avatar left-avatar"
+        return this.isSelf(item)
+          ? 'user-avatar right-avatar'
+          : 'user-avatar left-avatar'
       }
     },
 
     isMyContent() {
       return function (item) {
-        return this.isSelf(item) ? "my-content" : "user-content";
-      };
+        return this.isSelf(item) ? 'my-content' : 'user-content'
+      }
     },
 
     isInput() {
-      return this.content.trim() != ""
-        ? "iconfont iconzhifeiji submit-btn"
-        : "iconfont iconzhifeiji";
-    }
-  }
+      return this.content.trim() != ''
+        ? 'iconfont iconzhifeiji submit-btn'
+        : 'iconfont iconzhifeiji'
+    },
+  },
 }
 </script>
 
@@ -536,8 +561,8 @@ export default {
 .chat-btn {
   border-radius: 100px !important;
   position: fixed;
-  bottom: 35px;
-  right: 50px;
+  bottom: 15px;
+  right: 5px;
   cursor: pointer;
   height: 60px !important;
   width: 60px !important;
@@ -593,7 +618,7 @@ export default {
   padding: 20px 16px 0 16px;
   top: 80px;
   bottom: 50px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 

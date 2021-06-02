@@ -16,22 +16,31 @@ public enum WebsocketTypeConst {
      * 在线人数
      */
     ONLINE_COUNT(1, "在线人数"),
+
     /**
      * 历史记录
      */
     HISTORY_RECORD(2, "历史记录"),
+
     /**
      * 发送消息
      */
     SEND_MESSAGE(3, "发送消息"),
+
     /**
      * 撤回消息
      */
     RECALL_MESSAGE(4, "撤回消息"),
+
     /**
      * 语音消息
      */
-    VOICE_MESSAGE(5,"语音消息");
+    VOICE_MESSAGE(5, "语音消息"),
+
+    /**
+     * 心跳
+     */
+    HEART_BEAT(6, "心跳消息");
 
     /**
      * 类型
@@ -45,6 +54,7 @@ public enum WebsocketTypeConst {
 
     /**
      * 根据类型获取枚举
+     *
      * @param type 类型
      * @return 枚举
      */

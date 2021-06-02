@@ -1,8 +1,8 @@
-#配置端口
+# 配置端口
 server:
   port: 8989
 
-#配置mysql数据库
+# 配置mysql数据库
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -25,12 +25,15 @@ spring:
       # 数据库连接超时时间,默认30秒，即30000
       connection-timeout: 30000
       connection-test-query: SELECT 1
-  #redis配置
+  # redis配置
   redis:
     host: localhost
     port: 6379
     password:
-  #es配置
+  # es配置
+  elasticsearch:
+    host: localhost
+    port: 9200
 
   #mq配置
   rabbitmq:
@@ -38,7 +41,7 @@ spring:
     port: 5672
     username: guest
     password: guest
-  #邮箱配置
+  # 邮箱配置
   mail:
     host: smtp.qq.com
     username: 2413245708@qq.com
@@ -51,16 +54,16 @@ spring:
       auth: true
       socketFactory:
       class: javax.net.ssl.SSLSocketFactory
-  #图片大小限制
+  # 图片大小限制
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 10MB
-elasticsearch:
-  host: localhost
-  port: 9200
+  profiles:
+    active: dev
 
-#配置MybatisPlus
+
+# 配置MybatisPlus
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
