@@ -14,22 +14,22 @@
 </template>
 
 <script>
-import {mapState} from "vuex"
-import tocbot from "tocbot";
+import tocbot from 'tocbot'
+import { mapState } from 'vuex'
 
 export default {
-  name: "Tocbot",
+  name: 'Tocbot',
 
   methods: {
     initTocbot() {
       tocbot.init({
         // 要把目录添加元素位置，支持选择器
-        tocSelector: ".js-toc",
+        tocSelector: '.js-toc',
         // 获取html的元素
-        contentSelector: ".article-content",
+        contentSelector: '.article-content',
         // 要显示的id的目录
-        headingSelector: "h1, h2, h3",
-        positionFixedSelector: ".m-toc",
+        headingSelector: 'h1, h2, h3',
+        positionFixedSelector: '.m-toc',
         onClick: function (e) {
           e.preventDefault()
         },
@@ -40,13 +40,13 @@ export default {
         scrollSmoothOffset: -55,
         // Headings offset between the headings and the top of the document (this is meant for minor adjustments).
         // Can also be used to account for scroll height discrepancies from the use of css scroll-padding-top
-        headingsOffset: -18
-      });
-    }
+        headingsOffset: -18,
+      })
+    },
   },
 
   computed: {
-    ...mapState(["isBlogRenderComplete"])
+    ...mapState(['isBlogRenderComplete']),
   },
 
   mounted() {
@@ -63,8 +63,8 @@ export default {
       if (this.isBlogRenderComplete) {
         this.initTocbot()
       }
-    }
-  }
+    },
+  },
 
 }
 </script>
@@ -87,6 +87,7 @@ export default {
   transform: translate(0, -2px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
+
 .box-card .item:hover {
   cursor: pointer;
 }
@@ -98,46 +99,62 @@ export default {
 .toc {
   overflow-y: auto;
 }
+
 .toc > ul {
   overflow: hidden;
   position: relative;
 }
+
 .toc > ul li {
   list-style: none;
 }
+
 .toc-list {
   list-style-type: none;
   margin: 0;
   padding-left: 10px;
 }
+
 .toc-list li a {
   display: block;
   padding: 4px 0;
   font-weight: 300;
 }
+
 .toc-list li a:hover {
   color: #409eff;
 }
+
 a.toc-link {
   color: currentColor;
   height: 100%;
 }
+
 .is-collapsible {
   max-height: 1000px;
   overflow: hidden;
   transition: all 300ms ease-in-out;
 }
+
 .is-collapsed {
   max-height: 0;
 }
+
 .is-position-fixed {
   position: sticky !important;
   top: 60px;
 }
+
 .is-active-link {
   font-weight: 700;
   color: #409eff !important;
 }
+
+.item >>> .is-active-link {
+  border-left-color: #409eff;
+  background: #409eff;
+}
+
 .toc-link::before {
   background-color: #eee;
   content: " ";
@@ -147,8 +164,5 @@ a.toc-link {
   margin-top: -1px;
   position: absolute;
   width: 2px;
-}
-.is-active-link::before {
-  background-color: #54bc4b;
 }
 </style>

@@ -253,15 +253,15 @@
 </template>
 
 <script>
-import Clipboard from "clipboard";
-import Comment from "../../components/Comment";
-import Tocbot from "../../components/Tocbot";
-import tocbot from "tocbot";
+import Clipboard from 'clipboard'
+import Comment from '../../components/Comment'
+import Tocbot from '../../components/Tocbot'
+import tocbot from 'tocbot'
 
 export default {
   components: {
     Comment,
-    Tocbot
+    Tocbot,
   },
   created() {
     this.getArticle()
@@ -279,8 +279,11 @@ export default {
     next()
   },
   beforeRouteUpdate(to, from, next) {
-    this.$store.dispatch('setIsBlogRenderComplete', false)
-    next()
+    if (to.path !== from.path) {
+      this.getArticle()
+      this.$store.dispatch('setIsBlogRenderComplete', false)
+      next()
+    }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -288,35 +291,34 @@ export default {
     })
   },
 
-
   data: function () {
     return {
       imgList: [],
       article: {
         lastArticle: {
           id: 0,
-          articleCover: ""
+          articleCover: '',
         },
         nextArticle: {
           id: 0,
-          articleCover: ""
+          articleCover: '',
         },
-        articleRecommendList: []
+        articleRecommendList: [],
       },
       articleLatestList: [],
       commentList: [],
       count: 0,
-      wordNum: "",
-      readTime: "",
+      wordNum: '',
+      readTime: '',
       articleHref: window.location.href,
-      clipboard: null
-    };
+      clipboard: null,
+    }
   },
   methods: {
     getArticle() {
       const that = this
       // 查询文章
-      this.axios.get("/api" + this.$route.path).then(({data}) => {
+      this.axios.get('/api' + this.$route.path).then(({ data }) => {
         document.title = data.data.articleTitle
         // 将markdown转换为Html
         this.markdownToHtml(data.data)
@@ -324,30 +326,30 @@ export default {
           // 统计文章字数
           this.wordNum = this.deleteHTMLTag(this.article.articleContent).length
           // 计算阅读时间
-          this.readTime = Math.round(this.wordNum / 400) + "分钟"
+          this.readTime = Math.round(this.wordNum / 400) + '分钟'
           // 添加代码复制功能
-          this.clipboard = new Clipboard(".copy-btn")
-          this.clipboard.on("success", () => {
-            this.$toast({type: "success", message: "复制成功"})
+          this.clipboard = new Clipboard('.copy-btn')
+          this.clipboard.on('success', () => {
+            this.$toast({ type: 'success', message: '复制成功' })
           })
 
-          let nodes = this.$refs.article.children;
+          let nodes = this.$refs.article.children
           if (nodes.length) {
             for (let i = 0; i < nodes.length; i++) {
-              let node = nodes[i];
-              let reg = /^H[1-4]{1}$/;
+              let node = nodes[i]
+              let reg = /^H[1-4]{1}$/
               if (reg.exec(node.tagName)) {
-                node.id = i;
+                node.id = i
               }
             }
           }
 
           // 添加图片预览功能
-          const imgList = this.$refs.article.getElementsByTagName("img")
+          const imgList = this.$refs.article.getElementsByTagName('img')
           for (let i = 0; i < imgList.length; i++) {
             this.imgList.push(imgList[i].src)
-            imgList[i].style.cssText = "cursor:zoom-in;"
-            imgList[i].addEventListener("click", function (e) {
+            imgList[i].style.cssText = 'cursor:zoom-in;'
+            imgList[i].addEventListener('click', function (e) {
               that.previewImg(e.toElement.src)
             })
           }
@@ -360,23 +362,21 @@ export default {
 
     // 最新文章
     listNewestArticles() {
-      this.axios.get("/api/articles/newest").then(({data}) => {
+      this.axios.get('/api/articles/newest').then(({ data }) => {
         this.articleLatestList = data.data
       })
     },
 
     listComment() {
       const path = this.$route.path
-      const arr = path.split("/")
+      const arr = path.split('/')
       const articleId = arr[arr.length - 1]
-      this.axios
-        .get("/api/comments", {
-          params: {current: 1, articleId: articleId}
-        })
-        .then(({data}) => {
-          this.commentList = data.data.recordList
-          this.count = data.data.count
-        })
+      this.axios.get('/api/comments', {
+        params: { current: 1, articleId: articleId },
+      }).then(({ data }) => {
+        this.commentList = data.data.recordList
+        this.count = data.data.count
+      })
     },
     like() {
       // 判断登录
@@ -386,23 +386,23 @@ export default {
       }
       // 发送请求
       let param = new URLSearchParams()
-      param.append("articleId", this.article.id)
-      this.axios.post("/api/articles/like", param).then(({data}) => {
+      param.append('articleId', this.article.id)
+      this.axios.post('/api/articles/like', param).then(({ data }) => {
         if (data.flag) {
           // 判断是否点赞
           if (this.$store.state.articleLikeSet.indexOf(this.article.id) != -1) {
-            this.$set(this.article, "likeCount", this.article.likeCount - 1)
+            this.$set(this.article, 'likeCount', this.article.likeCount - 1)
           } else {
-            this.$set(this.article, "likeCount", this.article.likeCount + 1)
+            this.$set(this.article, 'likeCount', this.article.likeCount + 1)
           }
-          this.$store.commit("articleLike", this.article.id)
+          this.$store.commit('articleLike', this.article.id)
         }
       })
     },
 
     markdownToHtml(article) {
-      const MarkdownIt = require("markdown-it")
-      const hljs = require("highlight.js")
+      const MarkdownIt = require('markdown-it')
+      const hljs = require('highlight.js')
       const md = new MarkdownIt({
         html: true,
         linkify: true,
@@ -412,41 +412,41 @@ export default {
           let d = new Date().getTime()
           if (
             window.performance &&
-            typeof window.performance.now === "function"
+            typeof window.performance.now === 'function'
           ) {
-            d += performance.now();
+            d += performance.now()
           }
-          const codeIndex = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+          const codeIndex = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
             /[xy]/g,
             function (c) {
-              let r = (d + Math.random() * 16) % 16 | 0;
-              d = Math.floor(d / 16);
-              return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-            }
+              let r = (d + Math.random() * 16) % 16 | 0
+              d = Math.floor(d / 16)
+              return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16)
+            },
           )
           // 复制功能主要使用的是 clipboard.js
-          let html = `<button class="copy-btn iconfont iconfuzhi" type="button" data-clipboard-action="copy" data-clipboard-target="#copy${codeIndex}"></button>`
+          let html = `<button class="copy-btn iconfont iconfuzhi" type="button" data-clipboard-action="copy" data-clipboard-target="#copy${ codeIndex }"></button>`
           const linesLength = str.split(/\n/).length - 1
           // 生成行号
           let linesNum = '<span aria-hidden="true" class="line-numbers-rows">'
           for (let index = 0; index < linesLength; index++) {
-            linesNum = linesNum + "<span></span>"
+            linesNum = linesNum + '<span></span>'
           }
-          linesNum += "</span>"
+          linesNum += '</span>'
           if (lang && hljs.getLanguage(lang)) {
             // highlight.js 高亮代码
             const preCode = hljs.highlight(lang, str, true).value
             html = html + preCode
             if (linesLength) {
-              html += '<b class="name">' + lang + "</b>"
+              html += '<b class="name">' + lang + '</b>'
             }
             // 将代码包裹在 textarea 中，由于防止textarea渲染出现问题，这里将 "<" 用 "<" 代替，不影响复制功能
-            return `<pre class="hljs"><code>${html}</code>${linesNum}</pre><textarea style="position: absolute;top: -9999px;left: -9999px;z-index: -9999;" id="copy${codeIndex}">${str.replace(
+            return `<pre class="hljs"><code>${ html }</code>${ linesNum }</pre><textarea style="position: absolute;top: -9999px;left: -9999px;z-index: -9999;" id="copy${ codeIndex }">${ str.replace(
               /<\/textarea>/g,
-              "</textarea>"
-            )}</textarea>`
+              '</textarea>',
+            ) }</textarea>`
           }
-        }
+        },
       })
       // 将markdown替换为html标签
       article.articleContent = md.render(article.articleContent)
@@ -455,39 +455,35 @@ export default {
     previewImg(img) {
       this.$imagePreview({
         images: this.imgList,
-        index: this.imgList.indexOf(img)
+        index: this.imgList.indexOf(img),
       })
     },
     deleteHTMLTag(content) {
-      return content
-        .replace(/<\/?[^>]*>/g, "")
-        .replace(/[|]*\n/, "")
-        .replace(/&npsp;/gi, "")
-    }
+      return content.replace(/<\/?[^>]*>/g, '').replace(/[|]*\n/, '').replace(/&npsp;/gi, '')
+    },
   },
   computed: {
     articleCover() {
       return (
-        "background: url(" +
+        'background: url(' +
         this.article.articleCover +
-        ") center center / cover no-repeat"
+        ') center center / cover no-repeat'
       )
     },
     isLike() {
       let articleLikeSet = this.$store.state.articleLikeSet
       return articleLikeSet.indexOf(this.article.id) != -1
-        ? "like-btn-active"
-        : "like-btn";
+        ? 'like-btn-active'
+        : 'like-btn'
     },
     isFull() {
       return function (id) {
-        return id ? "post full" : "post"
+        return id ? 'post full' : 'post'
       }
     },
-  }
+  },
 
-
-};
+}
 </script>
 
 <style scoped>
