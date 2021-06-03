@@ -1,7 +1,8 @@
 package com.star.core.search;
 
 import com.star.core.config.RabbitConfig;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -12,10 +13,11 @@ import javax.annotation.Resource;
  * @Author: zzStar
  * @Date: 06-03-2021 13:36
  */
-@Slf4j
 @Component
 @RabbitListener(queues = RabbitConfig.es_queue)
 public class MqHandle {
+
+    private static final Logger log = LoggerFactory.getLogger(MqHandle.class);
 
     @Resource
     private ElasticSearchUtil elasticSearchUtil;

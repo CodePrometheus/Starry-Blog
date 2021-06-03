@@ -12,9 +12,9 @@ import com.star.core.service.dto.PageDTO;
 import com.star.core.service.dto.TagDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -29,10 +29,10 @@ import java.util.List;
 @RestController
 public class TagController {
 
-    @Autowired
+    @Resource
     private TagService tagService;
 
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
     @ApiOperation(value = "查看标签列表")

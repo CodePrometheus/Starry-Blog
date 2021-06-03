@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.star.core.domain.entity.Article;
 import com.star.core.domain.mapper.ArticleMapper;
 import com.star.core.domain.mapper.ElasticsearchMapper;
-import com.star.core.search.ArticleMqMessage;
 import com.star.core.service.dto.ArticleSearchDTO;
 import com.star.core.util.BeanCopyUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +20,10 @@ import java.util.List;
  * @Author: zzStar
  * @Date: 06-02-2021 23:30
  */
-@Slf4j
 @Component
 public class ElasticSearchUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(ElasticSearchUtil.class);
 
     @Resource
     private ArticleMapper articleMapper;

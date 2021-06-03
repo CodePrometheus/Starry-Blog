@@ -13,9 +13,9 @@ import com.star.core.service.dto.CategoryDTO;
 import com.star.core.service.dto.PageDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -29,10 +29,10 @@ import java.util.List;
 @RestController
 public class CategoryController {
 
-    @Autowired
+    @Resource
     private CategoryService categoryService;
 
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
     @ApiOperation(value = "查看分类列表")

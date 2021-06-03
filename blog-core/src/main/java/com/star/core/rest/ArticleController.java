@@ -4,19 +4,19 @@ package com.star.core.rest;
 import com.star.common.constant.PathConst;
 import com.star.common.constant.Result;
 import com.star.common.constant.StatusConst;
+import com.star.common.tool.ImageUtil;
+import com.star.core.domain.vo.ArticleVO;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.DeleteVO;
 import com.star.core.service.ArticleService;
 import com.star.core.service.dto.*;
-import com.star.core.domain.vo.ArticleVO;
-import com.star.common.tool.ImageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 public class ArticleController {
 
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
     @ApiOperation(value = "查看文章归档")

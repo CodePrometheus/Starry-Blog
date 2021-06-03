@@ -6,10 +6,11 @@ import com.star.core.service.BlogInfoService;
 import com.star.core.service.dto.BlogHomeInfoDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * 博客信息模块
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BlogInfoController {
 
-    @Autowired
+    @Resource
     private BlogInfoService blogInfoService;
 
     @ApiOperation(value = "查看博客信息")

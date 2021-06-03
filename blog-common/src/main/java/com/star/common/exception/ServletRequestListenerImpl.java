@@ -1,11 +1,11 @@
 package com.star.common.exception;
 
 import com.star.common.tool.IpUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
 @Component
 public class ServletRequestListenerImpl implements ServletRequestListener {
 
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
     @Override

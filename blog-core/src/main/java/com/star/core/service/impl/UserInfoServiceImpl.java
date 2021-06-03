@@ -3,17 +3,18 @@ package com.star.core.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.PathConst;
+import com.star.common.exception.StarryException;
+import com.star.common.tool.ImageUtil;
 import com.star.core.domain.entity.UserInfo;
 import com.star.core.domain.mapper.UserInfoMapper;
 import com.star.core.domain.vo.UserInfoVO;
 import com.star.core.domain.vo.UserRoleVO;
-import com.star.common.exception.StarryException;
 import com.star.core.service.UserInfoService;
-import com.star.common.tool.ImageUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 
 /**
  * 用户信息业务
@@ -24,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
-    @Autowired
+    @Resource
     private UserInfoMapper userInfoMapper;
 
     @Override

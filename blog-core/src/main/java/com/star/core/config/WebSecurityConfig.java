@@ -2,7 +2,6 @@ package com.star.core.config;
 
 
 import com.star.core.config.handler.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.annotation.Resource;
 
 /**
  * Security配置
@@ -22,19 +23,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    @Resource
     private AuthenticationEntryPointImpl authenticationEntryPoint;
 
-    @Autowired
+    @Resource
     private AccessDeniedHandlerImpl accessDeniedHandler;
 
-    @Autowired
+    @Resource
     private AuthenticationSuccessHandlerImpl authenticationSuccessHandler;
 
-    @Autowired
+    @Resource
     private AuthenticationFailHandlerImpl authenticationFailHandler;
 
-    @Autowired
+    @Resource
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     /**

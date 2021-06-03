@@ -20,20 +20,18 @@ import com.star.core.domain.mapper.TagMapper;
 import com.star.core.domain.vo.ArticleVO;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.DeleteVO;
+import com.star.core.search.ArticleMqMessage;
 import com.star.core.service.ArticleService;
 import com.star.core.service.ArticleTagService;
 import com.star.core.service.dto.*;
-import com.star.core.search.ArticleMqMessage;
 import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.HTMLUtil;
 import com.star.core.util.UserUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -56,37 +54,36 @@ import static com.star.common.constant.RedisConst.ARTICLE_VIEWS_COUNT;
  * @Date: 12-19-2020 13:37
  */
 @Service
-@Slf4j
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     @Resource
     private AmqpTemplate amqpTemplate;
 
-    @Autowired
+    @Resource
     private ArticleMapper articleMapper;
 
-    @Autowired
+    @Resource
     private CategoryMapper categoryMapper;
 
-    @Autowired
+    @Resource
     private TagMapper tagMapper;
 
-    @Autowired
+    @Resource
     private ArticleTagMapper articleTagMapper;
 
-    @Autowired
+    @Resource
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
-    @Autowired
+    @Resource
     private HttpSession session;
 
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
-    @Autowired
+    @Resource
     private ArticleTagService articleTagService;
 
     @Override

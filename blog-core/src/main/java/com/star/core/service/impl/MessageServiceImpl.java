@@ -4,21 +4,21 @@ package com.star.core.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.star.common.exception.StarryException;
+import com.star.common.tool.IpUtil;
 import com.star.core.domain.entity.Message;
 import com.star.core.domain.mapper.MessageMapper;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.MessageVO;
-import com.star.common.exception.StarryException;
 import com.star.core.service.MessageService;
 import com.star.core.service.dto.MessageBackDTO;
 import com.star.core.service.dto.MessageDTO;
 import com.star.core.service.dto.PageDTO;
-import com.star.common.tool.IpUtil;
 import com.star.core.util.BeanCopyUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -29,10 +29,10 @@ import java.util.List;
 @Service
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> implements MessageService {
 
-    @Autowired
+    @Resource
     private MessageMapper messageMapper;
 
-    @Autowired
+    @Resource
     private HttpServletRequest request;
 
     @Transactional(rollbackFor = StarryException.class)

@@ -27,4 +27,5 @@ public class ElasticSearchConfig {
                 .build();
         return RestClients.create(clientConfiguration).rest();
     }
+
 }

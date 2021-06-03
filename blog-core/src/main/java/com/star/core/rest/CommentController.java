@@ -2,21 +2,21 @@ package com.star.core.rest;
 
 import com.star.common.constant.Result;
 import com.star.common.constant.StatusConst;
-import com.star.core.service.dto.CommentBackDTO;
-import com.star.core.service.dto.CommentDTO;
-import com.star.core.service.dto.ReplyDTO;
 import com.star.core.domain.vo.CommentVO;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.DeleteVO;
 import com.star.core.service.CommentService;
+import com.star.core.service.dto.CommentBackDTO;
+import com.star.core.service.dto.CommentDTO;
 import com.star.core.service.dto.PageDTO;
+import com.star.core.service.dto.ReplyDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -30,7 +30,7 @@ import java.util.List;
 @Api(tags = "评论模块")
 public class CommentController {
 
-    @Autowired
+    @Resource
     private CommentService commentService;
 
     @ApiOperation(value = "查询评论")

@@ -15,11 +15,11 @@ import com.star.core.service.CommentService;
 import com.star.core.service.dto.*;
 import com.star.core.util.HTMLUtil;
 import com.star.core.util.UserUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -31,13 +31,13 @@ import java.util.*;
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
-    @Autowired
+    @Resource
     private CommentMapper commentMapper;
 
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
-    @Autowired
+    @Resource
     private CommentService commentService;
 
     @Override

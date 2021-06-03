@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.core.domain.entity.UniqueView;
 import com.star.core.domain.mapper.UniqueViewMapper;
 import com.star.core.service.UniqueViewService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Calendar;
 
 /**
@@ -20,10 +20,10 @@ import java.util.Calendar;
 @Service
 public class UniqueViewServiceImpl extends ServiceImpl<UniqueViewMapper, UniqueView> implements UniqueViewService {
 
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
-    @Autowired
+    @Resource
     private UniqueViewMapper uniqueViewMapper;
 
     @Scheduled(cron = " 0 0 0 * * ?")

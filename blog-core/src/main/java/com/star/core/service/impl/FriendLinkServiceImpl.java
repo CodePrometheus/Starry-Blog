@@ -4,17 +4,17 @@ package com.star.core.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.core.service.dto.FriendLinkDTO;
 import com.star.core.domain.entity.FriendLink;
 import com.star.core.domain.mapper.LinkMapper;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.service.FriendLinkService;
 import com.star.core.service.dto.FriendLinkBackDTO;
+import com.star.core.service.dto.FriendLinkDTO;
 import com.star.core.service.dto.PageDTO;
 import com.star.core.util.BeanCopyUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class FriendLinkServiceImpl extends ServiceImpl<LinkMapper, FriendLink> implements FriendLinkService {
 
-    @Autowired
+    @Resource
     private LinkMapper linkMapper;
 
     @Override

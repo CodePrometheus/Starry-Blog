@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.LoginConst;
+import com.star.common.exception.StarryException;
+import com.star.common.tool.IpUtil;
 import com.star.core.domain.entity.UserAuth;
 import com.star.core.domain.entity.UserInfo;
 import com.star.core.domain.mapper.UserAuthMapper;
@@ -12,14 +14,11 @@ import com.star.core.domain.mapper.UserInfoMapper;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.PasswordVO;
 import com.star.core.domain.vo.UserVO;
-import com.star.common.exception.StarryException;
 import com.star.core.service.UserAuthService;
 import com.star.core.service.dto.PageDTO;
 import com.star.core.service.dto.UserBackDTO;
 import com.star.core.service.dto.UserInfoDTO;
-import com.star.common.tool.IpUtil;
 import com.star.core.util.UserUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -46,17 +46,23 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 @Service
 public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> implements UserAuthService {
-    @Autowired
+
+    @Resource
     private JavaMailSender javaMailSender;
-    @Autowired
+
+    @Resource
     private RedisTemplate redisTemplate;
-    @Autowired
+
+    @Resource
     private UserAuthMapper userAuthMapper;
-    @Autowired
+
+    @Resource
     private UserInfoMapper userInfoMapper;
-    @Autowired
+
+    @Resource
     private RestTemplate restTemplate;
-    @Autowired
+
+    @Resource
     private HttpServletRequest request;
 
     /**

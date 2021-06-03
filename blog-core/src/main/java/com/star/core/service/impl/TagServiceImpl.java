@@ -4,20 +4,20 @@ package com.star.core.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.star.common.exception.StarryException;
 import com.star.core.domain.entity.ArticleTag;
 import com.star.core.domain.entity.Tag;
 import com.star.core.domain.mapper.ArticleTagMapper;
 import com.star.core.domain.mapper.TagMapper;
 import com.star.core.domain.vo.ConditionVO;
-import com.star.common.exception.StarryException;
 import com.star.core.service.TagService;
 import com.star.core.service.dto.PageDTO;
 import com.star.core.service.dto.TagDTO;
 import com.star.core.util.BeanCopyUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -27,10 +27,10 @@ import java.util.List;
 @Service
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagService {
 
-    @Autowired
+    @Resource
     private TagMapper tagMapper;
 
-    @Autowired
+    @Resource
     private ArticleTagMapper articleTagMapper;
 
     @Override

@@ -19,7 +19,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.*;
 

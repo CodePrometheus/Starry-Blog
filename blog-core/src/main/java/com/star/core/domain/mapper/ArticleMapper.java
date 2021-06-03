@@ -2,8 +2,8 @@ package com.star.core.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.star.core.domain.entity.Article;
-import com.star.core.service.dto.*;
 import com.star.core.domain.vo.ConditionVO;
+import com.star.core.service.dto.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -67,6 +67,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     /**
      * 查看文章的推荐文章
+     *
      * @param articleId 文章id
      * @return 推荐文章
      */

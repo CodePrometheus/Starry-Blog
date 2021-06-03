@@ -3,20 +3,20 @@ package com.star.core.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.star.common.exception.StarryException;
 import com.star.core.domain.entity.UserAuth;
 import com.star.core.domain.entity.UserInfo;
 import com.star.core.domain.mapper.UserAuthMapper;
 import com.star.core.domain.mapper.UserInfoMapper;
-import com.star.common.exception.StarryException;
 import com.star.core.service.dto.UserInfoDTO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Set;
 
 /**
@@ -24,11 +24,14 @@ import java.util.Set;
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
+
+    @Resource
     private UserAuthMapper userAuthMapper;
-    @Autowired
+
+    @Resource
     private UserInfoMapper userInfoMapper;
-    @Autowired
+
+    @Resource
     private RedisTemplate redisTemplate;
 
     @Override

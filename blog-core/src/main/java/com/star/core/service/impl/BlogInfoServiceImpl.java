@@ -12,11 +12,11 @@ import com.star.core.service.dto.ArticleRankDTO;
 import com.star.core.service.dto.BlogBackInfoDTO;
 import com.star.core.service.dto.BlogHomeInfoDTO;
 import com.star.core.service.dto.CategoryDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -28,25 +28,25 @@ import java.util.*;
 @Service
 public class BlogInfoServiceImpl implements BlogInfoService {
 
-    @Autowired
+    @Resource
     private UserInfoMapper userInfoMapper;
 
-    @Autowired
+    @Resource
     private ArticleMapper articleMapper;
 
-    @Autowired
+    @Resource
     private CategoryMapper categoryMapper;
 
-    @Autowired
+    @Resource
     private TagMapper tagMapper;
 
-    @Autowired
+    @Resource
     private MessageMapper messageMapper;
 
-    @Autowired
+    @Resource
     private UniqueViewMapper uniqueViewMapper;
 
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
     @Override
