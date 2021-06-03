@@ -14,10 +14,10 @@ import org.springframework.data.elasticsearch.client.RestClients;
 @Configuration
 public class ElasticSearchConfig {
 
-    @Value("${elasticsearch.host}")
+    @Value("${spring.elasticsearch.host}")
     private String host;
 
-    @Value("${elasticsearch.port}")
+    @Value("${spring.elasticsearch.port}")
     private String port;
 
     @Bean

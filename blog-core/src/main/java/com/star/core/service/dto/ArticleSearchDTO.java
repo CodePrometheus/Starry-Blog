@@ -1,7 +1,9 @@
 package com.star.core.service.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -15,7 +17,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
  */
 @Data
 @Builder
-@Document(indexName = "article")
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(indexName = "starry-article", replicas = 0)
 public class ArticleSearchDTO {
 
     /**

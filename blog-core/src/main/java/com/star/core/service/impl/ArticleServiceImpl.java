@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.ArticleConst;
 import com.star.common.constant.DeleteConst;
 import com.star.common.exception.StarryException;
+import com.star.core.config.RabbitConfig;
 import com.star.core.domain.entity.Article;
 import com.star.core.domain.entity.ArticleTag;
 import com.star.core.domain.entity.Category;
@@ -22,6 +23,7 @@ import com.star.core.domain.vo.DeleteVO;
 import com.star.core.service.ArticleService;
 import com.star.core.service.ArticleTagService;
 import com.star.core.service.dto.*;
+import com.star.core.search.ArticleMqMessage;
 import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.HTMLUtil;
 import com.star.core.util.UserUtil;
@@ -30,6 +32,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -39,6 +42,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,6 +58,9 @@ import static com.star.common.constant.RedisConst.ARTICLE_VIEWS_COUNT;
 @Service
 @Slf4j
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
+
+    @Resource
+    private AmqpTemplate amqpTemplate;
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -272,6 +279,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             }
             articleTagService.saveBatch(articleTagList);
         }
+        // es
+        amqpTemplate.convertAndSend(RabbitConfig.es_change,
+                RabbitConfig.es_bind_key, new ArticleMqMessage(article.getId(), ArticleMqMessage.CREATE_OR_UPDATE));
     }
 
     @Transactional(rollbackFor = StarryException.class)
@@ -303,6 +313,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleTagMapper.delete(queryWrapper);
         //删除文章
         articleMapper.deleteBatchIds(articleIdList);
+        // es
+        amqpTemplate.convertAndSend(RabbitConfig.es_change,
+                RabbitConfig.es_bind_key, new ArticleMqMessage(articleIdList.get(0), ArticleMqMessage.REMOVE));
     }
 
 
