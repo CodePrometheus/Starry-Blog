@@ -1,13 +1,17 @@
 package com.star.core.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.DeleteConst;
 import com.star.common.constant.UserConst;
 import com.star.common.exception.StarryException;
+import com.star.core.config.RabbitConfig;
 import com.star.core.domain.entity.Comment;
 import com.star.core.domain.mapper.CommentMapper;
+import com.star.core.domain.mapper.UserInfoMapper;
 import com.star.core.domain.vo.CommentVO;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.DeleteVO;
@@ -15,12 +19,19 @@ import com.star.core.service.CommentService;
 import com.star.core.service.dto.*;
 import com.star.core.util.HTMLUtil;
 import com.star.core.util.UserUtil;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+
+import static com.star.common.constant.CommonConst.*;
+
 
 /**
  * 评论业务
@@ -30,6 +41,12 @@ import java.util.*;
  */
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
+
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+
+    @Resource
+    private UserInfoMapper userInfoMapper;
 
     @Resource
     private CommentMapper commentMapper;
@@ -111,7 +128,35 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //过滤html标签
         commentVO.setCommentContent(HTMLUtil.deleteCommentTag(commentVO.getCommentContent()));
         commentMapper.insert(new Comment(commentVO));
+        // 通知用户
+        notice(commentVO);
     }
+
+    /**
+     * 通知评论用户
+     *
+     * @param commentVO
+     */
+    @Async
+    public void notice(CommentVO commentVO) {
+        // 判断是回复用户还是评论作者
+        Integer userId = Objects.nonNull(commentVO.getReplyId()) ? commentVO.getReplyId() : BLOGGER_ID;
+        // 查询邮箱号
+        String email = userInfoMapper.selectById(userId).getEmail();
+        if (StringUtils.isNotBlank(email)) {
+            // 判断页面路径
+            String url = Objects.nonNull(commentVO.getArticleId()) ? URL + ARTICLE_PATH + commentVO.getArticleId() : URL + LINK_PATH;
+            // 发送消息
+            EmailDTO emailDTO = EmailDTO.builder()
+                    .email(email)
+                    .subject("评论提醒")
+                    .content("你收到了一条新的回复，请前往 " + url + "页面查看").build();
+            rabbitTemplate.convertAndSend(RabbitConfig.EMAIL_EXCHANGE, "*",
+                    new Message(JSON.toJSONBytes(emailDTO),
+                            new MessageProperties()));
+        }
+    }
+
 
     @Transactional(rollbackFor = StarryException.class)
     @Override

@@ -61,6 +61,11 @@ public class UserInfo {
      */
     private Date createTime;
 
+    /**
+     * 邮箱号
+     */
+    private String email;
+
 
     public UserInfo() {
         this.nickname = "用户" + System.currentTimeMillis();

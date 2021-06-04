@@ -25,8 +25,6 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import hls from 'videojs-contrib-hls'
 import 'view-design/dist/styles/iview.css';
-import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 
 
 Vue.prototype.config = config
@@ -41,7 +39,6 @@ Vue.use(Toast)
 Vue.use(APlayer, { productionTip: false })
 Vue.use(live2d)
 Vue.use(hls)
-Vue.use(Element)
 
 Vue.filter('date', function (value) {
   return moment(value).format('YYYY-MM-DD HH:mm')

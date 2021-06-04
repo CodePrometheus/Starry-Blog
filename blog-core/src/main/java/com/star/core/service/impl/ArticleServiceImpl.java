@@ -277,8 +277,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleTagService.saveBatch(articleTagList);
         }
         // es
-        amqpTemplate.convertAndSend(RabbitConfig.es_change,
-                RabbitConfig.es_bind_key, new ArticleMqMessage(article.getId(), ArticleMqMessage.CREATE_OR_UPDATE));
+        amqpTemplate.convertAndSend(RabbitConfig.ES_CHANGE,
+                RabbitConfig.ES_BIND_KEY, new ArticleMqMessage(article.getId(), ArticleMqMessage.CREATE_OR_UPDATE));
     }
 
     @Transactional(rollbackFor = StarryException.class)
@@ -311,8 +311,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //删除文章
         articleMapper.deleteBatchIds(articleIdList);
         // es
-        amqpTemplate.convertAndSend(RabbitConfig.es_change,
-                RabbitConfig.es_bind_key, new ArticleMqMessage(articleIdList.get(0), ArticleMqMessage.REMOVE));
+        amqpTemplate.convertAndSend(RabbitConfig.ES_CHANGE,
+                RabbitConfig.ES_BIND_KEY, new ArticleMqMessage(articleIdList.get(0), ArticleMqMessage.REMOVE));
     }
 
 

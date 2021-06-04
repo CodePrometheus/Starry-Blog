@@ -14,7 +14,6 @@
     "clipboard": "^2.0.6",
     "core-js": "^3.6.4",
     "easy-typer-js": "^2.1.0",
-    "element-ui": "^2.15.1",
     "highlight.js": "^10.0.3",
     "jsonp": "^0.2.1",
     "live2d-vue": "^0.2.5",

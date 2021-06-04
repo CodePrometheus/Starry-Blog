@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * @Date: 06-03-2021 13:36
  */
 @Component
-@RabbitListener(queues = RabbitConfig.es_queue)
+@RabbitListener(queues = RabbitConfig.ES_QUEUE)
 public class MqHandle {
 
     private static final Logger log = LoggerFactory.getLogger(MqHandle.class);

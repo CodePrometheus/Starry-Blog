@@ -20,7 +20,7 @@
     <RegisterModel/>
     <!-- 忘记密码模态框 -->
     <ForgetModel/>
-    <Note/>
+<!--    <Note/>-->
     <Live2D/>
     <ChatRoom/>
   </v-app>
@@ -35,7 +35,7 @@ import searchModel from "./components/model/SearchModel";
 import LoginModel from "./components/model/LoginModel";
 import RegisterModel from "./components/model/RegisterModel";
 import ForgetModel from "./components/model/ForgetModel";
-import Note from "./components/Notification";
+// import Note from "./components/Notification";
 import Live2D from "./components/Live2D";
 import ChatRoom from "./components/ChatRoom";
 
@@ -49,7 +49,7 @@ export default {
     LoginModel,
     RegisterModel,
     ForgetModel,
-    Note,
+    // Note,
     Live2D,
     ChatRoom
   },

@@ -25,6 +25,22 @@ public class CommonConst {
     public static final int BLOGGER_ID = 1;
 
     /**
+     * 网站域名
+     */
+    public static final String URL = "https://github.com/CodePrometheus";
+
+    /**
+     * 文章页面路径
+     */
+    public static final String ARTICLE_PATH = "/articles/";
+
+    /**
+     * 友联页面路径
+     */
+    public static final String LINK_PATH = "/links";
+
+
+    /**
      * 默认用户昵称
      */
     public static final String DEFAULT_NICKNAME = "用户" + System.currentTimeMillis();
@@ -32,6 +48,6 @@ public class CommonConst {
     /**
      * 默认用户头像
      */
-    public static final String DEFAULT_AVATAR = "https://www.static.talkxj.com/avatar/user.png";
+    public static final String DEFAULT_AVATAR = "https://gitee.com/codeprometheus/MyPicBed/raw/master/img/star.png";
 
 }
