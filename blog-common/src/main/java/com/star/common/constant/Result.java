@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @Date: 12-16-2020 22:16
  */
 @Data
+@SuppressWarnings("unchecked")
 public class Result<T> implements Serializable {
 
     private boolean flag;
