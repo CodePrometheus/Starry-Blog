@@ -1,6 +1,7 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.star.core.domain.vo.CategoryVO;
 import com.star.core.service.dto.CategoryDTO;
 import com.star.core.domain.entity.Category;
 import com.star.core.domain.vo.ConditionVO;
@@ -35,5 +36,11 @@ public interface CategoryService extends IService<Category> {
      * @param categoryIdList 分类id集合
      */
     void deleteCategory(List<Integer> categoryIdList);
+
+    /**
+     * 添加或修改分类
+     * @param categoryVO 分类
+     */
+    void saveOrUpdateCategory(CategoryVO categoryVO);
 
 }

@@ -1,14 +1,12 @@
 package com.star.core.domain.vo;
 
-
-import com.star.core.domain.entity.Article;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
-
 
 /**
  * 文章VO
@@ -17,6 +15,7 @@ import java.util.List;
  * @Date: 12-16-2020 20:16
  */
 @Data
+@Builder
 @ApiModel(description = "文章")
 public class ArticleVO {
 
@@ -69,21 +68,5 @@ public class ArticleVO {
      */
     @ApiModelProperty(name = "isDraft", value = "是否为草稿", dataType = "Integer")
     private Integer isDraft;
-
-
-    public ArticleVO(Article article, List<Integer> tagIdList) {
-        this.id = article.getId();
-        this.articleTitle = article.getArticleTitle();
-        this.articleContent = article.getArticleContent();
-        this.articleCover = article.getArticleCover();
-        this.categoryId = article.getCategoryId();
-        this.isTop = article.getIsTop();
-        this.tagIdList = tagIdList;
-        this.isDraft = article.getIsDraft();
-    }
-
-    public ArticleVO() {
-    }
-
 
 }

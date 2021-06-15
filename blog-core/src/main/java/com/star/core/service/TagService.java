@@ -4,6 +4,7 @@ package com.star.core.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.domain.entity.Tag;
 import com.star.core.domain.vo.ConditionVO;
+import com.star.core.domain.vo.TagVO;
 import com.star.core.service.dto.PageDTO;
 import com.star.core.service.dto.TagDTO;
 
@@ -35,5 +36,12 @@ public interface TagService extends IService<Tag> {
      * @param tagIdList 标签id集合
      */
     void deleteTag(List<Integer> tagIdList);
+
+    /**
+     * 保存或更新标签
+     *
+     * @param tagVO
+     */
+    void saveOrUpdateTag(TagVO tagVO);
 
 }

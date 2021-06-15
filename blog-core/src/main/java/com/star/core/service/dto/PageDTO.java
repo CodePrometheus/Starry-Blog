@@ -1,6 +1,9 @@
 package com.star.core.service.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -11,6 +14,9 @@ import java.util.List;
  * @Date: 12-19-2020 13:39
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PageDTO<T> {
 
     /**
@@ -22,13 +28,5 @@ public class PageDTO<T> {
      * 总数
      */
     private Integer count;
-
-    public PageDTO(List<T> recordList, Integer count) {
-        this.recordList = recordList;
-        this.count = count;
-    }
-
-    public PageDTO() {
-    }
 
 }

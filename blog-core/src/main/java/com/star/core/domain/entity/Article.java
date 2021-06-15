@@ -3,9 +3,10 @@ package com.star.core.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.star.core.domain.vo.ArticleVO;
-import com.star.core.util.UserUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -16,6 +17,9 @@ import java.util.Date;
  * @Date: 12-16-2020 20:10
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("tb_article")
 public class Article {
     /**
@@ -73,31 +77,5 @@ public class Article {
      * 状态码
      */
     private Integer isDelete;
-
-    public Article(ArticleVO articleVO) {
-        this.id = articleVO.getId();
-        this.userId = UserUtil.getLoginUser().getUserInfoId();
-        this.categoryId = articleVO.getCategoryId();
-        this.articleCover = articleVO.getArticleCover();
-        this.articleTitle = articleVO.getArticleTitle();
-        this.articleContent = articleVO.getArticleContent();
-        this.createTime = this.id == null ? new Date() : null;
-        this.updateTime = this.id != null ? new Date() : null;
-        this.isTop = articleVO.getIsTop();
-        this.isDraft = articleVO.getIsDraft();
-    }
-
-    public Article(Integer id) {
-        this.id = id;
-        this.isTop = 0;
-    }
-
-    public Article(Integer id, Integer isTop) {
-        this.id = id;
-        this.isTop = isTop;
-    }
-
-    public Article() {
-    }
 
 }

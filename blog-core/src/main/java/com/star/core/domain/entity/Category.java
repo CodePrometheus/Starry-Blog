@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.star.core.domain.vo.CategoryVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,6 +17,8 @@ import java.util.Date;
  * @Date: 12-18-2020 17:24
  */
 @Data
+@Builder
+@AllArgsConstructor
 @TableName("tb_category")
 public class Category {
 
@@ -33,14 +37,5 @@ public class Category {
      * 创建时间
      */
     private Date createTime;
-
-    public Category(CategoryVO categoryVO) {
-        this.id = categoryVO.getId();
-        this.categoryName = categoryVO.getCategoryName();
-        this.createTime = this.id == null ? new Date() : null;
-    }
-
-    public Category() {
-    }
 
 }

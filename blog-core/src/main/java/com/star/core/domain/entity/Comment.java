@@ -3,9 +3,10 @@ package com.star.core.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.star.core.domain.vo.CommentVO;
-import com.star.core.util.UserUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -16,6 +17,9 @@ import java.util.Date;
  * @Date: 12-18-2020 17:26
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("tb_comment")
 public class Comment {
 
@@ -59,19 +63,5 @@ public class Comment {
      * 状态码
      */
     private Integer isDelete;
-
-    public Comment(CommentVO commentVO) {
-        this.userId = UserUtil.getLoginUser().getUserInfoId();
-        this.replyId = commentVO.getReplyId();
-        this.articleId = commentVO.getArticleId();
-        this.commentContent = commentVO.getCommentContent();
-        this.parentId = commentVO.getParentId();
-        this.createTime = new Date();
-    }
-
-    public Comment(Integer commentId, Integer isDelete) {
-        this.id = commentId;
-        this.isDelete = isDelete;
-    }
 
 }

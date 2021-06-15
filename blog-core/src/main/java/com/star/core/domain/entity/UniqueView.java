@@ -3,6 +3,8 @@ package com.star.core.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,6 +14,8 @@ import java.util.Date;
  * @Date: 12-18-2020 17:41
  */
 @Data
+@Builder
+@AllArgsConstructor
 @TableName("tb_unique_view")
 public class UniqueView {
 
@@ -30,13 +34,5 @@ public class UniqueView {
      * 访问量
      */
     private Integer viewsCount;
-
-    public UniqueView(Date createTime, Integer viewsCount) {
-        this.createTime = createTime;
-        this.viewsCount = viewsCount;
-    }
-
-    public UniqueView() {
-    }
 
 }

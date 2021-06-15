@@ -1,9 +1,16 @@
 package com.star.core.service.dto;
 
-import com.star.core.domain.entity.UserInfo;
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 用户登录信息
@@ -12,7 +19,8 @@ import java.util.Set;
  * @Date: 12-16-2020 20:24
  */
 @Data
-public class UserInfoDTO {
+@Builder
+public class UserInfoDTO implements UserDetails {
 
     /**
      * 用户账号id
@@ -25,9 +33,29 @@ public class UserInfoDTO {
     private Integer userInfoId;
 
     /**
+     * 邮箱号
+     */
+    private String email;
+
+    /**
+     * 登录方式
+     */
+    private Integer loginType;
+
+    /**
+     * 用户名
+     */
+    private String username;
+
+    /**
+     * 密码
+     */
+    private String password;
+
+    /**
      * 用户角色
      */
-    private String userRole;
+    private List<String> roleList;
 
     /**
      * 用户昵称
@@ -50,34 +78,76 @@ public class UserInfoDTO {
     private String webSite;
 
     /**
-     * 用户禁言状态
+     * 点赞评论集合
      */
-    private Integer isSilence;
+    private Set<Integer> commentLikeSet;
 
     /**
      * 点赞文章集合
      */
-    private Set articleLikeSet;
+    private Set<Integer> articleLikeSet;
 
     /**
-     * 点赞评论集合
+     * 用户登录ip
      */
-    private Set commentLikeSet;
+    private String ipAddr;
 
-    public UserInfoDTO() {
+    /**
+     * ip来源
+     */
+    private String ipSource;
+
+    /**
+     * 浏览器
+     */
+    private String browser;
+
+    /**
+     * 操作系统
+     */
+    private String os;
+
+    /**
+     * 最近登录时间
+     */
+    private Date lastLoginTime;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roleList.stream()
+                // 构建SimpleGrantedAuthority对象
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
-    public UserInfoDTO(Integer id, UserInfo userInfo, Set articleLikeSet, Set commentLikeSet) {
-        this.id = id;
-        this.userInfoId = userInfo.getId();
-        this.userRole = userInfo.getUserRole();
-        this.nickname = userInfo.getNickname();
-        this.avatar = userInfo.getAvatar();
-        this.isSilence = userInfo.getIsSilence();
-        this.intro = userInfo.getIntro();
-        this.webSite = userInfo.getWebSite();
-        this.articleLikeSet = articleLikeSet;
-        this.commentLikeSet = commentLikeSet;
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

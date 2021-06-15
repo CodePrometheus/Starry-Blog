@@ -38,33 +38,33 @@ public class TagController {
     @ApiOperation(value = "查看标签列表")
     @GetMapping("/tags")
     private Result<PageDTO<TagDTO>> listTags(Long current) {
-        return new Result(true, StatusConst.OK, "查询成功", tagService.listTags());
+        return new Result<>(true, StatusConst.OK, "查询成功", tagService.listTags());
     }
 
     @ApiOperation(value = "查看分类下对应的文章")
     @GetMapping("/tags/{tagId}")
     private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("tagId") Integer tagId, Long current) {
-        return new Result(true, StatusConst.OK, "查询成功", articleService.listArticlesByCondition(new ConditionVO(tagId, current)));
+        return new Result<>(true, StatusConst.OK, "查询成功", articleService.listArticlesByCondition(new ConditionVO(tagId, current)));
     }
 
     @ApiOperation(value = "查看后台标签列表")
     @GetMapping("/admin/tags")
     private Result<PageDTO<Tag>> listTagBackDTO(ConditionVO condition) {
-        return new Result(true, StatusConst.OK, "查询成功", tagService.listTagBackDTO(condition));
+        return new Result<>(true, StatusConst.OK, "查询成功", tagService.listTagBackDTO(condition));
     }
 
     @ApiOperation(value = "添加或修改标签")
     @PostMapping("/admin/tags")
     private Result saveOrUpdateTag(@Valid @RequestBody TagVO tagVO) {
-        tagService.saveOrUpdate(new Tag(tagVO));
-        return new Result(true, StatusConst.OK, "操作成功");
+        tagService.saveOrUpdateTag(tagVO);
+        return new Result<>(true, StatusConst.OK, "操作成功");
     }
 
     @ApiOperation(value = "删除标签")
     @DeleteMapping("/admin/tags")
     private Result deleteTag(@RequestBody List<Integer> tagIdList) {
         tagService.deleteTag(tagIdList);
-        return new Result(true, StatusConst.OK, "删除成功");
+        return new Result<>(true, StatusConst.OK, "删除成功");
     }
 
 

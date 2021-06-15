@@ -3,8 +3,10 @@ package com.star.core.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.star.core.domain.vo.MessageVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -15,6 +17,9 @@ import java.util.Date;
  * @Date: 12-18-2020 17:38
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("tb_message")
 public class Message {
 
@@ -58,19 +63,5 @@ public class Message {
      * 留言时间
      */
     private Date createTime;
-
-
-    public Message(MessageVO messageVO, String ipAddress, String ipSource) {
-        this.ipAddress = ipAddress;
-        this.ipSource = ipSource;
-        this.nickname = messageVO.getNickname();
-        this.avatar = messageVO.getAvatar();
-        this.messageContent = messageVO.getMessageContent();
-        this.time = messageVO.getTime();
-        this.createTime = new Date();
-    }
-
-    public Message() {
-    }
 
 }

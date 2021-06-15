@@ -1,4 +1,4 @@
-package com.star.core.config;
+package com.star.common.constant;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

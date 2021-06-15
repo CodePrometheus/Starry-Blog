@@ -8,7 +8,7 @@
         <result column="create_time" property="createTime" />
         <result column="views_count" property="viewsCount" />
     </resultMap>
-    <select id="listUniqueViews" resultType="java.lang.Integer">
+    <select id="listUniqueViews" resultType="com.star.core.service.dto.UniqueViewDTO">
      SELECT
 	 views_count
      FROM

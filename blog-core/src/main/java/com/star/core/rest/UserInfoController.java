@@ -50,8 +50,8 @@ public class UserInfoController {
 
     @ApiOperation(value = "修改用户禁言状态")
     @PutMapping("/admin/users/comment/{userInfoId}")
-    private Result<String> updateUserSilence(@PathVariable("userInfoId") Integer userInfoId, Integer isSilence) {
-        userInfoService.updateUserSilence(userInfoId, isSilence);
+    private Result<String> updateUserSilence(@PathVariable("userInfoId") Integer userInfoId, Integer isDisable) {
+        userInfoService.updateUserDisable(userInfoId, isDisable);
         return new Result(true, StatusConst.OK, "修改成功！");
     }
 

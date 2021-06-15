@@ -2,10 +2,11 @@ package com.star.core.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.service.dto.FriendLinkBackDTO;
-import com.star.core.service.dto.FriendLinkDTO;
 import com.star.core.domain.entity.FriendLink;
 import com.star.core.domain.vo.ConditionVO;
+import com.star.core.domain.vo.FriendLinkVO;
+import com.star.core.service.dto.FriendLinkBackDTO;
+import com.star.core.service.dto.FriendLinkDTO;
 import com.star.core.service.dto.PageDTO;
 
 import java.util.List;
@@ -29,5 +30,12 @@ public interface FriendLinkService extends IService<FriendLink> {
      * @return 友链列表
      */
     PageDTO<FriendLinkBackDTO> listFriendLinkDTO(ConditionVO condition);
+
+    /**
+     * 保存或修改友联
+     *
+     * @param friendLinkVO
+     */
+    void saveOrUpdateFriendLink(FriendLinkVO friendLinkVO);
 
 }

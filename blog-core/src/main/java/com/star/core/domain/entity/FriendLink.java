@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.star.core.domain.vo.FriendLinkVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -15,6 +18,9 @@ import java.util.Date;
  * @Date: 12-18-2020 17:32
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("tb_friend_link")
 public class FriendLink {
 
@@ -48,22 +54,5 @@ public class FriendLink {
      * 创建时间
      */
     private Date createTime;
-
-
-    public FriendLink(FriendLinkVO friendLinkVO) {
-        this.id = friendLinkVO.getId();
-        this.linkName = friendLinkVO.getLinkName();
-        this.linkAvatar = friendLinkVO.getLinkAvatar();
-        this.linkAddress = friendLinkVO.getLinkAddress();
-        this.linkIntro = friendLinkVO.getLinkIntro();
-        this.createTime = this.id == null ? new Date() : null;
-    }
-
-    public FriendLink(Integer friendLinkId, Integer isDelete) {
-        this.id = friendLinkId;
-    }
-
-    public FriendLink() {
-    }
 
 }

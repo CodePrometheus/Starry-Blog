@@ -1,6 +1,6 @@
 package com.star.core.config;
 
-
+import com.star.common.constant.SwaggerProperties;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.boot.SpringBootVersion;

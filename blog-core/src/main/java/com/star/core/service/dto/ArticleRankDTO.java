@@ -1,5 +1,7 @@
 package com.star.core.service.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -9,6 +11,8 @@ import lombok.Data;
  * @Date: 12-19-2020 21:53
  */
 @Data
+@Builder
+@AllArgsConstructor
 public class ArticleRankDTO {
 
     /**
@@ -20,11 +24,5 @@ public class ArticleRankDTO {
      * 浏览量
      */
     private Integer viewsCount;
-
-
-    public ArticleRankDTO(String articleTitle, Integer viewsCount) {
-        this.articleTitle = articleTitle;
-        this.viewsCount = viewsCount;
-    }
 
 }

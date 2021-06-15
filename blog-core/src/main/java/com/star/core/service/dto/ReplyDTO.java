@@ -1,6 +1,9 @@
 package com.star.core.service.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -11,6 +14,9 @@ import java.util.Date;
  * @Date: 12-20-2020 15:08
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReplyDTO {
 
     /**

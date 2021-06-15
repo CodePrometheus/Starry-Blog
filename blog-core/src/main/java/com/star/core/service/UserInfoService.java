@@ -2,6 +2,7 @@ package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.domain.entity.UserInfo;
+import com.star.core.domain.vo.EmailVO;
 import com.star.core.domain.vo.UserInfoVO;
 import com.star.core.domain.vo.UserRoleVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,11 +35,18 @@ public interface UserInfoService extends IService<UserInfo> {
     void updateUserRole(UserRoleVO userRoleVO);
 
     /**
-     * 修改用户禁言状态
+     * 修改用户禁用状态
      *
      * @param userInfoId 用户信息id
-     * @param isSilence  禁言状态
+     * @param isDisable  禁用状态
      */
-    void updateUserSilence(Integer userInfoId, Integer isSilence);
+    void updateUserDisable(Integer userInfoId, Integer isDisable);
+
+    /**
+     * 绑定用户邮箱
+     *
+     * @param emailVO
+     */
+    void saveUserEmail(EmailVO emailVO);
 
 }

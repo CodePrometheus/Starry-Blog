@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class CategoryBackDTO {
+
     /**
      * id
      */
@@ -19,4 +20,5 @@ public class CategoryBackDTO {
      * 分类名
      */
     private String categoryName;
+
 }

@@ -1,12 +1,8 @@
 package com.star.core.service.impl;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.common.constant.ArticleConst;
-import com.star.common.constant.DeleteConst;
 import com.star.common.exception.StarryException;
 import com.star.core.config.RabbitConfig;
 import com.star.core.domain.entity.Article;
@@ -25,7 +21,6 @@ import com.star.core.service.ArticleService;
 import com.star.core.service.ArticleTagService;
 import com.star.core.service.dto.*;
 import com.star.core.util.BeanCopyUtil;
-import com.star.core.util.HTMLUtil;
 import com.star.core.util.UserUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -46,14 +41,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.FALSE;
-import static com.star.common.constant.RedisConst.ARTICLE_LIKE_COUNT;
-import static com.star.common.constant.RedisConst.ARTICLE_VIEWS_COUNT;
+import static com.star.common.constant.RedisConst.*;
 
 /**
  * @Author: zzStar
  * @Date: 12-19-2020 13:37
  */
 @Service
+@SuppressWarnings("unchecked")
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     @Resource
@@ -94,78 +89,79 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .eq(Article::getIsDelete, FALSE)
                 .eq(Article::getIsDraft, FALSE)
                 .orderByDesc(Article::getId)
-                .last("limit 4"));
+                .last("limit 5"));
         return BeanCopyUtil.copyList(articleList, ArticleRecommendDTO.class);
     }
 
     @Override
     public PageDTO<ArchiveDTO> listArchives(Long current) {
         Page<Article> page = new Page<>(current, 10);
-        QueryWrapper<Article> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "article_title", "create_time").orderByDesc("create_time").eq("is_delete", DeleteConst.NORMAL).eq("is_draft", ArticleConst.PUBLISH);
-        //获取分页数据
-        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
-        //拷贝dto集合
+        Page<Article> articlePage = articleMapper.selectPage(page, new LambdaQueryWrapper<Article>()
+                .select(Article::getId, Article::getArticleTitle, Article::getCreateTime)
+                .orderByDesc(Article::getCreateTime)
+                .eq(Article::getIsDraft, FALSE)
+                .eq(Article::getIsDelete, FALSE));
+
+        // 拷贝dto集合
         List<ArchiveDTO> archiveDTOList = BeanCopyUtil.copyList(articlePage.getRecords(), ArchiveDTO.class);
         return new PageDTO<>(archiveDTOList, (int) articlePage.getTotal());
     }
 
     @Override
     public PageDTO<ArticleBackDTO> listArticleBackDTO(ConditionVO condition) {
-        //转换页码
+        // 转换页码
         condition.setCurrent((condition.getCurrent() - 1) * condition.getSize());
-        //查询文章总量
+        // 查询文章总量
         Integer count = articleMapper.countArticlesBack(condition);
         if (count == 0) {
-            return new PageDTO<ArticleBackDTO>();
+            return new PageDTO<>();
         }
-        //查询后台文章
+        // 查询后台文章
         List<ArticleBackDTO> articleBackDTOList = articleMapper.listArticlesBack(condition);
-        //查询文章点赞量和浏览量
-        Map<String, Integer> viewsCountMap = redisTemplate.boundHashOps("article_views_count").entries();
-        Map<String, Integer> likeCountMap = redisTemplate.boundHashOps("article_like_count").entries();
-        //封装点赞量和浏览量
-        for (ArticleBackDTO articleBackDTO : articleBackDTOList) {
-            articleBackDTO.setViewsCount(viewsCountMap.get(articleBackDTO.getId().toString()));
-            articleBackDTO.setLikeCount(likeCountMap.get(articleBackDTO.getId().toString()));
-        }
+        // 查询文章点赞量和浏览量
+        Map<String, Integer> likeCountMap = redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).entries();
+        Map<String, Integer> viewsCountMap = redisTemplate.boundHashOps(ARTICLE_VIEWS_COUNT).entries();
+        // 封装点赞量和浏览量
+        articleBackDTOList.forEach(articleBackDTO -> {
+            articleBackDTO.setViewsCount(Objects.requireNonNull(viewsCountMap).get(articleBackDTO.getId().toString()));
+            articleBackDTO.setLikeCount(Objects.requireNonNull(likeCountMap).get(articleBackDTO.getId().toString()));
+        });
         return new PageDTO<>(articleBackDTOList, count);
     }
 
     @Override
     public List<ArticleHomeDTO> listArticles(Long current) {
-        //转换页码查询
-        List<ArticleHomeDTO> articleDTOList = articleMapper.listArticles((current - 1) * 10);
-        //文章内容过滤markdown标签展示
-        for (ArticleHomeDTO articleDTO : articleDTOList) {
-            articleDTO.setArticleContent(HTMLUtil.deleteArticleTag(articleDTO.getArticleContent()));
-        }
-        return articleDTOList;
+        List<ArticleHomeDTO> articleHomeLists = articleMapper.listArticles((current - 1) * 10);
+        return articleHomeLists;
     }
 
     @Override
     public ArticlePreviewListDTO listArticlesByCondition(ConditionVO condition) {
-        //转换页码
+        // 转换页码
         condition.setCurrent((condition.getCurrent() - 1) * 9);
-        //搜索条件对应数据
+        // 搜索条件对应数据
         List<ArticlePreviewDTO> articlePreviewDTOList = articleMapper.listArticlesByCondition(condition);
-        //搜索条件对应名(标签或分类名)
-        String name = null;
-        if (condition.getCategoryId() != null) {
-            QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("category_name").eq("id", condition.getCategoryId());
-            name = categoryMapper.selectOne(queryWrapper).getCategoryName();
+        // 搜索条件对应名(标签或分类名)
+        String name;
+        if (Objects.nonNull(condition.getCategoryId())) {
+            name = categoryMapper.selectOne(new LambdaQueryWrapper<Category>()
+                    .select(Category::getCategoryName)
+                    .eq(Category::getId, condition.getCategoryId()))
+                    .getCategoryName();
         } else {
-            QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-            queryWrapper.select("tag_name").eq("id", condition.getTagId());
-            name = tagMapper.selectOne(queryWrapper).getTagName();
+            name = tagMapper.selectOne(new LambdaQueryWrapper<Tag>()
+                    .select(Tag::getTagName)
+                    .eq(Tag::getId, condition.getTagId()))
+                    .getTagName();
         }
-        return new ArticlePreviewListDTO(articlePreviewDTOList, name);
+        return ArticlePreviewListDTO.builder()
+                .articlePreviewDTOList(articlePreviewDTOList)
+                .name(name).build();
     }
 
     @Override
     public ArticleDTO getArticleById(Integer articleId) {
-        //  更新文章浏览量
+        // 更新文章浏览量
         updateArticleViewsCount(articleId);
         // 查询id对应的文章
         ArticleDTO article = articleMapper.getArticleById(articleId);
@@ -193,9 +189,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 查询相关推荐文章
         article.setArticleRecommendList(articleMapper.listArticleRecommends(articleId));
 
-        //封装点赞量和浏览量封装
+        // 封装点赞量和浏览量封装
         article.setViewsCount((Integer) redisTemplate.boundHashOps(ARTICLE_VIEWS_COUNT).get(articleId.toString()));
         article.setLikeCount((Integer) redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).get(articleId.toString()));
+
         return article;
     }
 
@@ -221,95 +218,112 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleOptionDTO listArticleOptionDTO() {
-        //查询文章分类选项
-        QueryWrapper<Category> categoryQueryWrapper = new QueryWrapper<>();
-        categoryQueryWrapper.select("id", "category_name");
-        List<CategoryBackDTO> categoryDTOList = BeanCopyUtil.copyList(categoryMapper.selectList(categoryQueryWrapper), CategoryBackDTO.class);
-        //查询文章标签选项
-        QueryWrapper<Tag> tagQueryWrapper = new QueryWrapper<>();
-        tagQueryWrapper.select("id", "tag_name");
-        List<TagDTO> tagDTOList = BeanCopyUtil.copyList(tagMapper.selectList(tagQueryWrapper), TagDTO.class);
-        return new ArticleOptionDTO(categoryDTOList, tagDTOList);
+        // 查询文章分类选项
+        List<Category> categoryList = categoryMapper.selectList(new LambdaQueryWrapper<Category>()
+                .select(Category::getId, Category::getCategoryName));
+        List<CategoryBackDTO> categoryBackDTOList = BeanCopyUtil.copyList(categoryList, CategoryBackDTO.class);
+
+        // 查询文章标签选项
+        List<Tag> tagList = tagMapper.selectList(new LambdaQueryWrapper<Tag>()
+                .select(Tag::getId, Tag::getTagName));
+        List<TagDTO> tagDTOList = BeanCopyUtil.copyList(tagList, TagDTO.class);
+        return ArticleOptionDTO.builder()
+                .categoryDTOList(categoryBackDTOList)
+                .tagDTOList(tagDTOList).build();
     }
 
-    @Transactional(rollbackFor = StarryException.class)
     @Override
+    @Transactional(rollbackFor = StarryException.class)
     public void saveArticleLike(Integer articleId) {
-        //查询当前用户点赞过的文章id集合
-        Set<Integer> articleLikeSet = (Set<Integer>) redisTemplate.boundHashOps("article_user_like").get(UserUtil.getLoginUser().getUserInfoId().toString());
-        //第一次点赞则创建
-        if (articleLikeSet == null) {
-            articleLikeSet = new HashSet<Integer>();
+        // 查询当前用户点赞过的文章id集合
+        Set<Integer> articleLikeSet = (Set<Integer>) redisTemplate.boundHashOps(ARTICLE_USER_LIKE).get(UserUtil.getLoginUser().getUserInfoId().toString());
+        // 第一次点赞则创建
+        // == null 只能用来判断是否为null CollectionUtils.isEmpty() 包含null,size=0等多种情况
+        if (CollectionUtils.isEmpty(articleLikeSet)) {
+            articleLikeSet = new HashSet<>();
         }
-        //判断是否点赞
+        // 点过赞
         if (articleLikeSet.contains(articleId)) {
-            //点过赞则删除文章id
+            // 点过赞则删除文章id
             articleLikeSet.remove(articleId);
-            //文章点赞量-1
-            redisTemplate.boundHashOps("article_like_count").increment(articleId.toString(), -1);
+            // 文章点赞量-1
+            redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).increment(articleId.toString(), -1);
         } else {
-            //未点赞则增加文章id
+            // 未点赞则增加文章id
             articleLikeSet.add(articleId);
-            //文章点赞量+1
-            redisTemplate.boundHashOps("article_like_count").increment(articleId.toString(), 1);
+            // 文章点赞量+1
+            redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).increment(articleId.toString(), 1);
         }
-        //保存点赞记录
-        redisTemplate.boundHashOps("article_user_like").put(UserUtil.getLoginUser().getUserInfoId().toString(), articleLikeSet);
+        // 保存点赞记录
+        redisTemplate.boundHashOps(ARTICLE_USER_LIKE).put(UserUtil.getLoginUser().getUserInfoId().toString(), articleLikeSet);
     }
 
-    @Transactional(rollbackFor = StarryException.class)
     @Override
+    @Transactional(rollbackFor = StarryException.class)
     public void saveOrUpdateArticle(ArticleVO articleVO) {
-        Article article = new Article(articleVO);
-        //编辑文章则删除文章所有标签
-        if (articleVO.getId() != null && articleVO.getIsDraft() == ArticleConst.PUBLISH) {
-            QueryWrapper<ArticleTag> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("article_id", articleVO.getId());
-            articleTagMapper.delete(queryWrapper);
-        }
+        // save Or update
+        Article article = Article.builder()
+                .id(articleVO.getId())
+                .userId(UserUtil.getLoginUser().getUserInfoId())
+                .categoryId(articleVO.getCategoryId())
+                .articleCover(articleVO.getArticleCover())
+                .articleTitle(articleVO.getArticleTitle())
+                .articleContent(articleVO.getArticleContent())
+                .createTime(Objects.isNull(articleVO.getId()) ? new Date() : null)
+                .updateTime(Objects.nonNull(articleVO.getId()) ? new Date() : null)
+                .isTop(articleVO.getIsTop())
+                .isDraft(articleVO.getIsDraft()).build();
         articleService.saveOrUpdate(article);
-        //添加文章标签
+
+        //  编辑文章则删除文章对应的所有标签
+        if (Objects.nonNull(articleVO.getId()) && articleVO.getIsDraft().equals(FALSE)) {
+            articleTagMapper.delete(new LambdaQueryWrapper<ArticleTag>()
+                    .eq(ArticleTag::getArticleId, articleVO.getId()));
+        }
+
+        // 添加文章标签
         if (!articleVO.getTagIdList().isEmpty()) {
-            List<ArticleTag> articleTagList = new ArrayList<>();
-            for (Integer tagId : articleVO.getTagIdList()) {
-                articleTagList.add(new ArticleTag(article.getId(), tagId));
-            }
+            List<ArticleTag> articleTagList = articleVO.getTagIdList().stream().map(tagId -> ArticleTag.builder()
+                    .articleId(article.getId())
+                    .tagId(tagId).build())
+                    .collect(Collectors.toList());
             articleTagService.saveBatch(articleTagList);
         }
+
         // es
         amqpTemplate.convertAndSend(RabbitConfig.ES_CHANGE,
                 RabbitConfig.ES_BIND_KEY, new ArticleMqMessage(article.getId(), ArticleMqMessage.CREATE_OR_UPDATE));
     }
 
-    @Transactional(rollbackFor = StarryException.class)
     @Override
+    @Transactional(rollbackFor = StarryException.class)
     public void updateArticleTop(Integer articleId, Integer isTop) {
-        //修改文章置顶状态
-        articleMapper.updateById(new Article(articleId, isTop));
+        // 修改文章置顶状态
+        Article article = Article.builder()
+                .id(articleId)
+                .isTop(isTop).build();
+        articleMapper.updateById(article);
     }
 
-    @Transactional(rollbackFor = StarryException.class)
     @Override
+    @Transactional(rollbackFor = StarryException.class)
     public void updateArticleDelete(DeleteVO deleteVO) {
-        //修改文章逻辑删除状态
-        List<Article> articleList = new ArrayList<>();
-        for (Integer articleId : deleteVO.getIdList()) {
-            Article article = new Article(articleId);
-            article.setIsDelete(deleteVO.getIsDelete());
-            articleList.add(article);
-        }
+        // 修改文章逻辑删除状态
+        List<Article> articleList = deleteVO.getIdList().stream().map(id -> Article.builder()
+                .id(id)
+                .isTop(FALSE)
+                .isDelete(deleteVO.getIsDelete()).build()).collect(Collectors.toList());
         articleService.updateBatchById(articleList);
     }
 
-    @Transactional(rollbackFor = StarryException.class)
     @Override
+    @Transactional(rollbackFor = StarryException.class)
     public void deleteArticles(List<Integer> articleIdList) {
-        //删除文章标签关联
-        QueryWrapper<ArticleTag> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("article_id", articleIdList);
-        articleTagMapper.delete(queryWrapper);
-        //删除文章
+        // 删除文章标签关联
+        articleTagMapper.delete(new LambdaQueryWrapper<ArticleTag>()
+                .in(ArticleTag::getArticleId, articleIdList));
         articleMapper.deleteBatchIds(articleIdList);
+
         // es
         amqpTemplate.convertAndSend(RabbitConfig.ES_CHANGE,
                 RabbitConfig.ES_BIND_KEY, new ArticleMqMessage(articleIdList.get(0), ArticleMqMessage.REMOVE));
@@ -323,20 +337,27 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleVO getArticleBackById(Integer articleId) {
-        //查询文章信息
-        QueryWrapper<Article> articleQueryWrapper = new QueryWrapper<>();
-        articleQueryWrapper.select("id", "article_title", "article_content", "article_cover", "category_id", "is_top", "is_draft").eq("id", articleId);
-        Article article = articleMapper.selectOne(articleQueryWrapper);
-        //查询文章标签
-        QueryWrapper<ArticleTag> articleTagQueryWrapper = new QueryWrapper<>();
-        articleTagQueryWrapper.select("tag_id").eq("article_id", article.getId());
-        List<ArticleTag> articleTagList = articleTagMapper.selectList(articleTagQueryWrapper);
-        //提取标签id集合
-        List<Integer> tagIdList = new ArrayList<>();
-        for (ArticleTag articleTag : articleTagList) {
-            tagIdList.add(articleTag.getTagId());
-        }
-        return new ArticleVO(article, tagIdList);
+        // 查询文章信息
+        Article article = articleMapper.selectOne(new LambdaQueryWrapper<Article>()
+                .select(Article::getId, Article::getArticleTitle, Article::getArticleContent
+                        , Article::getArticleCover, Article::getCategoryId, Article::getIsTop, Article::getIsDraft)
+                .eq(Article::getId, articleId));
+
+        // 查询文章标签
+        List<Integer> articleTagList = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>()
+                .select(ArticleTag::getTagId)
+                .eq(ArticleTag::getArticleId, article.getId()))
+                .stream()
+                .map(ArticleTag::getTagId).collect(Collectors.toList());
+        return ArticleVO.builder()
+                .id(article.getId())
+                .articleTitle(article.getArticleTitle())
+                .articleContent(article.getArticleContent())
+                .articleCover(article.getArticleCover())
+                .categoryId(article.getCategoryId())
+                .isTop(article.getIsTop())
+                .isDraft(article.getIsDraft())
+                .tagIdList(articleTagList).build();
     }
 
     /**
@@ -346,16 +367,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @return es条件构造器
      */
     private NativeSearchQueryBuilder buildQuery(ConditionVO condition) {
-        //条件构造器
+        // 条件构造器
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        //根据关键词搜索文章标题或内容
-        if (condition.getKeywords() != null) {
+        // 根据关键词搜索文章标题或内容
+        if (Objects.nonNull(condition.getKeywords())) {
             boolQueryBuilder.must(QueryBuilders.boolQuery().should(QueryBuilders.matchQuery("articleTitle", condition.getKeywords()))
                     .should(QueryBuilders.matchQuery("articleContent", condition.getKeywords())))
-                    .must(QueryBuilders.termQuery("isDelete", DeleteConst.NORMAL));
+                    .must(QueryBuilders.termQuery("isDelete", FALSE));
         }
-        //查询
+        // 查询
         nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
         return nativeSearchQueryBuilder;
     }

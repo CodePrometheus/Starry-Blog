@@ -2,6 +2,8 @@ package com.star.core.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.star.core.domain.entity.UniqueView;
+import com.star.core.service.dto.UniqueViewDTO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +20,10 @@ public interface UniqueViewMapper extends BaseMapper<UniqueView> {
     /**
      * 获取一周用户量
      *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
      * @return 用户量集合
      */
-    List<Integer> listUniqueViews();
+    List<UniqueViewDTO> listUniqueViews(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
 }

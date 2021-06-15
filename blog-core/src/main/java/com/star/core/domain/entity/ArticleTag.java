@@ -3,6 +3,7 @@ package com.star.core.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -12,6 +13,7 @@ import lombok.Data;
  * @Date: 12-18-2020 17:22
  */
 @Data
+@Builder
 @TableName("tb_article_tag")
 public class ArticleTag {
 
@@ -30,13 +32,5 @@ public class ArticleTag {
      * 标签id
      */
     private Integer tagId;
-
-    public ArticleTag(Integer articleId, Integer tagId) {
-        this.articleId = articleId;
-        this.tagId = tagId;
-    }
-
-    public ArticleTag() {
-    }
 
 }

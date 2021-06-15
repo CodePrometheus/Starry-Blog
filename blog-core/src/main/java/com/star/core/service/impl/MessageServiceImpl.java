@@ -1,7 +1,8 @@
 package com.star.core.service.impl;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,32 +37,41 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     @Resource
     private HttpServletRequest request;
 
-    @Transactional(rollbackFor = StarryException.class)
     @Override
+    @Transactional(rollbackFor = StarryException.class)
     public void saveMessage(MessageVO messageVO) {
         String ipAddr = IpUtil.getIpAddr(request);
         String ipSource = IpUtil.getIpSource(ipAddr);
-        messageMapper.insert(new Message(messageVO, ipAddr, ipSource));
+        Message message = Message.builder()
+                .ipAddress(ipAddr)
+                .ipAddress(ipSource)
+                .nickname(messageVO.getNickname())
+                .avatar(messageVO.getAvatar())
+                .messageContent(messageVO.getMessageContent())
+                .time(messageVO.getTime())
+                .createTime(new Date()).build();
+        messageMapper.insert(message);
     }
 
     @Override
     public List<MessageDTO> listMessages() {
-        QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "nickname", "avatar", "message_content", "time");
-        return BeanCopyUtil.copyList(messageMapper.selectList(queryWrapper), MessageDTO.class);
+        List<Message> messageList = messageMapper.selectList(new LambdaQueryWrapper<Message>()
+                .select(Message::getId, Message::getNickname, Message::getAvatar, Message::getMessageContent, Message::getTime));
+        return BeanCopyUtil.copyList(messageList, MessageDTO.class);
     }
 
     @Override
     public PageDTO listMessageBackDTO(ConditionVO condition) {
         Page<Message> page = new Page<>(condition.getCurrent(), condition.getSize());
-        QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "nickname", "avatar", "ip_address", "ip_source", "message_content", "create_time")
-                .like(condition.getKeywords() != null, "nickname", condition.getKeywords())
-                .orderByDesc("create_time");
-        Page<Message> messagePage = messageMapper.selectPage(page, queryWrapper);
+        LambdaQueryWrapper<Message> messagePageQuery = new LambdaQueryWrapper<Message>()
+                .select(Message::getId, Message::getNickname, Message::getMessageContent, Message::getAvatar,
+                        Message::getCreateTime, Message::getIpSource, Message::getIpAddress)
+                .like(StringUtils.isNotBlank(condition.getKeywords()), Message::getNickname, condition.getKeywords())
+                .orderByDesc(Message::getCreateTime);
+        Page<Message> messagePage = messageMapper.selectPage(page, messagePageQuery);
         //转换DTO
         List<MessageBackDTO> messageBackDTOList = BeanCopyUtil.copyList(messagePage.getRecords(), MessageBackDTO.class);
-        return new PageDTO(messageBackDTOList, (int) messagePage.getTotal());
+        return new PageDTO<>(messageBackDTOList, (int) messagePage.getTotal());
     }
 
 }

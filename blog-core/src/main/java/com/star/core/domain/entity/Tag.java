@@ -3,7 +3,8 @@ package com.star.core.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.star.core.domain.vo.TagVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,6 +16,8 @@ import java.util.Date;
  * @Date: 12-18-2020 17:40
  */
 @Data
+@Builder
+@AllArgsConstructor
 @TableName("tb_tag")
 public class Tag {
 
@@ -33,14 +36,5 @@ public class Tag {
      * 创建时间
      */
     private Date createTime;
-
-    public Tag(TagVO tagVO) {
-        this.id = tagVO.getId();
-        this.tagName = tagVO.getTagName();
-        this.createTime = this.id == null ? new Date() : null;
-    }
-
-    public Tag() {
-    }
 
 }

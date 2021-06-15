@@ -16,8 +16,7 @@ public class CommonConst {
     /**
      * 是
      */
-    public static final int TURE = 1;
-
+    public static final int TRUE = 1;
 
     /**
      * 博主id
@@ -38,7 +37,6 @@ public class CommonConst {
      * 友联页面路径
      */
     public static final String LINK_PATH = "/links";
-
 
     /**
      * 默认用户昵称

@@ -2,10 +2,12 @@ package com.star.core.domain.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 用户权限vo
@@ -14,6 +16,7 @@ import javax.validation.constraints.NotNull;
  * @Date: 12-16-2020 22:27
  */
 @Data
+@Builder
 @ApiModel(description = "用户权限")
 public class UserRoleVO {
     /**
@@ -31,10 +34,10 @@ public class UserRoleVO {
     private String nickname;
 
     /**
-     * 用户权限
+     * 用户角色
      */
-    @NotBlank(message = "用户权限不能为空")
-    @ApiModelProperty(name = "userRole", value = "权限", dataType = "String")
-    private String userRole;
+    @NotNull(message = "用户角色不能为空")
+    @ApiModelProperty(name = "roleList", value = "角色id集合", dataType = "List<Integer>")
+    private List<Integer> roleIdList;
 
 }

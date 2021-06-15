@@ -31,5 +31,4 @@ public class ArticleLike {
      */
     private Integer articleId;
 
-
 }

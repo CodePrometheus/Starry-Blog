@@ -1,6 +1,9 @@
 package com.star.core.service.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -11,7 +14,11 @@ import java.util.List;
  * @Date: 12-19-2020 15:22
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArticleOptionDTO {
+
     /**
      * 文章标签列表
      */
@@ -21,13 +28,5 @@ public class ArticleOptionDTO {
      * 文章分类列表
      */
     private List<CategoryBackDTO> categoryDTOList;
-
-    public ArticleOptionDTO(List<CategoryBackDTO> categoryDTOList, List<TagDTO> tagDTOList) {
-        this.categoryDTOList = categoryDTOList;
-        this.tagDTOList = tagDTOList;
-    }
-
-    public ArticleOptionDTO() {
-    }
 
 }

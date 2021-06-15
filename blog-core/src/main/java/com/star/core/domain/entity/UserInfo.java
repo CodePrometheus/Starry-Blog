@@ -3,10 +3,10 @@ package com.star.core.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.star.core.domain.vo.UserInfoVO;
-import com.star.core.domain.vo.UserRoleVO;
-import com.star.core.util.UserUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -17,6 +17,9 @@ import java.util.Date;
  * @Date: 12-16-2020 20:26
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("tb_user_info")
 public class UserInfo {
 
@@ -27,9 +30,9 @@ public class UserInfo {
     private Integer id;
 
     /**
-     * 用户角色
+     * 邮箱号
      */
-    private String userRole;
+    private String email;
 
     /**
      * 用户昵称
@@ -54,7 +57,7 @@ public class UserInfo {
     /**
      * 是否禁言
      */
-    private Integer isSilence;
+    private Integer isDisable;
 
     /**
      * 创建时间
@@ -62,42 +65,8 @@ public class UserInfo {
     private Date createTime;
 
     /**
-     * 邮箱号
+     * 更新时间
      */
-    private String email;
+    private Date updateTime;
 
-
-    public UserInfo() {
-        this.nickname = "用户" + System.currentTimeMillis();
-        this.createTime = new Date();
-    }
-
-    public UserInfo(String nickname, String avatar) {
-        this.nickname = nickname;
-        this.avatar = avatar;
-        this.createTime = new Date();
-    }
-
-    public UserInfo(UserInfoVO userInfoVO) {
-        this.id = UserUtil.getLoginUser().getUserInfoId();
-        this.nickname = userInfoVO.getNickname();
-        this.intro = userInfoVO.getIntro();
-        this.webSite = userInfoVO.getWebSite();
-    }
-
-    public UserInfo(String avatar) {
-        this.id = UserUtil.getLoginUser().getUserInfoId();
-        this.avatar = avatar;
-    }
-
-    public UserInfo(UserRoleVO userRoleVO) {
-        this.id = userRoleVO.getUserInfoId();
-        this.nickname = userRoleVO.getNickname();
-        this.userRole = userRoleVO.getUserRole();
-    }
-
-    public UserInfo(Integer id, Integer isSilence) {
-        this.id = id;
-        this.isSilence = isSilence;
-    }
 }
