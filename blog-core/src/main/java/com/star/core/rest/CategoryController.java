@@ -50,7 +50,7 @@ public class CategoryController {
     @ApiOperation(value = "添加或修改分类")
     @PostMapping("/admin/categories")
     private Result saveOrUpdateCategory(@Valid @RequestBody CategoryVO categoryVO) {
-        categoryService.saveOrUpdate(new Category(categoryVO));
+        categoryService.saveOrUpdateCategory(categoryVO);
         return new Result(true, StatusConst.OK, "操作成功");
     }
 

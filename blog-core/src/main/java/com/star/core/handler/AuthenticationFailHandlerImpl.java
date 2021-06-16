@@ -1,4 +1,4 @@
-package com.star.core.config.handler;
+package com.star.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.star.common.constant.Result;
@@ -23,7 +23,7 @@ public class AuthenticationFailHandlerImpl implements AuthenticationFailureHandl
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-        httpServletResponse.getWriter().write(JSON.toJSONString(new Result(false, StatusConst.ERROR, e.getMessage())));
+        httpServletResponse.getWriter().write(JSON.toJSONString(new Result<>(false, StatusConst.ERROR, e.getMessage())));
     }
 
 }

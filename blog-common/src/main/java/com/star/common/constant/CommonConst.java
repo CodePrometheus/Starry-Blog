@@ -48,4 +48,9 @@ public class CommonConst {
      */
     public static final String DEFAULT_AVATAR = "https://gitee.com/codeprometheus/MyPicBed/raw/master/img/star.png";
 
+    /**
+     * 前端组件名
+     */
+    public static String COMPONENT = "Layout";
+
 }

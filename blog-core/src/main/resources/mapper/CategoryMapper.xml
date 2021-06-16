@@ -4,15 +4,12 @@
 
 
     <select id="listCategoryDTO" resultType="com.star.core.service.dto.CategoryDTO">
-     SELECT
-	 c.id,
-	 c.category_name,
-	 COUNT( 1 ) as article_count
-     FROM
-	 tb_category c
-	 JOIN tb_article a ON c.id = a.category_id
-     GROUP BY
-	 a.category_id
+        SELECT c.id,
+               c.category_name,
+               COUNT(a.id) as article_count
+        FROM tb_category c
+                 JOIN tb_article a ON c.id = a.category_id
+        GROUP BY c.id
     </select>
 
 </mapper>

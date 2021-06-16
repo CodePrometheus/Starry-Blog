@@ -1,4 +1,4 @@
-package com.star.core.config.handler;
+package com.star.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.star.common.constant.Result;

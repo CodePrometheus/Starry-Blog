@@ -23,5 +23,4 @@ public class TagDTO {
      */
     private String tagName;
 
-
 }

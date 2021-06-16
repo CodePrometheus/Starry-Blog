@@ -1,6 +1,5 @@
 package com.star.core.util;
 
-import com.alibaba.fastjson.JSON;
 import com.star.common.tool.IpUtil;
 import com.star.core.domain.entity.UserAuth;
 import com.star.core.domain.entity.UserInfo;
@@ -27,7 +26,7 @@ public class UserUtil {
      * @return
      */
     public static UserInfoDTO getLoginUser() {
-        return JSON.parseObject(SecurityContextHolder.getContext().getAuthentication().getName(), UserInfoDTO.class);
+        return (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     /**

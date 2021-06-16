@@ -85,28 +85,24 @@
     </select>
 
     <select id="listRepliesByCommentId" resultType="com.star.core.service.dto.ReplyDTO">
-        SELECT
-        c.user_id,
-        u.nickname,
-        u.avatar,
-        u.web_site,
-        c.reply_id,
-        r.nickname as reply_nickname,
-        r.web_site as reply_web_site,
-        c.id,
-        c.parent_id,
-        c.comment_content,
-        c.create_time
-        FROM
-        tb_comment c
-        JOIN tb_user_info u ON c.user_id = u.id
-        JOIN tb_user_info r ON c.reply_id = r.id
-        WHERE
-        c.is_delete = 0
-        AND
-        parent_id =#{commentId}
+        SELECT c.user_id,
+               u.nickname,
+               u.avatar,
+               u.web_site,
+               c.reply_id,
+               r.nickname as reply_nickname,
+               r.web_site as reply_web_site,
+               c.id,
+               c.parent_id,
+               c.comment_content,
+               c.create_time
+        FROM tb_comment c
+                 JOIN tb_user_info u ON c.user_id = u.id
+                 JOIN tb_user_info r ON c.reply_id = r.id
+        WHERE c.is_delete = 0
+          AND parent_id = #{commentId}
         ORDER BY create_time ASC
-        LIMIT #{current},5
+            LIMIT #{current}, 5
     </select>
 
     <select id="listCommentBackDTO" resultType="com.star.core.service.dto.CommentBackDTO">

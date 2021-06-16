@@ -1,13 +1,12 @@
-package com.star.core.config.handler;
-
+package com.star.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.star.common.constant.Result;
-import com.star.common.constant.StatusConst;
-import com.star.common.tool.IpUtil;
 import com.star.core.domain.entity.UserAuth;
 import com.star.core.domain.mapper.UserAuthMapper;
 import com.star.core.service.dto.UserInfoDTO;
+import com.star.core.service.dto.UserLoginDTO;
+import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.UserUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -17,6 +16,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static com.star.common.constant.StatusConst.LOGIN;
+import static com.star.common.constant.StatusConst.OK;
 
 /**
  * 登录成功处理
@@ -30,17 +32,23 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     @Resource
     private UserAuthMapper userAuthMapper;
 
-    @Resource
-    private HttpServletRequest request;
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
+        // 更新用户ip，最近登录时间
+        updateUserInfo();
+        UserLoginDTO userLoginDTO = BeanCopyUtil.copyObject(UserUtil.getLoginUser(), UserLoginDTO.class);
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-        httpServletResponse.getWriter().write(JSON.toJSONString(new Result<UserInfoDTO>(true, StatusConst.OK, "登录成功！", UserUtil.getLoginUser())));
-        // 更新用户登录ip地址，最新登录时间
-        String ipAddr = IpUtil.getIpAddr(request);
-        String ipSource = IpUtil.getIpSource(ipAddr);
-        userAuthMapper.updateById(new UserAuth(ipAddr, ipSource));
+        httpServletResponse.getWriter().write(JSON.toJSONString(new Result<UserInfoDTO>(true, OK, LOGIN, userLoginDTO)));
+    }
+
+
+    public void updateUserInfo() {
+        UserAuth userAuth = UserAuth.builder()
+                .id(UserUtil.getLoginUser().getId())
+                .ipAddr(UserUtil.getLoginUser().getIpAddr())
+                .ipSource(UserUtil.getLoginUser().getIpSource())
+                .lastLoginTime(UserUtil.getLoginUser().getLastLoginTime()).build();
+        userAuthMapper.updateById(userAuth);
     }
 
 }
