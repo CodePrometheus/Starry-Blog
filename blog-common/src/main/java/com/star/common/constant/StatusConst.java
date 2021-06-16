@@ -22,30 +22,4 @@ public class StatusConst {
      */
     public static final int SYSTEM_ERROR = 5000;
 
-
-    /**
-     * 查询成功
-     */
-    public static final String QUERY = "查询成功";
-
-    /**
-     * 操作成功
-     */
-    public static final String OPERATE = "操作成功";
-
-    /**
-     * 删除成功
-     */
-    public static final String DELETE = "删除成功";
-
-    /**
-     * 登录成功
-     */
-    public static final String LOGIN = "登录成功";
-
-    /**
-     * 注销成功
-     */
-    public static final String LOGOUT = "注销成功";
-
 }

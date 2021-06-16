@@ -1,8 +1,6 @@
 package com.star.core.rest;
 
-
 import com.star.common.constant.Result;
-import com.star.common.constant.StatusConst;
 import com.star.core.domain.entity.Category;
 import com.star.core.domain.vo.CategoryVO;
 import com.star.core.domain.vo.ConditionVO;
@@ -18,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+
+import static com.star.common.constant.MessageConst.*;
+import static com.star.common.constant.StatusConst.OK;
+
 
 /**
  * 归档逻辑
@@ -38,33 +40,33 @@ public class CategoryController {
     @ApiOperation(value = "查看分类列表")
     @GetMapping("/categories")
     private Result<PageDTO<CategoryDTO>> listCategories() {
-        return new Result(true, StatusConst.OK, "查询成功", categoryService.listCategories());
+        return new Result<>(true, OK, QUERY, categoryService.listCategories());
     }
 
     @ApiOperation(value = "查看后台分类列表")
     @GetMapping("/admin/categories")
     private Result<PageDTO<Category>> listCategoryBackDTO(ConditionVO condition) {
-        return new Result(true, StatusConst.OK, "查询成功", categoryService.listCategoryBackDTO(condition));
+        return new Result<>(true, OK, QUERY, categoryService.listCategoryBackDTO(condition));
     }
 
     @ApiOperation(value = "添加或修改分类")
     @PostMapping("/admin/categories")
     private Result saveOrUpdateCategory(@Valid @RequestBody CategoryVO categoryVO) {
         categoryService.saveOrUpdateCategory(categoryVO);
-        return new Result(true, StatusConst.OK, "操作成功");
+        return new Result<>(true, OK, OPERATE);
     }
 
     @ApiOperation(value = "删除分类")
     @DeleteMapping("/admin/categories")
     private Result deleteCategories(@RequestBody List<Integer> categoryIdList) {
         categoryService.deleteCategory(categoryIdList);
-        return new Result(true, StatusConst.OK, "删除成功");
+        return new Result<>(true, OK, DELETE);
     }
 
     @ApiOperation(value = "查看分类下对应的文章")
     @GetMapping("/categories/{categoryId}")
     private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("categoryId") Integer categoryId, Long current) {
-        return new Result(true, StatusConst.OK, "查询成功", articleService.listArticlesByCondition(new ConditionVO(current, categoryId)));
+        return new Result<>(true, OK, QUERY, articleService.listArticlesByCondition(new ConditionVO(current, categoryId)));
     }
 
 }
