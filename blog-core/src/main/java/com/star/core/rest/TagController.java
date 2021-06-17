@@ -46,7 +46,10 @@ public class TagController {
     @ApiOperation(value = "查看分类下对应的文章")
     @GetMapping("/tags/{tagId}")
     private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("tagId") Integer tagId, Long current) {
-        return new Result<>(true, OK, QUERY, articleService.listArticlesByCondition(new ConditionVO(tagId, current)));
+        ConditionVO conditionVO = ConditionVO.builder()
+                .tagId(tagId)
+                .current(current).build();
+        return new Result<>(true, OK, QUERY, articleService.listArticlesByCondition(conditionVO));
     }
 
     @ApiOperation(value = "查看后台标签列表")

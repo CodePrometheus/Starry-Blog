@@ -6,6 +6,7 @@ import com.star.core.domain.vo.PasswordVO;
 import com.star.core.domain.vo.UserVO;
 import com.star.core.service.UserAuthService;
 import com.star.core.service.dto.PageDTO;
+import com.star.core.service.dto.UserBackDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +41,7 @@ public class UserAuthController {
 
     @ApiOperation(value = "查看后台用户列表")
     @GetMapping("/admin/users")
-    private Result<PageDTO> listUsers(ConditionVO condition) {
+    private Result<PageDTO<UserBackDTO>> listUsers(ConditionVO condition) {
         return new Result<>(true, OK, QUERY, userAuthService.listUserBackDTO(condition));
     }
 

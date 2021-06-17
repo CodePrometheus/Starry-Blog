@@ -1,6 +1,5 @@
 package com.star.core.service;
 
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.service.dto.UserBackDTO;
 import com.star.core.domain.entity.UserAuth;
@@ -27,29 +26,6 @@ public interface UserAuthService extends IService<UserAuth> {
      * @param user 用户对象
      */
     void saveUser(UserVO user);
-
-    /*
-     */
-/**
- * qq登录
- *
- * @param openId      qq openId
- * @param accessToken qq token
- * @return 用户登录信息
- *//*
-
-    UserInfoDTO qqLogin(String openId, String accessToken);
-
-    */
-/**
- * 微博登录
- *
- * @param code 微博code
- * @return 用户登录信息
- *//*
-
-    UserInfoDTO weiboLogin(String code);
-*/
 
     /**
      * 修改密码

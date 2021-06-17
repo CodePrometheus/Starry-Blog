@@ -3,6 +3,7 @@ package com.star.core.service.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 后台用户列表
@@ -34,11 +35,6 @@ public class UserBackDTO {
     private String nickname;
 
     /**
-     * 用户角色
-     */
-    private String userRole;
-
-    /**
      * 登录类型
      */
     private Integer loginType;
@@ -66,11 +62,16 @@ public class UserBackDTO {
     /**
      * 用户评论状态
      */
-    private Integer isSilence;
+    private Integer isDisable;
 
     /**
      * 状态
      */
     private Integer status;
+
+    /**
+     * 用户角色
+     */
+    private List<UserRoleDTO> roleList;
 
 }

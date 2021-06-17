@@ -66,7 +66,10 @@ public class CategoryController {
     @ApiOperation(value = "查看分类下对应的文章")
     @GetMapping("/categories/{categoryId}")
     private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("categoryId") Integer categoryId, Long current) {
-        return new Result<>(true, OK, QUERY, articleService.listArticlesByCondition(new ConditionVO(current, categoryId)));
+        ConditionVO conditionVO = ConditionVO.builder()
+                .categoryId(categoryId)
+                .current(current).build();
+        return new Result<>(true, OK, QUERY, articleService.listArticlesByCondition(conditionVO));
     }
 
 }

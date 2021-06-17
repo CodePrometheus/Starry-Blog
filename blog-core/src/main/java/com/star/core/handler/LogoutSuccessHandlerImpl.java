@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.star.common.constant.StatusConst.LOGOUT;
+import static com.star.common.constant.MessageConst.LOGOUT;
 import static com.star.common.constant.StatusConst.OK;
 
 /**

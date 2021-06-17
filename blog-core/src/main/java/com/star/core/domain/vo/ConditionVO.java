@@ -2,7 +2,12 @@ package com.star.core.domain.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 /**
  * 各种查询的条件
@@ -11,6 +16,9 @@ import lombok.Data;
  * @Date: 12-19-2020 14:01
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(description = "查询条件")
 public class ConditionVO {
 
@@ -50,10 +58,6 @@ public class ConditionVO {
     @ApiModelProperty(name = "isDelete", value = "是否删除", dataType = "Integer")
     private Integer isDelete;
 
-    public ConditionVO(Integer tagId, Long current) {
-        this.tagId = tagId;
-        this.current = current;
-    }
 
     /**
      * 是否为草稿
@@ -61,17 +65,16 @@ public class ConditionVO {
     @ApiModelProperty(name = "isDraft", value = "草稿状态", dataType = "Integer")
     private Integer isDraft;
 
-    public ConditionVO(Long current, Integer categoryId) {
-        this.current = current;
-        this.categoryId = categoryId;
-    }
+    /**
+     * 开始时间
+     */
+    @ApiModelProperty(name = "startTime", value = "开始时间", dataType = "Date")
+    private Date startTime;
 
-    public ConditionVO(Long current, String keywords) {
-        this.current = current;
-        this.keywords = keywords;
-    }
-
-    public ConditionVO() {
-    }
+    /**
+     * 结束时间
+     */
+    @ApiModelProperty(name = "endTime", value = "结束时间", dataType = "Date")
+    private Date endTime;
 
 }
