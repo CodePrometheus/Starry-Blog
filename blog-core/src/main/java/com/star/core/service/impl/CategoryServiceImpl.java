@@ -39,11 +39,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public PageDTO<CategoryDTO> listCategories() {
-        // 获取分类列表
-        List<CategoryDTO> categoryDTOList = categoryMapper.listCategoryDTO();
-        // 获取分类数量
-        Integer count = categoryMapper.selectCount(null);
-        return new PageDTO<>(categoryDTOList, count);
+        return new PageDTO<>(categoryMapper.listCategoryDTO(), categoryMapper.selectCount(null));
     }
 
     @Override
