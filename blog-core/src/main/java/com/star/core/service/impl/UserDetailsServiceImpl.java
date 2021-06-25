@@ -51,7 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (StringUtils.isBlank(username)) {
             throw new StarryException("用户名不能为空！");
         }
-        //查询账号是否存在
+        // 查询账号是否存在
         UserAuth user = userAuthMapper.selectOne(new LambdaQueryWrapper<UserAuth>()
                 .select(UserAuth::getId, UserAuth::getUserInfoId, UserAuth::getUsername,
                         UserAuth::getPassword, UserAuth::getLoginType)
@@ -60,7 +60,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new StarryException("用户名不存在");
         }
 
-        //查询账号对应的信息
+        // 查询账号对应的信息
         UserInfo userInfo = userInfoMapper.selectOne(new LambdaQueryWrapper<UserInfo>()
                 .select(UserInfo::getId, UserInfo::getEmail, UserInfo::getNickname, UserInfo::getAvatar,
                         UserInfo::getIntro, UserInfo::getWebSite, UserInfo::getIsDisable)
