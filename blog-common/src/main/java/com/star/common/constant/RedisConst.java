@@ -11,7 +11,7 @@ public class RedisConst {
     /**
      * 验证码过期时间
      */
-    public static final long CODE_EXPIRE_TIME = 15 * 60 * 1000;
+    public static final long CODE_EXPIRE_TIME = 5 * 60 * 1000;
 
     /**
      * 验证码
@@ -62,6 +62,16 @@ public class RedisConst {
      * ip集合
      */
     public static final String IP_SET = "ip_set";
+
+    /**
+     * ip
+     */
+    public static final String IP = "ip";
+
+    /**
+     * 发布你的第一篇公告吧
+     */
+    public static final String PUSH = "发布你的第一篇公告吧";
 
 
 }

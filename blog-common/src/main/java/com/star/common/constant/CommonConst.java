@@ -53,4 +53,15 @@ public class CommonConst {
      */
     public static String COMPONENT = "Layout";
 
+    /**
+     * 浏览文章集合
+     */
+    public static String ARTICLE_SET = "articleSet";
+
+    /**
+     * 用户ip
+     */
+    public static final String IP = "ip";
+
+
 }

@@ -3,13 +3,13 @@ package com.star.core.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.common.constant.CommonConst;
 import com.star.common.exception.StarryException;
+import com.star.common.tool.RedisUtil;
 import com.star.core.domain.entity.Article;
 import com.star.core.domain.entity.UserInfo;
 import com.star.core.domain.mapper.*;
 import com.star.core.service.BlogInfoService;
 import com.star.core.service.UniqueViewService;
 import com.star.core.service.dto.*;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +34,9 @@ import static com.star.common.constant.RedisConst.*;
 public class BlogInfoServiceImpl implements BlogInfoService {
 
     @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
     private UserInfoMapper userInfoMapper;
 
     @Resource
@@ -51,9 +54,6 @@ public class BlogInfoServiceImpl implements BlogInfoService {
     @Resource
     private UniqueViewService uniqueViewService;
 
-    @Resource
-    private RedisTemplate redisTemplate;
-
     @Override
     public BlogHomeInfoDTO getBlogInfo() {
         // 查询博主信息
@@ -69,10 +69,10 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         // 查询标签数量
         Integer tagCount = tagMapper.selectCount(null);
         // 查询公告
-        Object value = redisTemplate.boundValueOps(NOTICE).get();
-        String notice = Objects.nonNull(value) ? value.toString() : "发布你的第一篇公告吧";
+        Object value = redisUtil.get(NOTICE);
+        String notice = Objects.nonNull(value) ? value.toString() : PUSH;
         // 查询访问量
-        String viewCount = Objects.requireNonNull(redisTemplate.boundValueOps(BLOG_VIEWS_COUNT).get()).toString();
+        String viewCount = Objects.requireNonNull(redisUtil.get(BLOG_VIEWS_COUNT)).toString();
         // 封装上列数据
         return BlogHomeInfoDTO.builder()
                 .nickname(userInfo.getNickname())
@@ -88,7 +88,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
     @Override
     public BlogBackInfoDTO getBlogBackInfo() {
         // 查询访问量
-        Integer viewsCount = (Integer) redisTemplate.boundValueOps(BLOG_VIEWS_COUNT).get();
+        Integer viewsCount = (Integer) redisUtil.get(BLOG_VIEWS_COUNT);
         // 查询留言量
         Integer messageCount = messageMapper.selectCount(null);
         // 查询用户量
@@ -102,7 +102,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         // 查询分类数据
         List<CategoryDTO> categoryDTOList = categoryMapper.listCategoryDTO();
         // 查询redis访问量前五的文章
-        Map<String, Integer> articleViewsMap = redisTemplate.boundHashOps(ARTICLE_VIEWS_COUNT).entries();
+        Map<String, Integer> articleViewsMap = redisUtil.hGetAll(ARTICLE_VIEWS_COUNT);
 
         // 将文章进行倒序排序
         List<Integer> articleIdList = Objects.requireNonNull(articleViewsMap).entrySet().stream()
@@ -145,26 +145,26 @@ public class BlogInfoServiceImpl implements BlogInfoService {
 
     @Override
     public String getAbout() {
-        Object value = redisTemplate.boundValueOps(ABOUT).get();
+        Object value = redisUtil.get(ABOUT);
         return Objects.nonNull(value) ? value.toString() : "";
     }
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public void updateAbout(String aboutContent) {
-        redisTemplate.boundValueOps(ABOUT).set(aboutContent);
+        redisUtil.set(ABOUT, aboutContent);
     }
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public void updateNotice(String notice) {
-        redisTemplate.boundValueOps(NOTICE).set(notice);
+        redisUtil.set(NOTICE, notice);
     }
 
     @Override
     public String getNotice() {
-        Object value = redisTemplate.boundValueOps(NOTICE).get();
-        return Objects.nonNull(value) ? value.toString() : "发布你的第一篇公告吧";
+        Object value = redisUtil.get(NOTICE);
+        return Objects.nonNull(value) ? value.toString() : PUSH;
     }
 
 }

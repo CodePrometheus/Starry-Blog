@@ -1,10 +1,13 @@
 package com.star.core.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
 import com.star.common.tool.IpUtil;
+import com.star.common.tool.RedisUtil;
+import com.star.core.config.RabbitConfig;
 import com.star.core.domain.entity.UserAuth;
 import com.star.core.domain.entity.UserInfo;
 import com.star.core.domain.entity.UserRole;
@@ -16,12 +19,14 @@ import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.PasswordVO;
 import com.star.core.domain.vo.UserVO;
 import com.star.core.service.UserAuthService;
+import com.star.core.service.dto.EmailDTO;
 import com.star.core.service.dto.PageDTO;
 import com.star.core.service.dto.UserBackDTO;
 import com.star.core.service.dto.UserInfoDTO;
 import com.star.core.util.UserUtil;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -31,7 +36,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +45,6 @@ import static com.star.common.constant.LoginTypeConst.EMAIL;
 import static com.star.common.constant.RedisConst.*;
 import static com.star.common.constant.RoleEnum.USER;
 import static com.star.core.util.UserUtil.convertLoginUser;
-
 
 /**
  * 用户业务
@@ -54,6 +57,12 @@ import static com.star.core.util.UserUtil.convertLoginUser;
 public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> implements UserAuthService {
 
     @Resource
+    private RabbitTemplate rabbitTemplate;
+
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
     private RoleMapper roleMapper;
 
     @Resource
@@ -61,9 +70,6 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
 
     @Resource
     private JavaMailSender javaMailSender;
-
-    @Resource
-    private RedisTemplate redisTemplate;
 
     @Resource
     private UserAuthMapper userAuthMapper;
@@ -77,12 +83,6 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
     @Resource
     private HttpServletRequest request;
 
-    /**
-     * 过期时间
-     */
-    private static final long EXPIRE_TIME = 15 * 60 * 1000;
-
-
     @Override
     public void sendCode(String username) {
         if (!checkEmail(username)) {
@@ -94,15 +94,15 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         for (int i = 0; i < 6; i++) {
             code.append(random.nextInt(10));
         }
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("2413245708@qq.com");
-        message.setTo(username);
-        message.setSubject("验证码");
-        message.setText("您的验证码为 " + code.toString() + " 有效期15分钟，请不要告诉他人哦！");
-        javaMailSender.send(message);
-        // 将验证码存入redis，设置过期时间为15分钟
-        redisTemplate.boundValueOps(CODE_KEY + username).set(code);
-        redisTemplate.expire(CODE_KEY + username, EXPIRE_TIME, TimeUnit.MILLISECONDS);
+        EmailDTO emailDTO = EmailDTO.builder()
+                .email(username)
+                .subject("验证码")
+                .content("您的验证码为 " + code.toString() + " 悄悄告诉你，有效期只有5分钟，不要跟别人说哦！").build();
+        rabbitTemplate.convertAndSend(RabbitConfig.EMAIL_EXCHANGE,
+                "*", new Message(JSON.toJSONBytes(emailDTO),
+                        new MessageProperties()));
+        // 将验证码存入redis，设置过期时间为5分钟
+        redisUtil.set(CODE_KEY + username, code, CODE_EXPIRE_TIME);
     }
 
     @Override
@@ -208,8 +208,8 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
                 .eq(UserInfo::getId, user.getUserInfoId()));
 
         // 查询账号点赞信息包括文章和评论
-        Set<Integer> articleLikeSet = (Set) redisTemplate.boundHashOps(ARTICLE_USER_LIKE).get(userInfo.getId().toString());
-        Set<Integer> commentLikeSet = (Set) redisTemplate.boundHashOps(COMMENT_USER_LIKE).get(userInfo.getId().toString());
+        Set<Integer> articleLikeSet = (Set) redisUtil.hGet(ARTICLE_USER_LIKE, userInfo.getId().toString());
+        Set<Integer> commentLikeSet = (Set) redisUtil.hGet(COMMENT_USER_LIKE, userInfo.getId().toString());
         // 查询账号角色消息
         List<String> roleList = roleMapper.listRolesByUserInfoId(userInfo.getId());
         // 封装登录信息
@@ -240,7 +240,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
      * @return 合法状态
      */
     private Boolean checkUser(UserVO user) {
-        if (!user.getCode().equals(redisTemplate.boundValueOps(CODE_KEY + user.getUsername()).get())) {
+        if (!user.getCode().equals(redisUtil.get(CODE_KEY + user.getUsername()))) {
             throw new StarryException("验证码错误！");
         }
         UserAuth userAuth = userAuthMapper.selectOne(new LambdaQueryWrapper<UserAuth>()

@@ -2,13 +2,13 @@ package com.star.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.common.exception.StarryException;
+import com.star.common.tool.RedisUtil;
 import com.star.core.domain.entity.UserAuth;
 import com.star.core.domain.entity.UserInfo;
 import com.star.core.domain.mapper.RoleMapper;
 import com.star.core.domain.mapper.UserAuthMapper;
 import com.star.core.domain.mapper.UserInfoMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -32,6 +32,9 @@ import static com.star.core.util.UserUtil.convertLoginUser;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
     private HttpServletRequest request;
 
     @Resource
@@ -42,9 +45,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
     private UserInfoMapper userInfoMapper;
-
-    @Resource
-    private RedisTemplate redisTemplate;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -69,8 +69,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 查询账号对应的角色信息
         List<String> roleList = roleMapper.listRolesByUserInfoId(userInfo.getId());
         // 查询账号点赞信息
-        Set<Integer> articleLikeSet = (Set) redisTemplate.boundHashOps(ARTICLE_USER_LIKE).get(userInfo.getId().toString());
-        Set<Integer> commentLikeSet = (Set) redisTemplate.boundHashOps(COMMENT_USER_LIKE).get(userInfo.getId().toString());
+        Set<Integer> articleLikeSet = (Set) redisUtil.hGet(ARTICLE_USER_LIKE, userInfo.getId().toString());
+        Set<Integer> commentLikeSet = (Set) redisUtil.hGet(COMMENT_USER_LIKE, userInfo.getId().toString());
         // 封装信息
         return convertLoginUser(user, userInfo, roleList, articleLikeSet, commentLikeSet, request);
     }

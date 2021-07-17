@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
+import com.star.common.tool.RedisUtil;
 import com.star.core.config.RabbitConfig;
 import com.star.core.domain.entity.Article;
 import com.star.core.domain.entity.ArticleTag;
@@ -30,7 +31,6 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.star.common.constant.CommonConst.ARTICLE_SET;
 import static com.star.common.constant.CommonConst.FALSE;
 import static com.star.common.constant.RedisConst.*;
 
@@ -50,6 +51,9 @@ import static com.star.common.constant.RedisConst.*;
 @Service
 @SuppressWarnings("unchecked")
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
+
+    @Resource
+    private RedisUtil redisUtil;
 
     @Resource
     private AmqpTemplate amqpTemplate;
@@ -71,9 +75,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Resource
     private HttpSession session;
-
-    @Resource
-    private RedisTemplate redisTemplate;
 
     @Resource
     private ArticleService articleService;
@@ -119,8 +120,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 查询后台文章
         List<ArticleBackDTO> articleBackDTOList = articleMapper.listArticlesBack(condition);
         // 查询文章点赞量和浏览量
-        Map<String, Integer> likeCountMap = redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).entries();
-        Map<String, Integer> viewsCountMap = redisTemplate.boundHashOps(ARTICLE_VIEWS_COUNT).entries();
+        Map<String, Integer> likeCountMap = redisUtil.hGetAll(ARTICLE_LIKE_COUNT);
+        Map<String, Integer> viewsCountMap = redisUtil.hGetAll(ARTICLE_VIEWS_COUNT);
         // 封装点赞量和浏览量
         articleBackDTOList.forEach(articleBackDTO -> {
             articleBackDTO.setViewsCount(Objects.requireNonNull(viewsCountMap).get(articleBackDTO.getId().toString()));
@@ -131,8 +132,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public List<ArticleHomeDTO> listArticles(Long current) {
-        List<ArticleHomeDTO> articleHomeLists = articleMapper.listArticles((current - 1) * 10);
-        return articleHomeLists;
+        return articleMapper.listArticles((current - 1) * 10);
     }
 
     @Override
@@ -190,8 +190,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         article.setArticleRecommendList(articleMapper.listArticleRecommends(articleId));
 
         // 封装点赞量和浏览量封装
-        article.setViewsCount((Integer) redisTemplate.boundHashOps(ARTICLE_VIEWS_COUNT).get(articleId.toString()));
-        article.setLikeCount((Integer) redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).get(articleId.toString()));
+        article.setViewsCount((Integer) redisUtil.hGet(ARTICLE_VIEWS_COUNT, articleId.toString()));
+        article.setLikeCount((Integer) redisUtil.hGet(ARTICLE_LIKE_COUNT, articleId.toString()));
 
         return article;
     }
@@ -210,9 +210,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         if (!articleSet.contains(articleId)) {
             articleSet.add(articleId);
-            session.setAttribute("articleSet", articleSet);
+            session.setAttribute(ARTICLE_SET, articleSet);
             // +1
-            redisTemplate.boundHashOps(ARTICLE_VIEWS_COUNT).increment(articleId.toString(), 1);
+            redisUtil.hIncr(ARTICLE_VIEWS_COUNT, articleId.toString(), 1L);
         }
     }
 
@@ -236,7 +236,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Transactional(rollbackFor = StarryException.class)
     public void saveArticleLike(Integer articleId) {
         // 查询当前用户点赞过的文章id集合
-        Set<Integer> articleLikeSet = (Set<Integer>) redisTemplate.boundHashOps(ARTICLE_USER_LIKE).get(UserUtil.getLoginUser().getUserInfoId().toString());
+        Set<Integer> articleLikeSet = (Set<Integer>) redisUtil.hGet(ARTICLE_USER_LIKE, UserUtil.getUserInfoId().toString());
         // 第一次点赞则创建
         // == null 只能用来判断是否为null CollectionUtils.isEmpty() 包含null,size=0等多种情况
         if (CollectionUtils.isEmpty(articleLikeSet)) {
@@ -247,15 +247,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             // 点过赞则删除文章id
             articleLikeSet.remove(articleId);
             // 文章点赞量-1
-            redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).increment(articleId.toString(), -1);
+            redisUtil.hDecr(ARTICLE_LIKE_COUNT, articleId.toString(), 1L);
         } else {
             // 未点赞则增加文章id
             articleLikeSet.add(articleId);
             // 文章点赞量+1
-            redisTemplate.boundHashOps(ARTICLE_LIKE_COUNT).increment(articleId.toString(), 1);
+            redisUtil.hIncr(ARTICLE_LIKE_COUNT, articleId.toString(), 1L);
         }
         // 保存点赞记录
-        redisTemplate.boundHashOps(ARTICLE_USER_LIKE).put(UserUtil.getLoginUser().getUserInfoId().toString(), articleLikeSet);
+        redisUtil.hSet(ARTICLE_USER_LIKE, UserUtil.getUserInfoId().toString(), articleLikeSet);
     }
 
     @Override

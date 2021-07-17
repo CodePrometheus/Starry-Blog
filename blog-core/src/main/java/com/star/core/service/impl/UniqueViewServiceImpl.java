@@ -2,6 +2,7 @@ package com.star.core.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.tool.DateUtil;
+import com.star.common.tool.RedisUtil;
 import com.star.core.domain.entity.UniqueView;
 import com.star.core.domain.mapper.UniqueViewMapper;
 import com.star.core.service.UniqueViewService;
@@ -27,7 +28,7 @@ import static com.star.common.constant.RedisConst.IP_SET;
 public class UniqueViewServiceImpl extends ServiceImpl<UniqueViewMapper, UniqueView> implements UniqueViewService {
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisUtil redisUtil;
 
     @Resource
     private UniqueViewMapper uniqueViewMapper;
@@ -36,7 +37,7 @@ public class UniqueViewServiceImpl extends ServiceImpl<UniqueViewMapper, UniqueV
     @Scheduled(cron = " 0 0 0 * * ?")
     public void saveUniqueView() {
         // 获取每天用户量
-        Long count = redisTemplate.boundSetOps(IP_SET).size();
+        Long count = redisUtil.sSize(IP_SET);
         // 获取昨天日期插入数据
         UniqueView uniqueView = UniqueView.builder()
                 .createTime(DateUtil.getSomeDay(new Date(), -1))

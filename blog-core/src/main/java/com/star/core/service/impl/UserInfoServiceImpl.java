@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.PathConst;
 import com.star.common.exception.StarryException;
 import com.star.common.tool.ImageUtil;
+import com.star.common.tool.RedisUtil;
 import com.star.core.domain.entity.UserInfo;
 import com.star.core.domain.entity.UserRole;
 import com.star.core.domain.mapper.UserInfoMapper;
@@ -14,7 +15,6 @@ import com.star.core.domain.vo.UserRoleVO;
 import com.star.core.service.UserInfoService;
 import com.star.core.service.UserRoleService;
 import com.star.core.util.UserUtil;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,10 +38,10 @@ import static com.star.common.constant.RedisConst.CODE_KEY;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
     @Resource
-    private UserRoleService userRoleService;
+    private RedisUtil redisUtil;
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private UserRoleService userRoleService;
 
     @Resource
     private UserInfoMapper userInfoMapper;
@@ -103,7 +103,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public void saveUserEmail(EmailVO emailVO) {
-        if (!emailVO.getCode().equals(redisTemplate.boundValueOps(CODE_KEY + emailVO.getEmail()).get())) {
+        if (!emailVO.getCode().equals(redisUtil.get(CODE_KEY + emailVO.getEmail()))) {
             throw new StarryException("验证码错误");
         }
         UserInfo userInfo = UserInfo.builder()

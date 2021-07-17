@@ -29,6 +29,10 @@ public class UserUtil {
         return (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public static Integer getUserInfoId() {
+        return getLoginUser().getUserInfoId();
+    }
+
     /**
      * 封装用户登录信息
      *
