@@ -30,7 +30,7 @@ public class ResourceController {
 
     @ApiOperation(value = "导入swagger接口")
     @GetMapping("/resources/import")
-    public Result importSwagger() {
+    public Result<?> importSwagger() {
         resourceService.importSwagger();
         return new Result<>(true, OK, "导入Swagger成功");
     }
@@ -43,14 +43,14 @@ public class ResourceController {
 
     @ApiOperation(value = "删除资源")
     @DeleteMapping("/resources")
-    public Result deleteResources(@RequestBody List<Integer> resourceIdList) {
+    public Result<?> deleteResources(@RequestBody List<Integer> resourceIdList) {
         resourceService.deleteResources(resourceIdList);
         return new Result<>(true, OK, DELETE);
     }
 
     @ApiOperation(value = "新增或修改资源")
     @PostMapping("/resources")
-    public Result saveOrUpdateResources(@RequestBody @Valid ResourceVO resourceVO) {
+    public Result<?> saveOrUpdateResources(@RequestBody @Valid ResourceVO resourceVO) {
         resourceService.saveOrUpdateResource(resourceVO);
         return new Result<>(true, OK, OPERATE);
     }

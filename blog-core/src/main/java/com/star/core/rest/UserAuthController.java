@@ -34,7 +34,7 @@ public class UserAuthController {
     @ApiOperation(value = "发送邮箱验证码")
     @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", dataTypeClass = String.class)
     @GetMapping("/users/code")
-    private Result sendCode(String username) {
+    private Result<?> sendCode(String username) {
         userAuthService.sendCode(username);
         return new Result<>(true, OK, SEND);
     }
@@ -47,21 +47,21 @@ public class UserAuthController {
 
     @ApiOperation(value = "用户注册")
     @PostMapping("/users")
-    private Result saveUser(@Valid @RequestBody UserVO user) {
+    private Result<?> saveUser(@Valid @RequestBody UserVO user) {
         userAuthService.saveUser(user);
         return new Result<>(true, OK, REGISTER);
     }
 
     @ApiOperation(value = "修改密码")
     @PutMapping("/users/password")
-    private Result updatePassword(@Valid @RequestBody UserVO user) {
+    private Result<?> updatePassword(@Valid @RequestBody UserVO user) {
         userAuthService.updatePassword(user);
         return new Result<>(true, OK, UPDATE);
     }
 
     @ApiOperation(value = "修改管理员密码")
     @PutMapping("/admin/users/password")
-    private Result updateAdminPassword(@Valid @RequestBody PasswordVO passwordVO) {
+    private Result<?> updateAdminPassword(@Valid @RequestBody PasswordVO passwordVO) {
         userAuthService.updateAdminPassword(passwordVO);
         return new Result<>(true, OK, UPDATE);
     }

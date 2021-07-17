@@ -34,7 +34,7 @@ public class MessageController {
 
     @ApiOperation(value = "添加留言")
     @PostMapping("/messages")
-    private Result saveMessage(@Valid @RequestBody MessageVO messageVO) {
+    private Result<?> saveMessage(@Valid @RequestBody MessageVO messageVO) {
         messageService.saveMessage(messageVO);
         return new Result<>(true, OK, ADD);
     }
@@ -53,7 +53,7 @@ public class MessageController {
 
     @ApiOperation(value = "删除留言")
     @DeleteMapping("/admin/messages")
-    public Result deleteMessages(@RequestBody List<Integer> messageIdList) {
+    public Result<?> deleteMessages(@RequestBody List<Integer> messageIdList) {
         messageService.removeByIds(messageIdList);
         return new Result<>(true, OK, OPERATE);
     }

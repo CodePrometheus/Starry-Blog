@@ -20,7 +20,6 @@ import java.util.List;
 import static com.star.common.constant.MessageConst.*;
 import static com.star.common.constant.StatusConst.OK;
 
-
 /**
  * 归档逻辑
  *
@@ -51,14 +50,14 @@ public class CategoryController {
 
     @ApiOperation(value = "添加或修改分类")
     @PostMapping("/admin/categories")
-    private Result saveOrUpdateCategory(@Valid @RequestBody CategoryVO categoryVO) {
+    private Result<?> saveOrUpdateCategory(@Valid @RequestBody CategoryVO categoryVO) {
         categoryService.saveOrUpdateCategory(categoryVO);
         return new Result<>(true, OK, OPERATE);
     }
 
     @ApiOperation(value = "删除分类")
     @DeleteMapping("/admin/categories")
-    private Result deleteCategories(@RequestBody List<Integer> categoryIdList) {
+    private Result<?> deleteCategories(@RequestBody List<Integer> categoryIdList) {
         categoryService.deleteCategory(categoryIdList);
         return new Result<>(true, OK, DELETE);
     }

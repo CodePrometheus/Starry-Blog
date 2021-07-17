@@ -20,7 +20,6 @@ import java.util.List;
 import static com.star.common.constant.MessageConst.*;
 import static com.star.common.constant.StatusConst.OK;
 
-
 /**
  * 标签逻辑
  *
@@ -60,14 +59,14 @@ public class TagController {
 
     @ApiOperation(value = "添加或修改标签")
     @PostMapping("/admin/tags")
-    private Result saveOrUpdateTag(@Valid @RequestBody TagVO tagVO) {
+    private Result<?> saveOrUpdateTag(@Valid @RequestBody TagVO tagVO) {
         tagService.saveOrUpdateTag(tagVO);
         return new Result<>(true, OK, OPERATE);
     }
 
     @ApiOperation(value = "删除标签")
     @DeleteMapping("/admin/tags")
-    private Result deleteTag(@RequestBody List<Integer> tagIdList) {
+    private Result<?> deleteTag(@RequestBody List<Integer> tagIdList) {
         tagService.deleteTag(tagIdList);
         return new Result<>(true, OK, DELETE);
     }

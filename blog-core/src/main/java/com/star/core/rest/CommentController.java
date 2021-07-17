@@ -47,7 +47,7 @@ public class CommentController {
 
     @ApiOperation(value = "添加评论或回复")
     @PostMapping("/comments")
-    private Result saveComment(@Valid @RequestBody CommentVO commentVO) {
+    private Result<?> saveComment(@Valid @RequestBody CommentVO commentVO) {
         commentService.saveComment(commentVO);
         return new Result<>(true, OK, COMMENT);
     }
@@ -64,21 +64,21 @@ public class CommentController {
 
     @ApiOperation(value = "评论点赞")
     @PostMapping("/comments/like")
-    private Result saveCommentList(Integer commentId) {
+    private Result<?> saveCommentList(Integer commentId) {
         commentService.saveCommentLike(commentId);
         return new Result<>(true, OK, LIKE);
     }
 
     @ApiOperation(value = "删除或恢复评论")
     @PutMapping("/admin/comments")
-    private Result deleteComment(DeleteVO deleteVO) {
+    private Result<?> deleteComment(DeleteVO deleteVO) {
         commentService.updateCommentDelete(deleteVO);
         return new Result<>(true, OK, OPERATE);
     }
 
     @ApiOperation(value = "物理删除评论")
     @DeleteMapping("/admin/comments")
-    public Result deleteComments(@RequestBody List<Integer> commentIdList) {
+    public Result<?> deleteComments(@RequestBody List<Integer> commentIdList) {
         commentService.removeByIds(commentIdList);
         return new Result<>(true, OK, OPERATE);
     }

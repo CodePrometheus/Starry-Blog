@@ -37,4 +37,5 @@ public class Result<T> implements Serializable {
         this.code = StatusConst.OK;
         this.message = "操作成功!";
     }
+
 }

@@ -21,7 +21,6 @@ import java.util.List;
 import static com.star.common.constant.MessageConst.*;
 import static com.star.common.constant.StatusConst.OK;
 
-
 /**
  * 文章逻辑
  *
@@ -69,14 +68,14 @@ public class ArticleController {
 
     @ApiOperation(value = "添加或修改文章")
     @PostMapping("/admin/articles")
-    private Result saveArticle(@Valid @RequestBody ArticleVO articleVO) {
+    private Result<?> saveArticle(@Valid @RequestBody ArticleVO articleVO) {
         articleService.saveOrUpdateArticle(articleVO);
         return new Result<>(true, OK, OPERATE);
     }
 
     @ApiOperation(value = "修改文章置顶")
     @PutMapping("/admin/articles/top/{articleId}")
-    private Result updateArticleTop(@PathVariable("articleId") Integer articleId, Integer isTop) {
+    private Result<?> updateArticleTop(@PathVariable("articleId") Integer articleId, Integer isTop) {
         articleService.updateArticleTop(articleId, isTop);
         return new Result<>(true, OK, UPDATE);
     }
@@ -90,14 +89,14 @@ public class ArticleController {
 
     @ApiOperation(value = "恢复或删除文章")
     @PutMapping("/admin/articles")
-    private Result updateArticleDelete(DeleteVO deleteVO) {
+    private Result<?> updateArticleDelete(DeleteVO deleteVO) {
         articleService.updateArticleDelete(deleteVO);
         return new Result<>(true, OK, OPERATE);
     }
 
     @ApiOperation(value = "物理删除文章")
     @DeleteMapping("/admin/articles")
-    private Result deleteArticles(@RequestBody List<Integer> articleIdList) {
+    private Result<?> deleteArticles(@RequestBody List<Integer> articleIdList) {
         articleService.deleteArticles(articleIdList);
         return new Result<>(true, OK, OPERATE);
     }
@@ -125,7 +124,7 @@ public class ArticleController {
     @ApiOperation(value = "点赞文章")
     @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class)
     @PostMapping("/articles/like")
-    private Result saveArticleLike(Integer articleId) {
+    private Result<?> saveArticleLike(Integer articleId) {
         articleService.saveArticleLike(articleId);
         return new Result<>(true, OK, LIKE);
     }

@@ -42,14 +42,14 @@ public class RoleController {
 
     @ApiOperation(value = "保存或更新角色")
     @PostMapping("/role")
-    public Result listRoles(@RequestBody @Valid RoleVO roleVO) {
+    public Result<?> listRoles(@RequestBody @Valid RoleVO roleVO) {
         roleService.saveOrUpdateRole(roleVO);
         return new Result<>(true, OK, OPERATE);
     }
 
     @ApiOperation("删除角色")
     @DeleteMapping("/roles")
-    public Result deleteRoles(@RequestBody List<Integer> roleIdList) {
+    public Result<?> deleteRoles(@RequestBody List<Integer> roleIdList) {
         roleService.deleteRoles(roleIdList);
         return new Result<>(true, OK, OPERATE);
     }

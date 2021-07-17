@@ -14,7 +14,6 @@ import javax.annotation.Resource;
 import static com.star.common.constant.MessageConst.*;
 import static com.star.common.constant.StatusConst.OK;
 
-
 /**
  * 博客信息模块
  * about me + notice
@@ -49,14 +48,14 @@ public class BlogInfoController {
 
     @ApiOperation(value = "修改关于我信息")
     @PutMapping("/admin/about")
-    private Result updateAbout(String aboutContent) {
+    private Result<?> updateAbout(String aboutContent) {
         blogInfoService.updateAbout(aboutContent);
         return new Result<>(true, OK, UPDATE);
     }
 
     @ApiOperation(value = "修改公告")
     @PutMapping("/admin/notice")
-    private Result updateNotice(String notice) {
+    private Result<?> updateNotice(String notice) {
         blogInfoService.updateNotice(notice);
         return new Result<>(true, OK, UPDATE);
     }

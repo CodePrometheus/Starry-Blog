@@ -6,6 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Objects;
+
 import static com.star.common.constant.StatusConst.ERROR;
 
 /**
@@ -24,7 +26,7 @@ public class ControllerAdvice {
      * @return
      */
     @ExceptionHandler(value = StarryException.class)
-    public Result errorHandler(StarryException e) {
+    public Result<?> errorHandler(StarryException e) {
         return new Result<>(false, ERROR, e.getMessage());
     }
 
@@ -35,8 +37,8 @@ public class ControllerAdvice {
      * @return
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result handleValidException(MethodArgumentNotValidException e) {
-        return new Result<>(false, ERROR, e.getBindingResult().getFieldError().getDefaultMessage());
+    public Result<?> handleValidException(MethodArgumentNotValidException e) {
+        return new Result<>(false, ERROR, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
     }
 
 }

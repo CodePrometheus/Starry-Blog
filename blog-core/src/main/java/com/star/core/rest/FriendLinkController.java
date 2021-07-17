@@ -18,7 +18,6 @@ import java.util.List;
 import static com.star.common.constant.MessageConst.*;
 import static com.star.common.constant.StatusConst.OK;
 
-
 /**
  * 友链逻辑
  *
@@ -46,14 +45,14 @@ public class FriendLinkController {
 
     @ApiOperation(value = "保存或修改友链")
     @PostMapping("/admin/links")
-    private Result saveOrUpdateFriendLink(@Valid @RequestBody FriendLinkVO friendLinkVO) {
+    private Result<?> saveOrUpdateFriendLink(@Valid @RequestBody FriendLinkVO friendLinkVO) {
         friendLinkService.saveOrUpdateFriendLink(friendLinkVO);
         return new Result<>(true, OK, OPERATE);
     }
 
     @ApiOperation(value = "删除友链")
     @DeleteMapping("/admin/links")
-    private Result deleteFriendLink(@RequestBody List<Integer> linkIdList) {
+    private Result<?> deleteFriendLink(@RequestBody List<Integer> linkIdList) {
         friendLinkService.removeByIds(linkIdList);
         return new Result<>(true, OK, DELETE);
     }

@@ -31,7 +31,7 @@ public class UserInfoController {
 
     @ApiOperation(value = "修改用户资料")
     @PutMapping("/users/info")
-    private Result updateUserInfo(@Valid @RequestBody UserInfoVO userInfoVO) {
+    private Result<?> updateUserInfo(@Valid @RequestBody UserInfoVO userInfoVO) {
         userInfoService.updateUserInfo(userInfoVO);
         return new Result<>(true, OK, QUERY);
     }
