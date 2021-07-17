@@ -38,13 +38,13 @@ public class ConditionVO {
      * 当前页码
      */
     @ApiModelProperty(name = "current", value = "当前页码", required = true, dataType = "Long")
-    private Long current;
+    private Integer current;
 
     /**
      * 显示数量
      */
     @ApiModelProperty(name = "size", value = "显示数量", required = true, dataType = "Long")
-    private Long size;
+    private Integer size;
 
     /**
      * 搜索内容

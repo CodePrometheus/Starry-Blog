@@ -40,7 +40,6 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Override
     public PageDTO<TagDTO> listTags() {
         List<Tag> tagList = tagMapper.selectList(new LambdaQueryWrapper<Tag>().select(Tag::getId, Tag::getTagName));
-        // 查询标签列表
         List<TagDTO> tagDTOList = BeanCopyUtil.copyList(tagList, TagDTO.class);
         // 查询标签数量
         Integer count = tagMapper.selectCount(null);

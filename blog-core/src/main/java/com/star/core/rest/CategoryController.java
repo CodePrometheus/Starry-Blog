@@ -64,7 +64,7 @@ public class CategoryController {
 
     @ApiOperation(value = "查看分类下对应的文章")
     @GetMapping("/categories/{categoryId}")
-    private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("categoryId") Integer categoryId, Long current) {
+    private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("categoryId") Integer categoryId, Integer current) {
         ConditionVO conditionVO = ConditionVO.builder()
                 .categoryId(categoryId)
                 .current(current).build();

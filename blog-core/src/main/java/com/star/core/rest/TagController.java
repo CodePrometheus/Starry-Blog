@@ -44,7 +44,7 @@ public class TagController {
 
     @ApiOperation(value = "查看分类下对应的文章")
     @GetMapping("/tags/{tagId}")
-    private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("tagId") Integer tagId, Long current) {
+    private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("tagId") Integer tagId, Integer current) {
         ConditionVO conditionVO = ConditionVO.builder()
                 .tagId(tagId)
                 .current(current).build();
