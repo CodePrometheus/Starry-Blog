@@ -77,7 +77,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         return BlogHomeInfoDTO.builder()
                 .nickname(userInfo.getNickname())
                 .avatar(userInfo.getAvatar())
-                .intro(userInfo.getAvatar())
+                .intro(userInfo.getIntro())
                 .articleCount(articleCount)
                 .categoryCount(categoryCount)
                 .tagCount(tagCount)

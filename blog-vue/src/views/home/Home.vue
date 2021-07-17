@@ -182,7 +182,6 @@ import EasyTyper from "easy-typer-js";
 export default {
   created() {
     this.init();
-    this.getBlogInfo();
     this.timer = setInterval(this.runTime, 1000);
   },
   data: function () {
@@ -200,7 +199,6 @@ export default {
         sentencePause: true
       },
       articleList: [],
-      blogInfo: {},
       current: 1
     };
   },
@@ -240,12 +238,6 @@ export default {
       str += day.getSeconds() + "秒";
       this.time = str;
     },
-    getBlogInfo() {
-      this.axios.get("/api/").then(({data}) => {
-        this.blogInfo = data.data;
-        this.$store.commit("checkBlogInfo", data.data);
-      });
-    },
     infiniteHandler($state) {
       this.axios
           .get("/api/articles", {
@@ -268,10 +260,13 @@ export default {
     isRight() {
       return function (index) {
         if (index % 2 == 0) {
-          return "article-cover left-radius";
+          return "article-cover left-radius"
         }
-        return "article-cover right-radius";
-      };
+        return "article-cover right-radius"
+      }
+    },
+    blogInfo() {
+      return this.$store.state.blogInfo
     }
   }
 };

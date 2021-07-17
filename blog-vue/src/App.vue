@@ -20,26 +20,29 @@
     <RegisterModel/>
     <!-- 忘记密码模态框 -->
     <ForgetModel/>
-<!--    <Note/>-->
+    <!--    <Note/>-->
     <Live2D/>
     <ChatRoom/>
   </v-app>
 </template>
 
 <script>
-import TopNavBar from "./components/layout/TopNavBar";
-import SideNavBar from "./components/layout/SideNavBar";
-import Footer from "./components/layout/Footer";
-import BackTop from "./components/BackTop";
-import searchModel from "./components/model/SearchModel";
-import LoginModel from "./components/model/LoginModel";
-import RegisterModel from "./components/model/RegisterModel";
-import ForgetModel from "./components/model/ForgetModel";
+import TopNavBar from './components/layout/TopNavBar'
+import SideNavBar from './components/layout/SideNavBar'
+import Footer from './components/layout/Footer'
+import BackTop from './components/BackTop'
+import searchModel from './components/model/SearchModel'
+import LoginModel from './components/model/LoginModel'
+import RegisterModel from './components/model/RegisterModel'
+import ForgetModel from './components/model/ForgetModel'
 // import Note from "./components/Notification";
-import Live2D from "./components/Live2D";
-import ChatRoom from "./components/ChatRoom";
+import Live2D from './components/Live2D'
+import ChatRoom from './components/ChatRoom'
 
 export default {
+  created() {
+    this.getBlogInfo()
+  },
   components: {
     TopNavBar,
     SideNavBar,
@@ -51,19 +54,26 @@ export default {
     ForgetModel,
     // Note,
     Live2D,
-    ChatRoom
+    ChatRoom,
+  },
+  methods: {
+    getBlogInfo() {
+      this.axios.get('/api').then(({ data }) => {
+        this.$store.commit('checkBlogInfo', data.data)
+      })
+    },
   },
   beforeCreate() {
-    console.log("%c Starry-Blog | 你的美好，我都记得 %c v".concat("1.5", " %c"),
-        'background: #35495e;' +
-        ' padding: 1px;' +
-        ' border-radius: 3px 0 0 3px;' +
-        ' color: #fff',
-        'background: #483d8b; ' +
-        'padding: 1px; ' +
-        'border-radius: 0 3px 3px 0; ' +
-        'color: #fff',
-        'background: transparent');
-  }
-};
+    console.log('%c Starry-Blog | 你的美好，我都记得 %c v'.concat('1.5', ' %c'),
+      'background: #35495e;' +
+      ' padding: 1px;' +
+      ' border-radius: 3px 0 0 3px;' +
+      ' color: #fff',
+      'background: #483d8b; ' +
+      'padding: 1px; ' +
+      'border-radius: 0 3px 3px 0; ' +
+      'color: #fff',
+      'background: transparent')
+  },
+}
 </script>

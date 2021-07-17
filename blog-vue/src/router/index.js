@@ -1,101 +1,91 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/home/Home.vue";
-import Article from "../views/article/Article.vue";
-import Archive from "../views/archive/Archive.vue";
-import Tag from "../views/tag/Tag.vue";
-import Category from "../views/category/Category.vue";
-import Link from "../views/link/Link.vue";
-import About from "../views/about/About.vue";
-import Message from "../views/message/Messsage.vue";
-import ArticleList from "../components/ArticleList.vue";
-import User from "../views/user/User.vue";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import Video from '../views/video/Video'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const routes = [
   {
-    path: "/",
-    component: Home,
+    path: '/',
+    component: reslove => require(['../views/home/Home'], reslove),
     meta: {
-      title: "zzStar's Blog"
-    }
+      title: 'zzStar\'s Blog',
+    },
   },
   {
-    path: "/articles/:articleId",
-    component: Article
+    path: '/articles/:articleId',
+    component: reslove => require(['../views/article/Article'], reslove),
   },
   {
-    path: "/archives",
-    component: Archive,
+    path: '/archives',
+    component: reslove => require(['../views/archive/Archive'], reslove),
     meta: {
-      title: "归档"
-    }
+      title: '归档',
+    },
   },
   {
-    path: "/tags",
-    component: Tag,
+    path: '/tags',
+    component: reslove => require(['../views/tag/Tag'], reslove),
     meta: {
-      title: "标签"
-    }
+      title: '标签',
+    },
   },
   {
-    path: "/categories",
-    component: Category,
+    path: '/categories',
+    component: reslove => require(['../views/category/Category'], reslove),
     meta: {
-      title: "分类"
-    }
+      title: '分类',
+    },
   },
   {
-    path: "/categories/*",
-    component: ArticleList
+    path: '/categories/*',
+    component: reslove => require(['../components/ArticleList'], reslove),
   },
   {
-    path: "/links",
-    component: Link,
+    path: '/links',
+    component: reslove => require(['../views/link/Link'], reslove),
     meta: {
-      title: "友链列表"
-    }
+      title: '友链列表',
+    },
   },
   {
-    path: "/about",
-    component: About,
+    path: '/about',
+    component: reslove => require(['../views/about/About'], reslove),
     meta: {
-      title: "关于我"
-    }
+      title: '关于我',
+    },
   },
   {
-    path: "/video",
+    path: '/video',
     component: Video,
     meta: {
-      title: "Video"
-    }
+      title: 'Video',
+    },
   },
   {
-    path: "/message",
-    component: Message,
+    path: '/message',
+    component: reslove => require(['../views/message/Messsage'], reslove),
     meta: {
-      title: "留言板"
-    }
+      title: '留言板',
+    },
   },
   {
-    path: "/tags/*",
-    component: ArticleList
+    path: '/tags/*',
+    component: reslove => require(['../components/ArticleList'], reslove),
   },
   {
-    path: "/user",
-    component: User,
+    path: '/user',
+    component: reslove => require(['../views/user/User'], reslove),
     meta: {
-      title: "个人中心"
-    }
+      title: '个人中心',
+    },
   },
-];
+]
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
-  routes
-});
+  routes,
+})
 
-export default router;
+export default router

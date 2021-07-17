@@ -24,7 +24,8 @@ import live2d from 'live2d-vue'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import hls from 'videojs-contrib-hls'
-import 'view-design/dist/styles/iview.css';
+import 'view-design/dist/styles/iview.css'
+import "@mdi/font/css/materialdesignicons.css"
 
 
 Vue.prototype.config = config
