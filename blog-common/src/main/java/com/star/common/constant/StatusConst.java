@@ -22,4 +22,14 @@ public class StatusConst {
      */
     public static final int SYSTEM_ERROR = 5000;
 
+    /**
+     * 未登录
+     */
+    public static final int NOT_LOGIN = 4001;
+
+    /**
+     * 没有操作权限
+     */
+    public static final int NO_AUTH = 4002;
+
 }

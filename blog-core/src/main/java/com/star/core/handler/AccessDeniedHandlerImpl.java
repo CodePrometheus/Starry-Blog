@@ -24,6 +24,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
         httpServletResponse.setContentType("application/json;charset=utf-8");
-        httpServletResponse.getWriter().write(JSON.toJSONString(new Result(false, StatusConst.ERROR, "没有操作权限")));
+        httpServletResponse.getWriter().write(JSON.toJSONString(new Result<>(false, StatusConst.ERROR, "没有操作权限")));
     }
+
 }

@@ -112,7 +112,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<UserMenuDTO> listUserMenus() {
         // 查询用户菜单信息
-        List<Menu> menuList = menuMapper.listMenuByUserInfoId(UserUtil.getLoginUser().getUserInfoId());
+        List<Menu> menuList = menuMapper.listMenuByUserInfoId(UserUtil.getUserInfoId());
         // 获取目录列表
         List<Menu> parentMenu = listParentMenu(menuList);
         // 获取目录下的子菜单

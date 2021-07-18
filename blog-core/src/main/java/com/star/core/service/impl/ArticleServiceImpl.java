@@ -218,12 +218,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleOptionDTO listArticleOptionDTO() {
-        // 查询文章分类选项
+        // 查询文章对应的分类
         List<Category> categoryList = categoryMapper.selectList(new LambdaQueryWrapper<Category>()
                 .select(Category::getId, Category::getCategoryName));
         List<CategoryBackDTO> categoryBackDTOList = BeanCopyUtil.copyList(categoryList, CategoryBackDTO.class);
-
-        // 查询文章标签选项
+        // 查询文章对应的标签
         List<Tag> tagList = tagMapper.selectList(new LambdaQueryWrapper<Tag>()
                 .select(Tag::getId, Tag::getTagName));
         List<TagDTO> tagDTOList = BeanCopyUtil.copyList(tagList, TagDTO.class);

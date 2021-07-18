@@ -200,7 +200,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public PageDTO<CommentBackDTO> listCommentBackDTO(ConditionVO condition) {
         // 转换页码
         condition.setCurrent((condition.getCurrent() - 1) * condition.getSize());
-        // 统计后台评论量
+        // 统计后台所有评论量
         Integer count = commentMapper.countCommentBack(condition);
         if (count == 0) {
             return new PageDTO<>();
@@ -211,7 +211,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         Map<String, Integer> likeCountMap = redisUtil.hGetAll(COMMENT_LIKE_COUNT);
         // 封装点赞量
         for (CommentBackDTO commentBackDTO : commentBackDTOList) {
-            commentBackDTO.setLikeCount(Objects.requireNonNull(likeCountMap).get(commentBackDTO.getId().toString()));
+            commentBackDTO.setLikeCount(Objects.requireNonNull(likeCountMap)
+                    .get(commentBackDTO.getId().toString()));
         }
         return new PageDTO<>(commentBackDTOList, count);
     }

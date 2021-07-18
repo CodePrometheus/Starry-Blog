@@ -61,7 +61,7 @@ public class FriendLinkServiceImpl extends ServiceImpl<LinkMapper, FriendLink> i
         Integer count = linkMapper.selectCount(new LambdaQueryWrapper<FriendLink>()
                 .eq(FriendLink::getLinkName, friendLinkVO.getLinkName()));
         if (count > 0) {
-            throw new StarryException("友联已存在");
+            throw new StarryException("友链已存在");
         }
         FriendLink friendLink = FriendLink.builder()
                 .id(friendLinkVO.getId())

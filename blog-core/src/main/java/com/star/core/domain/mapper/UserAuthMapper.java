@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.star.core.domain.entity.UserAuth;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.service.dto.UserBackDTO;
-import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -60,7 +60,7 @@ public class ArticleController {
         return new Result<>(true, OK, QUERY, articleService.listArticleBackDTO(conditionVO));
     }
 
-    @ApiOperation(value = "查看文章选项")
+    @ApiOperation(value = "查看文章对应的分类与标签信息")
     @GetMapping("/admin/articles/options")
     private Result<ArticleOptionDTO> listArticleOptionDTO() {
         return new Result<>(true, OK, QUERY, articleService.listArticleOptionDTO());
@@ -73,7 +73,7 @@ public class ArticleController {
         return new Result<>(true, OK, OPERATE);
     }
 
-    @ApiOperation(value = "修改文章置顶")
+    @ApiOperation(value = "修改文章置顶状态")
     @PutMapping("/admin/articles/top/{articleId}")
     private Result<?> updateArticleTop(@PathVariable("articleId") Integer articleId, Integer isTop) {
         articleService.updateArticleTop(articleId, isTop);
