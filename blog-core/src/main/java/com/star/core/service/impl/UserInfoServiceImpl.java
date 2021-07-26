@@ -1,5 +1,6 @@
 package com.star.core.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.PathConst;
@@ -9,17 +10,22 @@ import com.star.common.tool.RedisUtil;
 import com.star.core.domain.entity.UserInfo;
 import com.star.core.domain.entity.UserRole;
 import com.star.core.domain.mapper.UserInfoMapper;
+import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.EmailVO;
 import com.star.core.domain.vo.UserInfoVO;
 import com.star.core.domain.vo.UserRoleVO;
 import com.star.core.service.UserInfoService;
 import com.star.core.service.UserRoleService;
+import com.star.core.service.dto.PageDTO;
+import com.star.core.service.dto.UserOnlineDTO;
 import com.star.core.util.UserUtil;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +42,9 @@ import static com.star.common.constant.RedisConst.CODE_KEY;
 @Service
 @SuppressWarnings("unchecked")
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
+
+    @Resource
+    private SessionRegistry sessionRegistry;
 
     @Resource
     private RedisUtil redisUtil;
@@ -110,6 +119,22 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 .id(UserUtil.getLoginUser().getUserInfoId())
                 .email(emailVO.getEmail()).build();
         userInfoMapper.updateById(userInfo);
+    }
+
+    @Override
+    public PageDTO<UserOnlineDTO> listOnlineUsers(ConditionVO conditionVO) {
+        // 获取security在线session
+        List<UserOnlineDTO> onlineUserList = sessionRegistry.getAllPrincipals().stream()
+                .filter(item -> sessionRegistry.getAllSessions(item, false).size() > 0)
+                .map(item -> JSON.parseObject(JSON.toJSONString(item), UserOnlineDTO.class))
+                .sorted(Comparator.comparing(UserOnlineDTO::getLastLoginTime).reversed())
+                .collect(Collectors.toList());
+        // 分页
+        int current = (conditionVO.getCurrent() - 1) * conditionVO.getSize();
+        int size = onlineUserList.size() > conditionVO.getSize() ? current + conditionVO.getSize()
+                : onlineUserList.size();
+        List<UserOnlineDTO> subList = onlineUserList.subList((conditionVO.getCurrent() - 1) * conditionVO.getSize(), size);
+        return new PageDTO<>(subList, onlineUserList.size());
     }
 
 

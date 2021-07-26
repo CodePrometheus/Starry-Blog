@@ -5,7 +5,7 @@ import com.star.core.domain.entity.Role;
 import com.star.core.domain.vo.ConditionVO;
 import com.star.core.service.dto.RoleDTO;
 import com.star.core.service.dto.UrlRoleDTO;
-import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

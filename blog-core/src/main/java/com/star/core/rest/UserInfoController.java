@@ -1,9 +1,12 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
+import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.UserInfoVO;
 import com.star.core.domain.vo.UserRoleVO;
 import com.star.core.service.UserInfoService;
+import com.star.core.service.dto.PageDTO;
+import com.star.core.service.dto.UserOnlineDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -50,11 +53,17 @@ public class UserInfoController {
         return new Result<>(true, OK, QUERY);
     }
 
-    @ApiOperation(value = "修改用户禁言状态")
-    @PutMapping("/admin/users/comment/{userInfoId}")
+    @ApiOperation(value = "修改用户禁用状态")
+    @PutMapping("/admin/users/disable/{userInfoId}")
     private Result<String> updateUserSilence(@PathVariable("userInfoId") Integer userInfoId, Integer isDisable) {
         userInfoService.updateUserDisable(userInfoId, isDisable);
         return new Result<>(true, OK, QUERY);
+    }
+
+    @ApiOperation("查看在线用户")
+    @GetMapping("/admin/user/online")
+    public Result<PageDTO<UserOnlineDTO>> listOnlineUsers(ConditionVO conditionVO) {
+        return new Result<>(true, OK, QUERY, userInfoService.listOnlineUsers(conditionVO));
     }
 
 }

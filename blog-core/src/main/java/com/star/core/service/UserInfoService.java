@@ -2,9 +2,12 @@ package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.domain.entity.UserInfo;
+import com.star.core.domain.vo.ConditionVO;
 import com.star.core.domain.vo.EmailVO;
 import com.star.core.domain.vo.UserInfoVO;
 import com.star.core.domain.vo.UserRoleVO;
+import com.star.core.service.dto.PageDTO;
+import com.star.core.service.dto.UserOnlineDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -48,5 +51,13 @@ public interface UserInfoService extends IService<UserInfo> {
      * @param emailVO
      */
     void saveUserEmail(EmailVO emailVO);
+
+    /**
+     * 查看在线用户列表
+     *
+     * @param conditionVO
+     * @return
+     */
+    PageDTO<UserOnlineDTO> listOnlineUsers(ConditionVO conditionVO);
 
 }
