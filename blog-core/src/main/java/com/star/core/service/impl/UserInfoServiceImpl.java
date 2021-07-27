@@ -17,14 +17,17 @@ import com.star.core.domain.vo.UserRoleVO;
 import com.star.core.service.UserInfoService;
 import com.star.core.service.UserRoleService;
 import com.star.core.service.dto.PageDTO;
+import com.star.core.service.dto.UserInfoDTO;
 import com.star.core.service.dto.UserOnlineDTO;
 import com.star.core.util.UserUtil;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -137,5 +140,16 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         return new PageDTO<>(subList, onlineUserList.size());
     }
 
+    @Override
+    public void removeOnlineUser(Integer userInfoId) {
+        List<Object> userInfoList = sessionRegistry.getAllPrincipals().stream().filter(item -> {
+            UserInfoDTO userInfoDTO = (UserInfoDTO) item;
+            return userInfoDTO.getUserInfoId().equals(userInfoId);
+        }).collect(Collectors.toList());
+        List<SessionInformation> list = new ArrayList<>();
+        userInfoList.forEach(item -> list.addAll(sessionRegistry.getAllSessions(item, false)));
+        // 注销
+        list.forEach(SessionInformation::expireNow);
+    }
 
 }

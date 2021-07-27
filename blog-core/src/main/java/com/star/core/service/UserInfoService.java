@@ -60,4 +60,9 @@ public interface UserInfoService extends IService<UserInfo> {
      */
     PageDTO<UserOnlineDTO> listOnlineUsers(ConditionVO conditionVO);
 
+    /**
+     * 下线用户
+     * @param userInfoId 用户信息id
+     */
+    void removeOnlineUser(Integer userInfoId);
 }

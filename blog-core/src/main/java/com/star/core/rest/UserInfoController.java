@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+import static com.star.common.constant.MessageConst.OPERATE;
 import static com.star.common.constant.MessageConst.QUERY;
 import static com.star.common.constant.StatusConst.OK;
 
@@ -64,6 +65,13 @@ public class UserInfoController {
     @GetMapping("/admin/user/online")
     public Result<PageDTO<UserOnlineDTO>> listOnlineUsers(ConditionVO conditionVO) {
         return new Result<>(true, OK, QUERY, userInfoService.listOnlineUsers(conditionVO));
+    }
+
+    @ApiOperation("移除在线用户")
+    @DeleteMapping("/admin/user/online/{userInfoId}")
+    public Result<PageDTO<UserOnlineDTO>> removeOnlineUser(@PathVariable("userInfoId") Integer userInfoId) {
+        userInfoService.removeOnlineUser(userInfoId);
+        return new Result<>(true, OK, OPERATE);
     }
 
 }
