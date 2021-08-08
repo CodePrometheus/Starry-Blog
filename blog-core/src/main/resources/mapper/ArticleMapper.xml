@@ -63,7 +63,7 @@
         SELECT a.id,
                article_cover,
                article_title,
-               article_content,
+               SUBSTR( article_content, 1, 500 ) AS article_content,,
                a.is_top,
                a.create_time,
                a.category_id,
@@ -231,6 +231,7 @@
                  WHERE article_id != #{articleId}
              ) t2
                  JOIN tb_article a ON t2.article_id = a.id
+        where a.is_delete = 0
         ORDER BY is_top DESC, id DESC LIMIT 6
     </select>
 

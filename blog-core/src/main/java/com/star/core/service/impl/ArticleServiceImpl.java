@@ -38,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.ARTICLE_SET;
@@ -145,13 +147,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String name;
         if (Objects.nonNull(condition.getCategoryId())) {
             name = categoryMapper.selectOne(new LambdaQueryWrapper<Category>()
-                    .select(Category::getCategoryName)
-                    .eq(Category::getId, condition.getCategoryId()))
+                            .select(Category::getCategoryName)
+                            .eq(Category::getId, condition.getCategoryId()))
                     .getCategoryName();
         } else {
             name = tagMapper.selectOne(new LambdaQueryWrapper<Tag>()
-                    .select(Tag::getTagName)
-                    .eq(Tag::getId, condition.getTagId()))
+                            .select(Tag::getTagName)
+                            .eq(Tag::getId, condition.getTagId()))
                     .getTagName();
         }
         return ArticlePreviewListDTO.builder()
@@ -161,6 +163,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleDTO getArticleById(Integer articleId) {
+        // 查询推荐文章
+        CompletableFuture<List<ArticleRecommendDTO>> recommendArticleList = CompletableFuture.supplyAsync(() ->
+                articleMapper.listArticleRecommends(articleId));
         // 更新文章浏览量
         updateArticleViewsCount(articleId);
         // 查询id对应的文章
@@ -192,6 +197,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 封装点赞量和浏览量封装
         article.setViewsCount((Integer) redisUtil.hGet(ARTICLE_VIEWS_COUNT, articleId.toString()));
         article.setLikeCount((Integer) redisUtil.hGet(ARTICLE_LIKE_COUNT, articleId.toString()));
+
+        // 封装相关推荐文章
+        try {
+            article.setArticleRecommendList(recommendArticleList.get());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return article;
     }
@@ -283,8 +295,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 添加文章标签
         if (!articleVO.getTagIdList().isEmpty()) {
             List<ArticleTag> articleTagList = articleVO.getTagIdList().stream().map(tagId -> ArticleTag.builder()
-                    .articleId(article.getId())
-                    .tagId(tagId).build())
+                            .articleId(article.getId())
+                            .tagId(tagId).build())
                     .collect(Collectors.toList());
             articleTagService.saveBatch(articleTagList);
         }
@@ -344,8 +356,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 查询文章标签
         List<Integer> articleTagList = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>()
-                .select(ArticleTag::getTagId)
-                .eq(ArticleTag::getArticleId, article.getId()))
+                        .select(ArticleTag::getTagId)
+                        .eq(ArticleTag::getArticleId, article.getId()))
                 .stream()
                 .map(ArticleTag::getTagId).collect(Collectors.toList());
         return ArticleVO.builder()
@@ -372,7 +384,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 根据关键词搜索文章标题或内容
         if (Objects.nonNull(condition.getKeywords())) {
             boolQueryBuilder.must(QueryBuilders.boolQuery().should(QueryBuilders.matchQuery("articleTitle", condition.getKeywords()))
-                    .should(QueryBuilders.matchQuery("articleContent", condition.getKeywords())))
+                            .should(QueryBuilders.matchQuery("articleContent", condition.getKeywords())))
                     .must(QueryBuilders.termQuery("isDelete", FALSE));
         }
         // 查询

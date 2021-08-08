@@ -9,18 +9,6 @@ package com.star.core.util;
 public class HTMLUtil {
 
     /**
-     * 删除文章内的markdown
-     *
-     * @param source 需要过滤的文本
-     * @return 过滤后的内容
-     */
-    public static String deleteArticleTag(String source) {
-        //删除HTML和markdown标签
-        source = source.replaceAll("!\\[\\]\\((.*?)\\)", "").replaceAll("<[^>]+>", "");
-        return deleteTag(source);
-    }
-
-    /**
      * 删除评论内容标签
      *
      * @param source 需要进行剔除HTML的文本
@@ -28,7 +16,8 @@ public class HTMLUtil {
      */
     public static String deleteCommentTag(String source) {
         //保留图片标签
-        source = source.replaceAll("(?!<(img).*?>)<.*?>", "");
+        source = source.replaceAll("(?!<(img).*?>)<.*?>", "")
+                .replaceAll("(on[^\"]+)", "");
         return deleteTag(source);
     }
 

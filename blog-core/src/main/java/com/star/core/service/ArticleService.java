@@ -8,6 +8,7 @@ import com.star.core.domain.vo.DeleteVO;
 import com.star.core.service.dto.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author zzStar
@@ -68,7 +69,7 @@ public interface ArticleService extends IService<Article> {
      * @param articleId 文章id
      * @return 文章
      */
-    ArticleDTO getArticleById(Integer articleId);
+    ArticleDTO getArticleById(Integer articleId) throws ExecutionException;
 
     /**
      * 查看文章分类标签选项

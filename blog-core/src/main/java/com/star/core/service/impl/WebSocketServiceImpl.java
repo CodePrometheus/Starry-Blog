@@ -9,6 +9,7 @@ import com.star.core.domain.mapper.ChatRecordMapper;
 import com.star.core.service.dto.ChatRecordDTO;
 import com.star.core.service.dto.RecallMessageDTO;
 import com.star.core.service.dto.WebsocketMessageDTO;
+import com.star.core.util.HTMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +144,8 @@ public class WebSocketServiceImpl {
             // 发送消息
             case SEND_MESSAGE:
                 ChatRecord chatRecord = JSON.parseObject(JSON.toJSONString(msg.getData()), ChatRecord.class);
+                // 过滤html标签
+                chatRecord.setContent(HTMLUtil.deleteCommentTag(chatRecord.getContent()));
                 recordMapper.insert(chatRecord);
                 msg.setData(chatRecord);
                 for (WebSocketServiceImpl webSocketService : webSocketSet) {

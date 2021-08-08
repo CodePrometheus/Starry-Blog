@@ -109,11 +109,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionRegistry(sessionRegistry());
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring()
-//                .antMatchers("/admin/**",
-//                        "/login");
-    }
-
 }
