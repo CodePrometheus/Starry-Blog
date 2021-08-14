@@ -1,12 +1,12 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.entity.Role;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.RoleVO;
-import com.star.core.service.dto.PageDTO;
-import com.star.core.service.dto.RoleDTO;
-import com.star.core.service.dto.UserRoleDTO;
+import com.star.core.entity.Role;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.RoleVO;
+import com.star.core.dto.PageDTO;
+import com.star.core.dto.RoleDTO;
+import com.star.core.dto.UserRoleDTO;
 
 import java.util.List;
 

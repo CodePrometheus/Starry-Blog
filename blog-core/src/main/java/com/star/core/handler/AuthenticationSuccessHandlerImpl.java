@@ -2,12 +2,12 @@ package com.star.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.star.common.constant.Result;
-import com.star.core.domain.entity.UserAuth;
-import com.star.core.domain.mapper.UserAuthMapper;
-import com.star.core.service.dto.UserInfoDTO;
-import com.star.core.service.dto.UserLoginDTO;
+import com.star.core.dto.UserLoginDTO;
+import com.star.core.entity.UserAuth;
+import com.star.core.mapper.UserAuthMapper;
 import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.UserUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -16,9 +16,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static com.star.common.constant.MessageConst.LOGIN;
-import static com.star.common.constant.StatusConst.OK;
 
 /**
  * 登录成功处理
@@ -29,16 +26,16 @@ import static com.star.common.constant.StatusConst.OK;
 @Component
 public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
-    @Resource
+    @Autowired(required = false)
     private UserAuthMapper userAuthMapper;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
-        // 更新用户ip，最近登录时间
-        updateUserInfo();
         UserLoginDTO userLoginDTO = BeanCopyUtil.copyObject(UserUtil.getLoginUser(), UserLoginDTO.class);
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-        httpServletResponse.getWriter().write(JSON.toJSONString(new Result<UserInfoDTO>(true, OK, LOGIN, userLoginDTO)));
+        httpServletResponse.getWriter().write(JSON.toJSONString(Result.success(userLoginDTO)));
+        // 更新用户ip，最近登录时间
+        updateUserInfo();
     }
 
 

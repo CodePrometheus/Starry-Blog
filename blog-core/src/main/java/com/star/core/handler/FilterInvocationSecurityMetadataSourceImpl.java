@@ -1,7 +1,7 @@
 package com.star.core.handler;
 
-import com.star.core.domain.mapper.RoleMapper;
-import com.star.core.service.dto.UrlRoleDTO;
+import com.star.core.mapper.RoleMapper;
+import com.star.core.dto.UrlRoleDTO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;

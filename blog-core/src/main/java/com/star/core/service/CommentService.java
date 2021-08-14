@@ -1,14 +1,14 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.entity.Comment;
-import com.star.core.domain.vo.CommentVO;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.DeleteVO;
-import com.star.core.service.dto.CommentBackDTO;
-import com.star.core.service.dto.CommentDTO;
-import com.star.core.service.dto.PageDTO;
-import com.star.core.service.dto.ReplyDTO;
+import com.star.core.entity.Comment;
+import com.star.core.vo.CommentVO;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.DeleteVO;
+import com.star.core.dto.CommentBackDTO;
+import com.star.core.dto.CommentDTO;
+import com.star.core.dto.PageDTO;
+import com.star.core.dto.ReplyDTO;
 
 import java.util.List;
 

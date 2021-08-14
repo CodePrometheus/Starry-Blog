@@ -1,8 +1,8 @@
 package com.star.core.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.core.domain.entity.ArticleTag;
-import com.star.core.domain.mapper.ArticleTagMapper;
+import com.star.core.entity.ArticleTag;
+import com.star.core.mapper.ArticleTagMapper;
 import com.star.core.service.ArticleTagService;
 import org.springframework.stereotype.Service;
 

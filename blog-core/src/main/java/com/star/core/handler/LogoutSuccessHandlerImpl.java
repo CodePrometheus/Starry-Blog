@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.star.common.constant.MessageConst.LOGOUT;
-import static com.star.common.constant.StatusConst.OK;
-
 /**
  * 注销处理
  *
@@ -26,7 +23,7 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-        httpServletResponse.getWriter().write(JSON.toJSONString(new Result<>(true, OK, LOGOUT)));
+        httpServletResponse.getWriter().write(JSON.toJSONString(Result.success()));
     }
 
 }

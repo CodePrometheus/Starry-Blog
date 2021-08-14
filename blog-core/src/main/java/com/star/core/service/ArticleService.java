@@ -1,14 +1,14 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.entity.Article;
-import com.star.core.domain.vo.ArticleVO;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.DeleteVO;
-import com.star.core.service.dto.*;
+import com.star.core.dto.*;
+import com.star.core.entity.Article;
+import com.star.core.vo.ArticleTopVO;
+import com.star.core.vo.ArticleVO;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.DeleteVO;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author zzStar
@@ -29,15 +29,14 @@ public interface ArticleService extends IService<Article> {
      * @param condition 条件
      * @return 文章列表
      */
-    PageDTO<ArticleBackDTO> listArticleBackDTO(ConditionVO condition);
+    PageDTO<ArticleBackDTO> listArticleBack(ConditionVO condition);
 
     /**
      * 查询首页文章
      *
-     * @param current 当前页码
      * @return 文章
      */
-    List<ArticleHomeDTO> listArticles(Long current);
+    List<ArticleHomeDTO> listArticles();
 
     /**
      * 根据条件查询文章列表
@@ -69,7 +68,7 @@ public interface ArticleService extends IService<Article> {
      * @param articleId 文章id
      * @return 文章
      */
-    ArticleDTO getArticleById(Integer articleId) throws ExecutionException;
+    ArticleDTO getArticleById(Integer articleId);
 
     /**
      * 查看文章分类标签选项
@@ -95,10 +94,9 @@ public interface ArticleService extends IService<Article> {
     /**
      * 修改文章置顶
      *
-     * @param isTop     置顶状态值
-     * @param articleId 文章id
+     * @param articleTopVO
      */
-    void updateArticleTop(Integer articleId, Integer isTop);
+    void updateArticleTop(ArticleTopVO articleTopVO);
 
     /**
      * 删除或恢复文章

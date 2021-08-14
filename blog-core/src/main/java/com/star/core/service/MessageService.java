@@ -2,12 +2,12 @@ package com.star.core.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.service.dto.MessageBackDTO;
-import com.star.core.service.dto.MessageDTO;
-import com.star.core.domain.entity.Message;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.MessageVO;
-import com.star.core.service.dto.PageDTO;
+import com.star.core.dto.MessageBackDTO;
+import com.star.core.dto.MessageDTO;
+import com.star.core.entity.Message;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.MessageVO;
+import com.star.core.dto.PageDTO;
 
 import java.util.List;
 

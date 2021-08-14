@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.common.constant.CommonConst;
 import com.star.common.exception.StarryException;
 import com.star.common.tool.RedisUtil;
-import com.star.core.domain.entity.Article;
-import com.star.core.domain.entity.UserInfo;
-import com.star.core.domain.mapper.*;
+import com.star.core.dto.*;
+import com.star.core.entity.Article;
+import com.star.core.entity.UserInfo;
+import com.star.core.mapper.*;
 import com.star.core.service.BlogInfoService;
 import com.star.core.service.UniqueViewService;
-import com.star.core.service.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

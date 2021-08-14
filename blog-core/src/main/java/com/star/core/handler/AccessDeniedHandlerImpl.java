@@ -2,7 +2,6 @@ package com.star.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.star.common.constant.Result;
-import com.star.common.constant.StatusConst;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -24,7 +23,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
         httpServletResponse.setContentType("application/json;charset=utf-8");
-        httpServletResponse.getWriter().write(JSON.toJSONString(new Result<>(false, StatusConst.ERROR, "没有操作权限")));
+        httpServletResponse.getWriter().write(JSON.toJSONString(Result.fail("权限不足")));
     }
 
 }

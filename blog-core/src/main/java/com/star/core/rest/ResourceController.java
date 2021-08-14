@@ -1,10 +1,10 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
-import com.star.core.domain.vo.ResourceVO;
+import com.star.core.dto.LabelOptionDTO;
+import com.star.core.dto.ResourceDTO;
 import com.star.core.service.ResourceService;
-import com.star.core.service.dto.LabelOptionDTO;
-import com.star.core.service.dto.ResourceDTO;
+import com.star.core.vo.ResourceVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-
-import static com.star.common.constant.MessageConst.*;
-import static com.star.common.constant.StatusConst.OK;
 
 /**
  * @Author: zzStar
@@ -32,33 +29,33 @@ public class ResourceController {
     @GetMapping("/resources/import")
     public Result<?> importSwagger() {
         resourceService.importSwagger();
-        return new Result<>(true, OK, "导入Swagger成功");
+        return Result.success();
     }
 
     @ApiOperation(value = "查看资源列表")
     @GetMapping("/resources")
     public Result<List<ResourceDTO>> listResources() {
-        return new Result<>(true, OK, QUERY, resourceService.listResources());
+        return Result.success(resourceService.listResources());
     }
 
     @ApiOperation(value = "删除资源")
     @DeleteMapping("/resources")
     public Result<?> deleteResources(@RequestBody List<Integer> resourceIdList) {
         resourceService.deleteResources(resourceIdList);
-        return new Result<>(true, OK, DELETE);
+        return Result.success();
     }
 
     @ApiOperation(value = "新增或修改资源")
     @PostMapping("/resources")
     public Result<?> saveOrUpdateResources(@RequestBody @Valid ResourceVO resourceVO) {
         resourceService.saveOrUpdateResource(resourceVO);
-        return new Result<>(true, OK, OPERATE);
+        return Result.success();
     }
 
     @ApiOperation(value = "查看角色资源选项")
     @GetMapping("/role/resources")
     public Result<List<LabelOptionDTO>> listResourceOption() {
-        return new Result<>(true, OK, QUERY, resourceService.listResourceOption());
+        return Result.success(resourceService.listResourceOption());
     }
 
 }

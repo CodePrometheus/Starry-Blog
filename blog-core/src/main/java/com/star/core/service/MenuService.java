@@ -1,11 +1,11 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.entity.Menu;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.service.dto.LabelOptionDTO;
-import com.star.core.service.dto.MenuDTO;
-import com.star.core.service.dto.UserMenuDTO;
+import com.star.core.entity.Menu;
+import com.star.core.vo.ConditionVO;
+import com.star.core.dto.LabelOptionDTO;
+import com.star.core.dto.MenuDTO;
+import com.star.core.dto.UserMenuDTO;
 
 import java.util.List;
 

@@ -2,12 +2,12 @@ package com.star.core.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.entity.FriendLink;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.FriendLinkVO;
-import com.star.core.service.dto.FriendLinkBackDTO;
-import com.star.core.service.dto.FriendLinkDTO;
-import com.star.core.service.dto.PageDTO;
+import com.star.core.entity.FriendLink;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.FriendLinkVO;
+import com.star.core.dto.FriendLinkBackDTO;
+import com.star.core.dto.FriendLinkDTO;
+import com.star.core.dto.PageDTO;
 
 import java.util.List;
 

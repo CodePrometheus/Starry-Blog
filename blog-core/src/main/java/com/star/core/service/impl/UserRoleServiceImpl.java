@@ -1,8 +1,8 @@
 package com.star.core.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.core.domain.entity.UserRole;
-import com.star.core.domain.mapper.UserRoleMapper;
+import com.star.core.entity.UserRole;
+import com.star.core.mapper.UserRoleMapper;
 import com.star.core.service.UserRoleService;
 import org.springframework.stereotype.Service;
 

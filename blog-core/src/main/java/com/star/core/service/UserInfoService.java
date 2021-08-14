@@ -1,13 +1,13 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.entity.UserInfo;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.EmailVO;
-import com.star.core.domain.vo.UserInfoVO;
-import com.star.core.domain.vo.UserRoleVO;
-import com.star.core.service.dto.PageDTO;
-import com.star.core.service.dto.UserOnlineDTO;
+import com.star.core.entity.UserInfo;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.EmailVO;
+import com.star.core.vo.UserInfoVO;
+import com.star.core.vo.UserRoleVO;
+import com.star.core.dto.PageDTO;
+import com.star.core.dto.UserOnlineDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

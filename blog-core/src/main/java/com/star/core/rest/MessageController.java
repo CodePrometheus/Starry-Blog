@@ -1,12 +1,12 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.MessageVO;
+import com.star.core.dto.MessageBackDTO;
+import com.star.core.dto.MessageDTO;
+import com.star.core.dto.PageDTO;
 import com.star.core.service.MessageService;
-import com.star.core.service.dto.MessageBackDTO;
-import com.star.core.service.dto.MessageDTO;
-import com.star.core.service.dto.PageDTO;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.MessageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-
-import static com.star.common.constant.MessageConst.ADD;
-import static com.star.common.constant.MessageConst.OPERATE;
-import static com.star.common.constant.StatusConst.OK;
 
 /**
  * 留言逻辑
@@ -36,26 +32,26 @@ public class MessageController {
     @PostMapping("/messages")
     private Result<?> saveMessage(@Valid @RequestBody MessageVO messageVO) {
         messageService.saveMessage(messageVO);
-        return new Result<>(true, OK, ADD);
+        return Result.success();
     }
 
     @ApiOperation(value = "查看留言列表")
     @GetMapping("/messages")
     private Result<List<MessageDTO>> listMessages() {
-        return new Result<>(true, OK, ADD, messageService.listMessages());
+        return Result.success(messageService.listMessages());
     }
 
     @ApiOperation(value = "查看后台留言列表")
     @GetMapping("/admin/messages")
     private Result<PageDTO<MessageBackDTO>> listMessageBackDTO(ConditionVO condition) {
-        return new Result<>(true, OK, ADD, messageService.listMessageBackDTO(condition));
+        return Result.success(messageService.listMessageBackDTO(condition));
     }
 
     @ApiOperation(value = "删除留言")
     @DeleteMapping("/admin/messages")
     public Result<?> deleteMessages(@RequestBody List<Integer> messageIdList) {
         messageService.removeByIds(messageIdList);
-        return new Result<>(true, OK, OPERATE);
+        return Result.success();
     }
 
 }

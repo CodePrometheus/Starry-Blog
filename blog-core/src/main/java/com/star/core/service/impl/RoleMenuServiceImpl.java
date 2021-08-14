@@ -1,8 +1,8 @@
 package com.star.core.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.core.domain.entity.RoleMenu;
-import com.star.core.domain.mapper.RoleMenuMapper;
+import com.star.core.entity.RoleMenu;
+import com.star.core.mapper.RoleMenuMapper;
 import com.star.core.service.RoleMenuService;
 import org.springframework.stereotype.Service;
 

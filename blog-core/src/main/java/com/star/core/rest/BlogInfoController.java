@@ -1,8 +1,9 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
+import com.star.core.dto.BlogBackInfoDTO;
+import com.star.core.dto.BlogHomeInfoDTO;
 import com.star.core.service.BlogInfoService;
-import com.star.core.service.dto.BlogHomeInfoDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,9 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-
-import static com.star.common.constant.MessageConst.*;
-import static com.star.common.constant.StatusConst.OK;
 
 /**
  * 博客信息模块
@@ -31,39 +29,39 @@ public class BlogInfoController {
     @ApiOperation(value = "查看博客信息")
     @GetMapping("/")
     private Result<BlogHomeInfoDTO> getBlogHomeInfo() {
-        return new Result<>(true, OK, QUERY, blogInfoService.getBlogInfo());
+        return Result.success(blogInfoService.getBlogInfo());
     }
 
     @ApiOperation(value = "查看后台信息")
     @GetMapping("/admin")
-    private Result<BlogHomeInfoDTO> getBlogBackInfo() {
-        return new Result<>(true, OK, QUERY, blogInfoService.getBlogBackInfo());
+    private Result<BlogBackInfoDTO> getBlogBackInfo() {
+        return Result.success(blogInfoService.getBlogBackInfo());
     }
 
     @ApiOperation(value = "查看关于我信息")
     @GetMapping("/about")
     private Result<String> getAbout() {
-        return new Result<>(true, OK, QUERY, blogInfoService.getAbout());
+        return Result.success(blogInfoService.getAbout());
     }
 
     @ApiOperation(value = "修改关于我信息")
     @PutMapping("/admin/about")
     private Result<?> updateAbout(String aboutContent) {
         blogInfoService.updateAbout(aboutContent);
-        return new Result<>(true, OK, UPDATE);
+        return Result.success();
     }
 
     @ApiOperation(value = "修改公告")
     @PutMapping("/admin/notice")
     private Result<?> updateNotice(String notice) {
         blogInfoService.updateNotice(notice);
-        return new Result<>(true, OK, UPDATE);
+        return Result.success();
     }
 
     @ApiOperation(value = "查看公告")
     @GetMapping("/admin/notice")
     private Result<String> getNotice() {
-        return new Result<>(true, OK, VIEW, blogInfoService.getNotice());
+        return Result.success(blogInfoService.getNotice());
     }
 
 }

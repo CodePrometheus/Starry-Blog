@@ -1,11 +1,12 @@
 package com.star.core.util;
 
 import com.star.common.tool.IpUtil;
-import com.star.core.domain.entity.UserAuth;
-import com.star.core.domain.entity.UserInfo;
-import com.star.core.service.dto.UserInfoDTO;
+import com.star.core.entity.UserAuth;
+import com.star.core.entity.UserInfo;
+import com.star.core.dto.UserInfoDTO;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.Set;
  * @Author: zzStar
  * @Date: 12-16-2020 20:22
  */
+@Component
 public class UserUtil {
 
     /**

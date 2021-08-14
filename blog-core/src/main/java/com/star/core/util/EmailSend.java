@@ -2,7 +2,7 @@ package com.star.core.util;
 
 import com.alibaba.fastjson.JSON;
 import com.star.core.config.RabbitConfig;
-import com.star.core.service.dto.EmailDTO;
+import com.star.core.dto.EmailDTO;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Value;

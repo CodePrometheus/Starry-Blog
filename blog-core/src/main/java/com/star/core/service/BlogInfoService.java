@@ -1,8 +1,8 @@
 package com.star.core.service;
 
 
-import com.star.core.service.dto.BlogBackInfoDTO;
-import com.star.core.service.dto.BlogHomeInfoDTO;
+import com.star.core.dto.BlogBackInfoDTO;
+import com.star.core.dto.BlogHomeInfoDTO;
 
 /**
  * @author zzStar

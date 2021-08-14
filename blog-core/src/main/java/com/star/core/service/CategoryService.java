@@ -1,11 +1,11 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.vo.CategoryVO;
-import com.star.core.service.dto.CategoryDTO;
-import com.star.core.domain.entity.Category;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.service.dto.PageDTO;
+import com.star.core.vo.CategoryVO;
+import com.star.core.dto.CategoryDTO;
+import com.star.core.entity.Category;
+import com.star.core.vo.ConditionVO;
+import com.star.core.dto.PageDTO;
 
 import java.util.List;
 

@@ -3,11 +3,10 @@ package com.star.core.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.tool.DateUtil;
 import com.star.common.tool.RedisUtil;
-import com.star.core.domain.entity.UniqueView;
-import com.star.core.domain.mapper.UniqueViewMapper;
+import com.star.core.entity.UniqueView;
+import com.star.core.mapper.UniqueViewMapper;
 import com.star.core.service.UniqueViewService;
-import com.star.core.service.dto.UniqueViewDTO;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.star.core.dto.UniqueViewDTO;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 

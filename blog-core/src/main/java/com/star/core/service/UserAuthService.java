@@ -1,12 +1,12 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.service.dto.UserBackDTO;
-import com.star.core.domain.entity.UserAuth;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.PasswordVO;
-import com.star.core.domain.vo.UserVO;
-import com.star.core.service.dto.PageDTO;
+import com.star.core.dto.UserBackDTO;
+import com.star.core.entity.UserAuth;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.PasswordVO;
+import com.star.core.vo.UserVO;
+import com.star.core.dto.PageDTO;
 
 /**
  * @author zzStar

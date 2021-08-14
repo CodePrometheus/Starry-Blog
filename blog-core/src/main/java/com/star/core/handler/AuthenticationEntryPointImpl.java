@@ -2,7 +2,6 @@ package com.star.core.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.star.common.constant.Result;
-import com.star.common.constant.StatusConst;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -24,7 +23,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         httpServletResponse.setContentType("application/json;charset=utf-8");
-        httpServletResponse.getWriter().write(JSON.toJSONString(new Result<>(false, StatusConst.ERROR, "请登录")));
+        httpServletResponse.getWriter().write(JSON.toJSONString(Result.fail("用户未登录")));
     }
 
 }

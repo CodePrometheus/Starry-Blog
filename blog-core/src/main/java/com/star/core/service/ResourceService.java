@@ -1,10 +1,10 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.entity.Resource;
-import com.star.core.domain.vo.ResourceVO;
-import com.star.core.service.dto.LabelOptionDTO;
-import com.star.core.service.dto.ResourceDTO;
+import com.star.core.entity.Resource;
+import com.star.core.vo.ResourceVO;
+import com.star.core.dto.LabelOptionDTO;
+import com.star.core.dto.ResourceDTO;
 
 import java.util.List;
 

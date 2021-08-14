@@ -1,10 +1,10 @@
 package com.star.core.search;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.star.core.domain.entity.Article;
-import com.star.core.domain.mapper.ArticleMapper;
-import com.star.core.domain.mapper.ElasticsearchMapper;
-import com.star.core.service.dto.ArticleSearchDTO;
+import com.star.core.entity.Article;
+import com.star.core.mapper.ArticleMapper;
+import com.star.core.mapper.ElasticsearchMapper;
+import com.star.core.dto.ArticleSearchDTO;
 import com.star.core.util.BeanCopyUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;

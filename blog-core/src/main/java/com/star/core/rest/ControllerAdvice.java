@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Objects;
 
-import static com.star.common.constant.StatusConst.ERROR;
-
 /**
  * 全局异常处理
  *
@@ -27,7 +25,7 @@ public class ControllerAdvice {
      */
     @ExceptionHandler(value = StarryException.class)
     public Result<?> errorHandler(StarryException e) {
-        return new Result<>(false, ERROR, e.getMessage());
+        return Result.success(e.getMessage());
     }
 
     /**
@@ -38,7 +36,7 @@ public class ControllerAdvice {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result<?> handleValidException(MethodArgumentNotValidException e) {
-        return new Result<>(false, ERROR, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
+        return Result.success(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
     }
 
 }

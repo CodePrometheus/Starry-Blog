@@ -1,7 +1,7 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.domain.entity.RoleResource;
+import com.star.core.entity.RoleResource;
 
 /**
  * @Author: zzStar

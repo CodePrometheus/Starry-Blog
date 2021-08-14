@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.star.core.domain.mapper.MenuMapper">
+<mapper namespace="com.star.core.mapper.MenuMapper">
 
 
-    <select id="listMenuByUserInfoId" resultType="com.star.core.domain.entity.Menu">
+    <select id="listMenuByUserInfoId" resultType="com.star.core.entity.Menu">
         SELECT DISTINCT m.id,
                         `name`,
                         `path`,

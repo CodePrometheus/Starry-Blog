@@ -1,8 +1,8 @@
 package com.star.core.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.core.domain.entity.RoleResource;
-import com.star.core.domain.mapper.RoleResourceMapper;
+import com.star.core.entity.RoleResource;
+import com.star.core.mapper.RoleResourceMapper;
 import com.star.core.service.RoleResourceService;
 import org.springframework.stereotype.Service;
 

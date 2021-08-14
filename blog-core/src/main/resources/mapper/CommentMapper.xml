@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.star.core.domain.mapper.CommentMapper">
+<mapper namespace="com.star.core.mapper.CommentMapper">
 
 
-    <select id="listComments" resultType="com.star.core.service.dto.CommentDTO">
+    <select id="listComments" resultType="com.star.core.dto.CommentDTO">
         SELECT
         u.nickname,
         u.avatar,
@@ -29,7 +29,7 @@
         LIMIT #{current},10
     </select>
 
-    <select id="listReplies" resultType="com.star.core.service.dto.ReplyDTO">
+    <select id="listReplies" resultType="com.star.core.dto.ReplyDTO">
         SELECT
         *
         FROM
@@ -65,7 +65,7 @@
         4 > row_num
     </select>
 
-    <select id="listReplyCountByCommentId" resultType="com.star.core.service.dto.ReplyCountDTO">
+    <select id="listReplyCountByCommentId" resultType="com.star.core.dto.ReplyCountDTO">
         SELECT
         parent_id as comment_id,
         count(1) AS reply_count
@@ -84,7 +84,7 @@
         parent_id
     </select>
 
-    <select id="listRepliesByCommentId" resultType="com.star.core.service.dto.ReplyDTO">
+    <select id="listRepliesByCommentId" resultType="com.star.core.dto.ReplyDTO">
         SELECT c.user_id,
                u.nickname,
                u.avatar,
@@ -105,7 +105,7 @@
             LIMIT #{current}, 5
     </select>
 
-    <select id="listCommentBackDTO" resultType="com.star.core.service.dto.CommentBackDTO">
+    <select id="listCommentBackDTO" resultType="com.star.core.dto.CommentBackDTO">
         SELECT
         c.id,
         u.avatar,

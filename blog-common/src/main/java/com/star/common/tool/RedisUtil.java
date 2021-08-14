@@ -119,12 +119,6 @@ public class RedisUtil {
         return redisTemplate.opsForSet().add(key, values);
     }
 
-    public Long sAdd(String key, long time, Object... values) {
-        Long count = redisTemplate.opsForSet().add(key, values);
-        expire(key, time);
-        return count;
-    }
-
     public Boolean sIsMember(String key, Object value) {
         return redisTemplate.opsForSet().isMember(key, value);
     }

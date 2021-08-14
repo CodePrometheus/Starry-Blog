@@ -1,14 +1,14 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
-import com.star.core.domain.vo.CommentVO;
-import com.star.core.domain.vo.ConditionVO;
-import com.star.core.domain.vo.DeleteVO;
+import com.star.core.dto.CommentBackDTO;
+import com.star.core.dto.CommentDTO;
+import com.star.core.dto.PageDTO;
+import com.star.core.dto.ReplyDTO;
 import com.star.core.service.CommentService;
-import com.star.core.service.dto.CommentBackDTO;
-import com.star.core.service.dto.CommentDTO;
-import com.star.core.service.dto.PageDTO;
-import com.star.core.service.dto.ReplyDTO;
+import com.star.core.vo.CommentVO;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.DeleteVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-
-import static com.star.common.constant.MessageConst.*;
-import static com.star.common.constant.StatusConst.OK;
 
 /**
  * 评论逻辑
@@ -42,14 +39,14 @@ public class CommentController {
     })
     @GetMapping("/comments")
     private Result<PageDTO<CommentDTO>> listComments(Integer articleId, Long current) {
-        return new Result<>(true, OK, QUERY, commentService.listComments(articleId, current));
+        return Result.success(commentService.listComments(articleId, current));
     }
 
     @ApiOperation(value = "添加评论或回复")
     @PostMapping("/comments")
     private Result<?> saveComment(@Valid @RequestBody CommentVO commentVO) {
         commentService.saveComment(commentVO);
-        return new Result<>(true, OK, COMMENT);
+        return Result.success();
     }
 
     @ApiOperation(value = "查询评论下的回复")
@@ -59,34 +56,34 @@ public class CommentController {
     })
     @GetMapping("/comments/replies")
     private Result<List<ReplyDTO>> listRepliesByCommentId(Integer commentId, Long current) {
-        return new Result<>(true, OK, QUERY, commentService.listRepliesByCommentId(commentId, current));
+        return Result.success(commentService.listRepliesByCommentId(commentId, current));
     }
 
     @ApiOperation(value = "评论点赞")
     @PostMapping("/comments/like")
     private Result<?> saveCommentList(Integer commentId) {
         commentService.saveCommentLike(commentId);
-        return new Result<>(true, OK, LIKE);
+        return Result.success();
     }
 
     @ApiOperation(value = "删除或恢复评论")
     @PutMapping("/admin/comments")
     private Result<?> deleteComment(DeleteVO deleteVO) {
         commentService.updateCommentDelete(deleteVO);
-        return new Result<>(true, OK, OPERATE);
+        return Result.success();
     }
 
     @ApiOperation(value = "物理删除评论")
     @DeleteMapping("/admin/comments")
     public Result<?> deleteComments(@RequestBody List<Integer> commentIdList) {
         commentService.removeByIds(commentIdList);
-        return new Result<>(true, OK, OPERATE);
+        return Result.success();
     }
 
     @ApiOperation(value = "查询后台评论")
     @GetMapping("/admin/comments")
     private Result<PageDTO<CommentBackDTO>> listCommentBackDTO(ConditionVO condition) {
-        return new Result<>(true, OK, QUERY, commentService.listCommentBackDTO(condition));
+        return Result.success(commentService.listCommentBackDTO(condition));
     }
 
 }
