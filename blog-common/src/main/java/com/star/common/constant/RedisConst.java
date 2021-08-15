@@ -69,9 +69,18 @@ public class RedisConst {
     public static final String IP = "ip";
 
     /**
-     * 发布你的第一篇公告吧
+     * 网站配置
      */
-    public static final String PUSH = "发布你的第一篇公告吧";
+    public static final String WEBSITE_CONFIG = "website_config";
 
+    /**
+     * 页面封面
+     */
+    public static final String PAGE_COVER = "page_cover";
+
+    /**
+     * 访客
+     */
+    public static final String UNIQUE_VISITOR = "unique_visitor";
 
 }

@@ -3,6 +3,8 @@ package com.star.core.service;
 
 import com.star.core.dto.BlogBackInfoDTO;
 import com.star.core.dto.BlogHomeInfoDTO;
+import com.star.core.vo.BlogInfoVo;
+import com.star.core.vo.WebsiteConfigVO;
 
 /**
  * @author zzStar
@@ -10,7 +12,7 @@ import com.star.core.dto.BlogHomeInfoDTO;
 public interface BlogInfoService {
 
     /**
-     * 获取首页数据
+     * 获取前台首页数据
      *
      * @return 博客首页信息
      */
@@ -33,22 +35,22 @@ public interface BlogInfoService {
     /**
      * 修改关于我内容
      *
-     * @param aboutContent 关于我内容
+     * @param blogInfoVo 博客信息 (关于我内容)
      */
-    void updateAbout(String aboutContent);
+    void updateAbout(BlogInfoVo blogInfoVo);
 
     /**
-     * 修改公告
+     * 获取网站配置
      *
-     * @param notice 公告
+     * @return {@link WebsiteConfigVO} 网站配置
      */
-    void updateNotice(String notice);
+    WebsiteConfigVO getWebsiteConfig();
 
     /**
-     * 后台查看公告
+     * 保存或更新网站配置
      *
-     * @return 公告
+     * @param websiteConfigVO 网站配置
      */
-    String getNotice();
+    void updateWebsiteConfig(WebsiteConfigVO websiteConfigVO);
 
 }

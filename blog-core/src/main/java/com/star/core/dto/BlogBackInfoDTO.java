@@ -1,5 +1,6 @@
 package com.star.core.dto;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel("后台博客信息")
 public class BlogBackInfoDTO {
+
     /**
      * 访问量
      */
@@ -41,16 +44,21 @@ public class BlogBackInfoDTO {
     /**
      * 分类统计
      */
-    private List<CategoryDTO> categoryDTOList;
+    private List<CategoryDTO> categoryList;
 
     /**
      * 一周用户量集合
      */
-    private List<UniqueViewDTO> uniqueViewDTOList;
+    private List<UniqueViewDTO> uniqueViewList;
 
     /**
      * 文章浏览量排行
      */
-    private List<ArticleRankDTO> articleRankDTOList;
+    private List<ArticleRankDTO> articleRankList;
+
+    /**
+     * 文章统计列表
+     */
+    private List<ArticleStatisticsDTO> articleStatisticsList;
 
 }

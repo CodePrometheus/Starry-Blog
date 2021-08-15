@@ -292,4 +292,17 @@ public class RedisUtil {
         return redisTemplate.opsForZSet().score(key, value);
     }
 
+    /**
+     * zset根据分数排名获取指定元素信息
+     *
+     * @param key   关键
+     * @param start 开始
+     * @param end   结束
+     * @return {@link Map<Object, Double>}
+     */
+    public Map<Object, Double> zReverseRangeWithScore(String key, Long start, Long end) {
+        return redisTemplate.opsForZSet().reverseRangeWithScores(key, start, end)
+                .stream()
+                .collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue, ZSetOperations.TypedTuple::getScore));
+    }
 }

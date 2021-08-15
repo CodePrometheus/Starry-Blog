@@ -4,6 +4,7 @@ import com.star.common.constant.Result;
 import com.star.core.dto.BlogBackInfoDTO;
 import com.star.core.dto.BlogHomeInfoDTO;
 import com.star.core.service.BlogInfoService;
+import com.star.core.vo.BlogInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,22 +47,9 @@ public class BlogInfoController {
 
     @ApiOperation(value = "修改关于我信息")
     @PutMapping("/admin/about")
-    private Result<?> updateAbout(String aboutContent) {
-        blogInfoService.updateAbout(aboutContent);
+    private Result<?> updateAbout(BlogInfoVo blogInfoVo) {
+        blogInfoService.updateAbout(blogInfoVo);
         return Result.success();
-    }
-
-    @ApiOperation(value = "修改公告")
-    @PutMapping("/admin/notice")
-    private Result<?> updateNotice(String notice) {
-        blogInfoService.updateNotice(notice);
-        return Result.success();
-    }
-
-    @ApiOperation(value = "查看公告")
-    @GetMapping("/admin/notice")
-    private Result<String> getNotice() {
-        return Result.success(blogInfoService.getNotice());
     }
 
 }

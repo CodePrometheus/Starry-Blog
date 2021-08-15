@@ -74,8 +74,16 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * 查看文章的推荐文章
      *
      * @param articleId 文章id
-     * @return 推荐文章
+     * @return 文章列表
      */
     List<ArticleRecommendDTO> listArticleRecommends(@Param("articleId") Integer articleId);
+
+
+    /**
+     * 文章统计
+     *
+     * @return {@link List<ArticleStatisticsDTO>} 文章统计结果
+     */
+    List<ArticleStatisticsDTO> listArticleStatistics();
 
 }

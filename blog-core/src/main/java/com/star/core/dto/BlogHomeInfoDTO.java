@@ -1,9 +1,13 @@
 package com.star.core.dto;
 
+import com.star.core.vo.PageVO;
+import com.star.core.vo.WebsiteConfigVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * 前台博客信息DTO
@@ -16,21 +20,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlogHomeInfoDTO {
-
-    /**
-     * 博主昵称
-     */
-    private String nickname;
-
-    /**
-     * 博主头像
-     */
-    private String avatar;
-
-    /**
-     * 博主简介
-     */
-    private String intro;
 
     /**
      * 文章数量
@@ -48,13 +37,18 @@ public class BlogHomeInfoDTO {
     private Integer tagCount;
 
     /**
-     * 公告
-     */
-    private String notice;
-
-    /**
      * 访问量
      */
     private String viewsCount;
+
+    /**
+     * 网站配置
+     */
+    private WebsiteConfigVO websiteConfig;
+
+    /**
+     * 页面列表
+     */
+    private List<PageVO> pageList;
 
 }
