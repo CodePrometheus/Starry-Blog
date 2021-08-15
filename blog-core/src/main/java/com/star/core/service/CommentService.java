@@ -9,6 +9,7 @@ import com.star.core.dto.CommentBackDTO;
 import com.star.core.dto.CommentDTO;
 import com.star.core.dto.PageData;
 import com.star.core.dto.ReplyDTO;
+import com.star.core.vo.ReviewVO;
 
 import java.util.List;
 
@@ -21,10 +22,9 @@ public interface CommentService extends IService<Comment> {
      * 查看评论
      *
      * @param articleId 文章id
-     * @param current   当前页码
      * @return CommentListDTO
      */
-    PageData<CommentDTO> listComments(Integer articleId, Long current);
+    PageData<CommentDTO> listComments(Integer articleId);
 
     /**
      * 查看评论下的回复
@@ -50,13 +50,6 @@ public interface CommentService extends IService<Comment> {
     void saveCommentLike(Integer commentId);
 
     /**
-     * 恢复或删除评论
-     *
-     * @param deleteVO 逻辑删除对象
-     */
-    void updateCommentDelete(DeleteVO deleteVO);
-
-    /**
      * 查询后台评论
      *
      * @param condition 条件
@@ -64,4 +57,10 @@ public interface CommentService extends IService<Comment> {
      */
     PageData<CommentBackDTO> listCommentBackDTO(ConditionVO condition);
 
+    /**
+     * 审核评论
+     *
+     * @param reviewVO 审核信息
+     */
+    void updateCommentsReview(ReviewVO reviewVO);
 }

@@ -1,8 +1,11 @@
 package com.star.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.star.core.dto.CategoryBackDTO;
 import com.star.core.entity.Category;
 import com.star.core.dto.CategoryDTO;
+import com.star.core.vo.ConditionVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +23,17 @@ public interface CategoryMapper extends BaseMapper<Category> {
      *
      * @return 归档
      */
-    List<CategoryDTO> listCategoryDTO();
+    List<CategoryDTO> listCategory();
+
+    /**
+     * 查询后台分类列表
+     *
+     * @param current   页码
+     * @param size      大小
+     * @param condition 条件
+     * @return {@link List<CategoryBackDTO>} 分类列表
+     */
+    List<CategoryBackDTO> listCategoryBack(@Param("current") Long current, @Param("size") Long size, @Param("condition") ConditionVO condition);
+
 
 }

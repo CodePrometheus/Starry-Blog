@@ -2,23 +2,25 @@ package com.star.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
+import com.star.core.dto.CategoryBackDTO;
+import com.star.core.dto.CategoryDTO;
+import com.star.core.dto.CategoryOptionDTO;
+import com.star.core.dto.PageData;
 import com.star.core.entity.Article;
 import com.star.core.entity.Category;
 import com.star.core.mapper.ArticleMapper;
 import com.star.core.mapper.CategoryMapper;
+import com.star.core.service.CategoryService;
+import com.star.core.util.BeanCopyUtil;
+import com.star.core.util.PageUtils;
 import com.star.core.vo.CategoryVO;
 import com.star.core.vo.ConditionVO;
-import com.star.core.service.CategoryService;
-import com.star.core.dto.CategoryDTO;
-import com.star.core.dto.PageData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,18 +41,28 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public PageData<CategoryDTO> listCategories() {
-        return new PageData<>(categoryMapper.listCategoryDTO(), categoryMapper.selectCount(null));
+        return new PageData<>(categoryMapper.listCategory(), categoryMapper.selectCount(null));
     }
 
     @Override
-    public PageData<Category> listCategoryBackDTO(ConditionVO condition) {
-        Page<Category> page = new Page<>(condition.getCurrent(), condition.getSize());
-        Page<Category> categoryPage = categoryMapper.selectPage(page, new LambdaQueryWrapper<Category>()
-                .select(Category::getId, Category::getCategoryName, Category::getCreateTime)
-                .like(StringUtils.isNotBlank(condition.getKeywords()),
-                        Category::getCategoryName, condition.getKeywords())
-                .orderByDesc(Category::getId));
-        return new PageData<>(categoryPage.getRecords(), (int) categoryPage.getTotal());
+    public List<CategoryOptionDTO> listCategoriesBySearch(ConditionVO condition) {
+        List<Category> categoryList = categoryMapper.selectList(new LambdaQueryWrapper<Category>().like(
+                StringUtils.isNotBlank(condition.getKeywords()), Category::getCategoryName,
+                condition.getKeywords()
+        ).orderByDesc(Category::getUpdateTime));
+        return BeanCopyUtil.copyList(categoryList, CategoryOptionDTO.class);
+    }
+
+    @Override
+    public PageData<CategoryBackDTO> listCategoryBack(ConditionVO condition) {
+        Integer categoryCount = categoryMapper.selectCount(new LambdaQueryWrapper<Category>()
+                .like(StringUtils.isNotBlank(condition.getKeywords()), Category::getCategoryName,
+                        condition.getKeywords()));
+        if (categoryCount == 0) {
+            return new PageData<>();
+        }
+        List<CategoryBackDTO> categoryList = categoryMapper.listCategoryBack(PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
+        return new PageData<>(categoryList, categoryCount);
     }
 
     @Override
@@ -69,15 +81,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Transactional(rollbackFor = StarryException.class)
     public void saveOrUpdateCategory(CategoryVO categoryVO) {
         // 判断是否重复
-        Integer categoryCount = categoryMapper.selectCount(new LambdaQueryWrapper<Category>()
+        Category existCategory = categoryMapper.selectOne(new LambdaQueryWrapper<Category>().select(Category::getId)
                 .eq(Category::getCategoryName, categoryVO.getCategoryName()));
-        if (categoryCount > 0) {
+        if (Objects.nonNull(existCategory) &&
+                !existCategory.getId().equals(categoryVO.getId())) {
             throw new StarryException("分类名已存在");
         }
         Category category = Category.builder()
                 .id(categoryVO.getId())
-                .categoryName(categoryVO.getCategoryName())
-                .createTime(Objects.isNull(categoryVO.getId()) ? new Date() : null).build();
+                .categoryName(categoryVO.getCategoryName()).build();
         this.saveOrUpdate(category);
     }
 

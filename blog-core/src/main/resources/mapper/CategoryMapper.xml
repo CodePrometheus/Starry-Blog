@@ -3,13 +3,34 @@
 <mapper namespace="com.star.core.mapper.CategoryMapper">
 
 
-    <select id="listCategoryDTO" resultType="com.star.core.dto.CategoryDTO">
+    <select id="listCategory" resultType="com.star.core.dto.CategoryDTO">
         SELECT c.id,
                c.category_name,
                COUNT(a.id) as article_count
         FROM tb_category c
                  LEFT JOIN tb_article a ON c.id = a.category_id
         GROUP BY c.id
+    </select>
+
+    <select id="listCategoryBack" resultType="com.star.core.dto.CategoryBackDTO">
+        SELECT
+        c.id,
+        c.category_name,
+        COUNT( a.id ) AS article_count,
+        c.create_time
+        FROM
+            tb_category c
+            LEFT JOIN tb_article a ON c.id = a.category_id
+        <where>
+            <if test="condition.keywords != null">
+                category_name like concat('%',#{condition.keywords},'%')
+            </if>
+        </where>
+        GROUP BY
+            c.id
+        ORDER BY
+            c.id DESC
+        LIMIT #{current},#{size}
     </select>
 
 </mapper>

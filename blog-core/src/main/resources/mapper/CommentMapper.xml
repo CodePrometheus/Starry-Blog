@@ -39,7 +39,7 @@
         u.nickname,
         u.avatar,
         u.web_site,
-        c.reply_id,
+        c.reply_user_id,
         r.nickname AS reply_nickname,
         r.web_site AS reply_web_site,
         c.id,
@@ -72,7 +72,7 @@
         FROM
         tb_comment
         WHERE
-        is_delete = 0
+        is_review = 1
         AND
         parent_id IN
         (

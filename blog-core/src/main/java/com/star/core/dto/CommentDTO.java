@@ -1,7 +1,12 @@
 package com.star.core.dto;
 
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +17,12 @@ import java.util.List;
  * @Date: 12-20-2020 15:06
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ApiModel("前台评论")
 public class CommentDTO {
+
     /**
      * 评论id
      */
@@ -51,7 +61,7 @@ public class CommentDTO {
     /**
      * 评论时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 回复量
@@ -61,6 +71,6 @@ public class CommentDTO {
     /**
      * 回复列表
      */
-    private List<ReplyDTO> replyDTOList;
+    private List<ReplyDTO> replyList;
 
 }

@@ -1,13 +1,12 @@
 package com.star.core.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -37,7 +36,7 @@ public class Comment {
     /**
      * 回复用户id
      */
-    private Integer replyId;
+    private Integer replyUserId;
 
     /**
      * 评论文章id
@@ -50,18 +49,25 @@ public class Comment {
     private String commentContent;
 
     /**
-     * 评论时间
-     */
-    private Date createTime;
-
-    /**
      * 父评论id
      */
     private Integer parentId;
 
     /**
-     * 状态码
+     * 是否审核
      */
-    private Integer isDelete;
+    private Integer isReview;
+
+    /**
+     * 评论时间
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    @TableField(fill = FieldFill.UPDATE)
+    private LocalDateTime updateTime;
 
 }

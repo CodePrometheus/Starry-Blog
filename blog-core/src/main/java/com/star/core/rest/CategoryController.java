@@ -1,11 +1,10 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
-import com.star.core.dto.ArticlePreviewListDTO;
+import com.star.core.dto.CategoryBackDTO;
 import com.star.core.dto.CategoryDTO;
+import com.star.core.dto.CategoryOptionDTO;
 import com.star.core.dto.PageData;
-import com.star.core.entity.Category;
-import com.star.core.service.ArticleService;
 import com.star.core.service.CategoryService;
 import com.star.core.vo.CategoryVO;
 import com.star.core.vo.ConditionVO;
@@ -30,9 +29,6 @@ public class CategoryController {
     @Resource
     private CategoryService categoryService;
 
-    @Resource
-    private ArticleService articleService;
-
     @ApiOperation(value = "查看分类列表")
     @GetMapping("/categories")
     private Result<PageData<CategoryDTO>> listCategories() {
@@ -41,8 +37,8 @@ public class CategoryController {
 
     @ApiOperation(value = "查看后台分类列表")
     @GetMapping("/admin/categories")
-    private Result<PageData<Category>> listCategoryBackDTO(ConditionVO condition) {
-        return Result.success(categoryService.listCategoryBackDTO(condition));
+    private Result<PageData<CategoryBackDTO>> listCategoryBack(ConditionVO condition) {
+        return Result.success(categoryService.listCategoryBack(condition));
     }
 
     @ApiOperation(value = "添加或修改分类")
@@ -59,13 +55,10 @@ public class CategoryController {
         return Result.success();
     }
 
-    @ApiOperation(value = "查看分类下对应的文章")
-    @GetMapping("/categories/{categoryId}")
-    private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("categoryId") Integer categoryId, Integer current) {
-        ConditionVO conditionVO = ConditionVO.builder()
-                .categoryId(categoryId)
-                .current(current).build();
-        return Result.success(articleService.listArticlesByCondition(conditionVO));
+    @ApiOperation(value = "搜索文章分类")
+    @GetMapping("/admin/categories/search")
+    public Result<List<CategoryOptionDTO>> listCategoriesBySearch(ConditionVO condition) {
+        return Result.success(categoryService.listCategoriesBySearch(condition));
     }
 
 }

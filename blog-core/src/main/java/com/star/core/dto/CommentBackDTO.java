@@ -1,7 +1,11 @@
 package com.star.core.dto;
 
 
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -12,6 +16,10 @@ import java.util.Date;
  * @Date: 12-20-2020 17:04
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ApiModel("后台评论")
 public class CommentBackDTO {
     /**
      * id

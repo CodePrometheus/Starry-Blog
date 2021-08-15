@@ -105,7 +105,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         // 查询文章统计
         List<ArticleStatisticsDTO> articleStatisticsList = articleMapper.listArticleStatistics();
         // 查询分类数据
-        List<CategoryDTO> categoryDTOList = categoryMapper.listCategoryDTO();
+        List<CategoryDTO> categoryDTOList = categoryMapper.listCategory();
         // 查询redis访问量前五的文章
         Map<Object, Double> articleMap = redisUtil.zReverseRangeWithScore(ARTICLE_VIEWS_COUNT, Long.valueOf(0), Long.valueOf(4));
 

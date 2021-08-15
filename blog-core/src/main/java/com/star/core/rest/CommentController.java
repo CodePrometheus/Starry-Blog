@@ -9,6 +9,7 @@ import com.star.core.service.CommentService;
 import com.star.core.vo.CommentVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.DeleteVO;
+import com.star.core.vo.ReviewVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -35,11 +36,10 @@ public class CommentController {
     @ApiOperation(value = "查询评论")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long", dataTypeClass = Long.class)
     })
     @GetMapping("/comments")
-    private Result<PageData<CommentDTO>> listComments(Integer articleId, Long current) {
-        return Result.success(commentService.listComments(articleId, current));
+    private Result<PageData<CommentDTO>> listComments(Integer articleId) {
+        return Result.success(commentService.listComments(articleId));
     }
 
     @ApiOperation(value = "添加评论或回复")
@@ -66,14 +66,14 @@ public class CommentController {
         return Result.success();
     }
 
-    @ApiOperation(value = "删除或恢复评论")
-    @PutMapping("/admin/comments")
-    private Result<?> deleteComment(DeleteVO deleteVO) {
-        commentService.updateCommentDelete(deleteVO);
+    @ApiOperation(value = "审核评论")
+    @PutMapping("/admin/comments/review")
+    private Result<?> updateCommentsReview(@Valid @RequestBody ReviewVO reviewVO) {
+        commentService.updateCommentsReview(reviewVO);
         return Result.success();
     }
 
-    @ApiOperation(value = "物理删除评论")
+    @ApiOperation(value = "删除评论")
     @DeleteMapping("/admin/comments")
     public Result<?> deleteComments(@RequestBody List<Integer> commentIdList) {
         commentService.removeByIds(commentIdList);

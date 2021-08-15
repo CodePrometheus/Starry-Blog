@@ -9,24 +9,30 @@ import com.star.common.tool.RedisUtil;
 import com.star.core.config.RabbitConfig;
 import com.star.core.dto.*;
 import com.star.core.entity.Comment;
+import com.star.core.mapper.ArticleMapper;
 import com.star.core.mapper.CommentMapper;
 import com.star.core.mapper.UserInfoMapper;
-import com.star.core.vo.CommentVO;
-import com.star.core.vo.ConditionVO;
-import com.star.core.vo.DeleteVO;
+import com.star.core.service.BlogInfoService;
 import com.star.core.service.CommentService;
 import com.star.core.util.HTMLUtil;
+import com.star.core.util.PageUtils;
 import com.star.core.util.UserUtil;
+import com.star.core.vo.CommentVO;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.ReviewVO;
+import com.star.core.vo.WebsiteConfigVO;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.*;
@@ -44,6 +50,12 @@ import static com.star.common.constant.RedisConst.COMMENT_USER_LIKE;
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
     @Resource
+    private ArticleMapper articleMapper;
+
+    @Resource
+    private BlogInfoService blogInfoService;
+
+    @Resource
     private RedisUtil redisUtil;
 
     @Resource
@@ -56,142 +68,141 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private CommentMapper commentMapper;
 
     @Override
-    public PageData<CommentDTO> listComments(Integer articleId, Long current) {
+    public PageData<CommentDTO> listComments(Integer articleId) {
         // 查询文章评论量
         Integer commentCount = commentMapper.selectCount(new LambdaQueryWrapper<Comment>()
                 .eq(Objects.isNull(articleId), Comment::getArticleId, articleId)
                 .isNull(Objects.isNull(articleId), Comment::getArticleId)
                 .isNull(Comment::getParentId)
-                .eq(Comment::getIsDelete, FALSE));
+                .eq(Comment::getIsReview, TRUE));
         if (commentCount == 0) {
             return new PageData<>();
         }
 
         // 查询评论集合
-        List<CommentDTO> commentDTOList = commentMapper.listComments(articleId, (current - 1) * 10);
+        List<CommentDTO> commentList = commentMapper.listComments(PageUtils.getLimitCurrent(), PageUtils.getSize(), articleId);
         // 查询redis的评论点赞数据
-        Map<String, Integer> likeCountMap = (Map<String, Integer>) redisUtil.hGetAll(COMMENT_LIKE_COUNT);
+        Map<String, Object> likeCountMap = redisUtil.hGetAll(COMMENT_LIKE_COUNT);
         // 提取评论id集合
-        List<Integer> commentIdList = new ArrayList<>();
-        for (CommentDTO commentDTO : commentDTOList) {
-            commentIdList.add(commentDTO.getId());
-            // 封装评论点赞量
-            commentDTO.setLikeCount(Objects.requireNonNull(likeCountMap).get(commentDTO.getId().toString()));
-        }
+        List<Integer> commentIdList = commentList.stream().map(CommentDTO::getId)
+                .collect(Collectors.toList());
 
         // 根据评论id集合查询所有分页回复数据
-        List<ReplyDTO> replyDTOList = commentMapper.listReplies(commentIdList);
-        for (ReplyDTO replyDTO : replyDTOList) {
-            // 封装回复点赞量
-            replyDTO.setLikeCount(Objects.requireNonNull(likeCountMap).get(replyDTO.getId().toString()));
-        }
+        List<ReplyDTO> replyList = commentMapper.listReplies(commentIdList);
+
+        // 封装回复点赞量
+        replyList.forEach(v -> v.setLikeCount((Integer) likeCountMap.get(v.getId().toString())));
 
         // 根据ParentId分组回复数据
-        Map<Integer, List<ReplyDTO>> replyMap = replyDTOList.stream()
+        Map<Integer, List<ReplyDTO>> replyMap = replyList.stream()
                 .collect(Collectors.groupingBy(ReplyDTO::getParentId));
 
-        // 封装评论id对应的评论数量
+        // 封装评论id对应的回复数量
         Map<Integer, Integer> replyCountMap = commentMapper.listReplyCountByCommentId(commentIdList)
                 .stream().collect(Collectors.toMap(ReplyCountDTO::getCommentId
                         , ReplyCountDTO::getReplyCount));
 
-        // 将分页回复数据和回复量封装进对应的评论
-        for (CommentDTO commentDTO : commentDTOList) {
-            commentDTO.setReplyDTOList(replyMap.get(commentDTO.getId()));
-            commentDTO.setReplyCount(replyCountMap.get(commentDTO.getId()));
-        }
-        return new PageData<>(commentDTOList, commentCount);
+        // 封装评论数据
+        commentList.forEach(v -> {
+            v.setReplyList(replyMap.get(v.getId()));
+            v.setReplyCount(replyCountMap.get(v.getId()));
+            v.setLikeCount((Integer) likeCountMap.get(v.getId().toString()));
+        });
+        return new PageData<>(commentList, commentCount);
     }
 
     @Override
     public List<ReplyDTO> listRepliesByCommentId(Integer commentId, Long current) {
         // 转换页码查询评论下的回复
-        List<ReplyDTO> replyDTOList = commentMapper.listRepliesByCommentId(commentId, (current - 1) * 5);
+        List<ReplyDTO> replyList = commentMapper.listRepliesByCommentId(PageUtils.getLimitCurrent(), PageUtils.getSize(), commentId);
         // 查询redis的评论点赞数据
-        Map<String, Integer> likeCountMap = (Map<String, Integer>) redisUtil.hGetAll(COMMENT_LIKE_COUNT);
-        for (ReplyDTO replyDTO : replyDTOList) {
-            // 封装点赞数据
-            replyDTO.setLikeCount(Objects.requireNonNull(likeCountMap).get(replyDTO.getId().toString()));
-        }
-        return replyDTOList;
+        Map<String, Object> likeCountMap = redisUtil.hGetAll(COMMENT_LIKE_COUNT);
+        // 封装点赞数据
+        replyList.forEach(v ->
+                v.setLikeCount((Integer) likeCountMap.get(v.getId().toString())));
+        return replyList;
     }
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public void saveComment(CommentVO commentVO) {
+        // 判断是否需要审核
+        WebsiteConfigVO websiteConfig = blogInfoService.getWebsiteConfig();
+        Integer isReward = websiteConfig.getIsReward();
         // 过滤html标签
         commentVO.setCommentContent(HTMLUtil.deleteCommentTag(commentVO.getCommentContent()));
         Comment comment = Comment.builder()
                 .userId(UserUtil.getLoginUser().getUserInfoId())
-                .replyId(commentVO.getReplyId())
+                .replyUserId(commentVO.getReplyUserId())
                 .articleId(commentVO.getArticleId())
                 .commentContent(commentVO.getCommentContent())
                 .parentId(commentVO.getParentId())
-                .createTime(new Date()).build();
+                .isReview(isReward == TRUE ? FALSE : TRUE).build();
         commentMapper.insert(comment);
-        // 通知用户
-        notice(commentVO);
+        // 判断是否开启邮箱通知,通知用户
+        if (websiteConfig.getIsEmailNotice().equals(TRUE)) {
+            notice(comment);
+        }
     }
 
     /**
      * 通知评论用户
      *
-     * @param commentVO
+     * @param comment 评论信息
      */
     @Async
-    public void notice(CommentVO commentVO) {
+    public void notice(Comment comment) {
         // 判断是回复用户还是评论作者
-        Integer userId = Objects.nonNull(commentVO.getReplyId()) ? commentVO.getReplyId() : BLOGGER_ID;
+        Integer authorId = articleMapper.selectById(comment.getArticleId()).getUserId();
+        Integer userId = Optional.ofNullable(comment.getReplyUserId()).orElse(authorId);
+
         // 查询邮箱号
-        String email = userInfoMapper.selectById(userId).getEmail();
-        if (StringUtils.isNotBlank(email)) {
-            // 判断页面路径
-            String url = Objects.nonNull(commentVO.getArticleId()) ? URL + ARTICLE_PATH + commentVO.getArticleId() : URL + LINK_PATH;
-            // 发送消息
-            EmailDTO emailDTO = EmailDTO.builder()
-                    .email(email)
+        String emailStr = userInfoMapper.selectById(userId).getEmail();
+        if (StringUtils.isBlank(emailStr)) {
+            return;
+        }
+        EmailDTO email = new EmailDTO();
+        // 判断页面路径
+        String url = Objects.nonNull(comment.getArticleId()) ? URL + ARTICLE_PATH + comment.getArticleId() : URL + LINK_PATH;
+        // 发送消息
+        if (comment.getIsReview().equals(TRUE)) {
+            email = EmailDTO.builder()
+                    .email(emailStr)
                     .subject("评论提醒")
                     .content("你收到了一条新的回复，请前往 " + url + "页面查看").build();
-            rabbitTemplate.convertAndSend(RabbitConfig.EMAIL_EXCHANGE, "*",
-                    new Message(JSON.toJSONBytes(emailDTO),
-                            new MessageProperties()));
+        } else {
+            // 管理员审核提醒
+            String adminEmail = userInfoMapper.selectById(authorId).getEmail();
+            email = EmailDTO.builder()
+                    .email(adminEmail)
+                    .subject("审核提醒")
+                    .content("您收到了一条新的回复，请前往后台管理页面审核").build();
         }
+        rabbitTemplate.convertAndSend(RabbitConfig.EMAIL_EXCHANGE, "*",
+                new Message(JSON.toJSONBytes(email),
+                        new MessageProperties()));
     }
 
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public void saveCommentLike(Integer commentId) {
-        // 查询当前用户点赞过的评论id集合
-        Set<Integer> commentLikeSet = (HashSet<Integer>) redisUtil.hGet(COMMENT_USER_LIKE, UserUtil.getUserInfoId().toString());
-        // 第一次点赞则创建
-        if (CollectionUtils.isEmpty(commentLikeSet)) {
-            commentLikeSet = new HashSet<>();
-        }
-        // 判断是否点赞
-        if (commentLikeSet.contains(commentId)) {
-            // 点过赞则删除评论id
-            commentLikeSet.remove(commentId);
-            // 评论点赞量-1
+        String commentLikeKey = COMMENT_USER_LIKE + UserUtil.getUserInfoId();
+        if (redisUtil.sIsMember(commentLikeKey, commentId)) {
+            redisUtil.sRemove(commentLikeKey, commentId);
             redisUtil.hDecr(COMMENT_LIKE_COUNT, commentId.toString(), 1L);
         } else {
-            // 未点赞则增加评论id
-            commentLikeSet.add(commentId);
-            // 评论点赞量+1
+            redisUtil.sAdd(commentLikeKey, commentId);
             redisUtil.hIncr(COMMENT_LIKE_COUNT, commentId.toString(), 1L);
         }
-        // 保存点赞记录
-        redisUtil.hSet(COMMENT_USER_LIKE, UserUtil.getUserInfoId().toString(), commentLikeSet);
     }
+
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
-    public void updateCommentDelete(DeleteVO deleteVO) {
-        // 修改评论逻辑删除状态
-        List<Comment> commentList = deleteVO.getIdList().stream()
-                .map(id -> Comment.builder()
-                        .id(id)
-                        .isDelete(deleteVO.getIsDelete()).build())
+    public void updateCommentsReview(ReviewVO reviewVO) {
+        List<Comment> commentList = reviewVO.getIdList().stream().map(v -> Comment.builder()
+                        .id(v).isReview(reviewVO.getIsReview()).build())
                 .collect(Collectors.toList());
         this.updateBatchById(commentList);
     }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -15,8 +16,8 @@ import java.util.Date;
  */
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class ReplyDTO {
 
     /**
@@ -52,7 +53,7 @@ public class ReplyDTO {
     /**
      * 被回复用户id
      */
-    private Integer replyId;
+    private Integer replyUserId;
 
     /**
      * 被回复用户昵称
@@ -77,6 +78,6 @@ public class ReplyDTO {
     /**
      * 评论时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
 }

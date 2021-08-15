@@ -2,7 +2,10 @@ package com.star.core.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
@@ -13,14 +16,17 @@ import javax.validation.constraints.NotBlank;
  * @Date: 12-18-2020 17:29
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(description = "评论")
 public class CommentVO {
 
     /**
      * 回复用户id
      */
-    @ApiModelProperty(name = "replyId", value = "回复用户id", dataType = "Integer")
-    private Integer replyId;
+    @ApiModelProperty(name = "replyUserId", value = "回复用户id", dataType = "Integer")
+    private Integer replyUserId;
 
     /**
      * 评论文章id
