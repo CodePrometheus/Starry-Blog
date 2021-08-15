@@ -13,7 +13,7 @@ import com.star.core.vo.CategoryVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.service.CategoryService;
 import com.star.core.dto.CategoryDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,19 +38,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     private ArticleMapper articleMapper;
 
     @Override
-    public PageDTO<CategoryDTO> listCategories() {
-        return new PageDTO<>(categoryMapper.listCategoryDTO(), categoryMapper.selectCount(null));
+    public PageData<CategoryDTO> listCategories() {
+        return new PageData<>(categoryMapper.listCategoryDTO(), categoryMapper.selectCount(null));
     }
 
     @Override
-    public PageDTO<Category> listCategoryBackDTO(ConditionVO condition) {
+    public PageData<Category> listCategoryBackDTO(ConditionVO condition) {
         Page<Category> page = new Page<>(condition.getCurrent(), condition.getSize());
         Page<Category> categoryPage = categoryMapper.selectPage(page, new LambdaQueryWrapper<Category>()
                 .select(Category::getId, Category::getCategoryName, Category::getCreateTime)
                 .like(StringUtils.isNotBlank(condition.getKeywords()),
                         Category::getCategoryName, condition.getKeywords())
                 .orderByDesc(Category::getId));
-        return new PageDTO<>(categoryPage.getRecords(), (int) categoryPage.getTotal());
+        return new PageData<>(categoryPage.getRecords(), (int) categoryPage.getTotal());
     }
 
     @Override

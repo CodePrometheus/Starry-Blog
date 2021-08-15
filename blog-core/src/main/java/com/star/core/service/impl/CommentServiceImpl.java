@@ -56,7 +56,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private CommentMapper commentMapper;
 
     @Override
-    public PageDTO<CommentDTO> listComments(Integer articleId, Long current) {
+    public PageData<CommentDTO> listComments(Integer articleId, Long current) {
         // 查询文章评论量
         Integer commentCount = commentMapper.selectCount(new LambdaQueryWrapper<Comment>()
                 .eq(Objects.isNull(articleId), Comment::getArticleId, articleId)
@@ -64,7 +64,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .isNull(Comment::getParentId)
                 .eq(Comment::getIsDelete, FALSE));
         if (commentCount == 0) {
-            return new PageDTO<>();
+            return new PageData<>();
         }
 
         // 查询评论集合
@@ -100,7 +100,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             commentDTO.setReplyDTOList(replyMap.get(commentDTO.getId()));
             commentDTO.setReplyCount(replyCountMap.get(commentDTO.getId()));
         }
-        return new PageDTO<>(commentDTOList, commentCount);
+        return new PageData<>(commentDTOList, commentCount);
     }
 
     @Override
@@ -197,13 +197,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public PageDTO<CommentBackDTO> listCommentBackDTO(ConditionVO condition) {
+    public PageData<CommentBackDTO> listCommentBackDTO(ConditionVO condition) {
         // 转换页码
         condition.setCurrent((condition.getCurrent() - 1) * condition.getSize());
         // 统计后台所有评论量
         Integer count = commentMapper.countCommentBack(condition);
         if (count == 0) {
-            return new PageDTO<>();
+            return new PageData<>();
         }
         // 查询后台评论集合
         List<CommentBackDTO> commentBackDTOList = commentMapper.listCommentBackDTO(condition);
@@ -214,7 +214,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             commentBackDTO.setLikeCount(Objects.requireNonNull(likeCountMap)
                     .get(commentBackDTO.getId().toString()));
         }
-        return new PageDTO<>(commentBackDTOList, count);
+        return new PageData<>(commentBackDTOList, count);
     }
 
 }

@@ -3,7 +3,7 @@ package com.star.core.rest;
 import com.star.common.constant.Result;
 import com.star.core.dto.ArticlePreviewListDTO;
 import com.star.core.dto.CategoryDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.entity.Category;
 import com.star.core.service.ArticleService;
 import com.star.core.service.CategoryService;
@@ -35,13 +35,13 @@ public class CategoryController {
 
     @ApiOperation(value = "查看分类列表")
     @GetMapping("/categories")
-    private Result<PageDTO<CategoryDTO>> listCategories() {
+    private Result<PageData<CategoryDTO>> listCategories() {
         return Result.success(categoryService.listCategories());
     }
 
     @ApiOperation(value = "查看后台分类列表")
     @GetMapping("/admin/categories")
-    private Result<PageDTO<Category>> listCategoryBackDTO(ConditionVO condition) {
+    private Result<PageData<Category>> listCategoryBackDTO(ConditionVO condition) {
         return Result.success(categoryService.listCategoryBackDTO(condition));
     }
 

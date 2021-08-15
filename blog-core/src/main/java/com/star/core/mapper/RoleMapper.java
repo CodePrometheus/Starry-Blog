@@ -1,10 +1,10 @@
 package com.star.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.star.core.entity.Role;
-import com.star.core.vo.ConditionVO;
 import com.star.core.dto.RoleDTO;
 import com.star.core.dto.UrlRoleDTO;
+import com.star.core.entity.Role;
+import com.star.core.vo.ConditionVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -28,10 +28,12 @@ public interface RoleMapper extends BaseMapper<Role> {
     /**
      * 查询角色列表
      *
-     * @param conditionVO 条件
-     * @return 角色列表
+     * @param current   页码
+     * @param size      大小
+     * @param condition 条件
+     * @return {@link List<RoleDTO>} 角色列表
      */
-    List<RoleDTO> listRoles(@Param("conditionVO") ConditionVO conditionVO);
+    List<RoleDTO> listRoles(@Param("current") Long current, @Param("size") Long size, @Param("condition") ConditionVO condition);
 
     /**
      * 查询路由角色列表

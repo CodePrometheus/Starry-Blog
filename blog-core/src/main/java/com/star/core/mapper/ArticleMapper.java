@@ -29,10 +29,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
     /**
      * 根据条件查询文章
      *
-     * @param condition 查询条件
-     * @return 文章集合
+     * @param current   页码
+     * @param size      大小
+     * @param condition 条件
+     * @return 文章列表
      */
-    List<ArticlePreviewDTO> listArticlesByCondition(@Param("condition") ConditionVO condition);
+    List<ArticlePreviewDTO> listArticlesByCondition(@Param("current") Long current, @Param("size") Long size, @Param("condition") ConditionVO condition);
 
     /**
      * 根据id查询文章
@@ -40,7 +42,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param articleId 文章id
      * @return 文章
      */
-    ArticleDTO getArticleById(Integer articleId);
+    ArticleDTO getArticleById(@Param("articleId") Integer articleId);
 
     /**
      * 查询后台文章总量
@@ -51,12 +53,14 @@ public interface ArticleMapper extends BaseMapper<Article> {
     Integer countArticlesBack(@Param("condition") ConditionVO condition);
 
     /**
-     * 根据条件后台查询文章
+     * 查询后台文章
      *
+     * @param current   页码
+     * @param size      大小
      * @param condition 条件
-     * @return 文章集合
+     * @return 文章列表
      */
-    List<ArticleBackDTO> listArticlesBack(@Param("condition") ConditionVO condition);
+    List<ArticleBackDTO> listArticlesBack(@Param("current") Long current, @Param("size") Long size, @Param("condition") ConditionVO condition);
 
     /**
      * 查询文章排行

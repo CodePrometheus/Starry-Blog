@@ -1,7 +1,7 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.UserOnlineDTO;
 import com.star.core.service.UserInfoService;
 import com.star.core.vo.ConditionVO;
@@ -59,13 +59,13 @@ public class UserInfoController {
 
     @ApiOperation("查看在线用户")
     @GetMapping("/admin/user/online")
-    public Result<PageDTO<UserOnlineDTO>> listOnlineUsers(ConditionVO conditionVO) {
+    public Result<PageData<UserOnlineDTO>> listOnlineUsers(ConditionVO conditionVO) {
         return Result.success(userInfoService.listOnlineUsers(conditionVO));
     }
 
     @ApiOperation("移除在线用户")
     @DeleteMapping("/admin/user/online/{userInfoId}")
-    public Result<PageDTO<UserOnlineDTO>> removeOnlineUser(@PathVariable("userInfoId") Integer userInfoId) {
+    public Result<PageData<UserOnlineDTO>> removeOnlineUser(@PathVariable("userInfoId") Integer userInfoId) {
         userInfoService.removeOnlineUser(userInfoId);
         return Result.success();
     }

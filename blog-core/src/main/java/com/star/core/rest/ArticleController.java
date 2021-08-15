@@ -41,8 +41,8 @@ public class ArticleController {
 
     @ApiOperation(value = "查看文章归档")
     @GetMapping("/articles/archives")
-    private Result<PageDTO<ArchiveDTO>> listArchives(Long current) {
-        return Result.success(articleService.listArchives(current));
+    private Result<PageData<ArchiveDTO>> listArchives() {
+        return Result.success(articleService.listArchives());
     }
 
     @ApiOperation(value = "查看首页文章")
@@ -51,22 +51,10 @@ public class ArticleController {
         return Result.success(articleService.listArticles());
     }
 
-    @ApiOperation(value = "查看最新文章")
-    @GetMapping("/articles/newest")
-    public Result<List<ArticleRecommendDTO>> listNewestArticles() {
-        return Result.success(articleService.listNewestArticles());
-    }
-
     @ApiOperation(value = "查看后台文章")
     @GetMapping("/admin/articles")
-    private Result<PageDTO<ArticleBackDTO>> listArticleBack(ConditionVO conditionVO) {
+    private Result<PageData<ArticleBackDTO>> listArticleBack(ConditionVO conditionVO) {
         return Result.success(articleService.listArticleBack(conditionVO));
-    }
-
-    @ApiOperation(value = "查看文章对应的分类与标签信息")
-    @GetMapping("/admin/articles/options")
-    private Result<ArticleOptionDTO> listArticleOptionDTO() {
-        return Result.success(articleService.listArticleOptionDTO());
     }
 
     @ApiOperation(value = "添加或修改文章")
@@ -114,7 +102,7 @@ public class ArticleController {
     @ApiOperation(value = "根据id查看文章")
     @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class)
     @GetMapping("/articles/{articleId}")
-    private Result<ArticleDTO> getArticleById(@PathVariable("articleId") Integer articleId) throws ExecutionException {
+    private Result<ArticleDTO> getArticleById(@PathVariable("articleId") Integer articleId) {
         return Result.success(articleService.getArticleById(articleId));
     }
 

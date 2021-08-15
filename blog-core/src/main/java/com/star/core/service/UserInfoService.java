@@ -6,7 +6,7 @@ import com.star.core.vo.ConditionVO;
 import com.star.core.vo.EmailVO;
 import com.star.core.vo.UserInfoVO;
 import com.star.core.vo.UserRoleVO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.UserOnlineDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,7 +58,7 @@ public interface UserInfoService extends IService<UserInfo> {
      * @param conditionVO
      * @return
      */
-    PageDTO<UserOnlineDTO> listOnlineUsers(ConditionVO conditionVO);
+    PageData<UserOnlineDTO> listOnlineUsers(ConditionVO conditionVO);
 
     /**
      * 下线用户

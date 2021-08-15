@@ -8,6 +8,10 @@ import com.star.common.exception.StarryException;
 import com.star.common.tool.IpUtil;
 import com.star.common.tool.RedisUtil;
 import com.star.core.config.RabbitConfig;
+import com.star.core.dto.EmailDTO;
+import com.star.core.dto.PageData;
+import com.star.core.dto.UserBackDTO;
+import com.star.core.dto.UserInfoDTO;
 import com.star.core.entity.UserAuth;
 import com.star.core.entity.UserInfo;
 import com.star.core.entity.UserRole;
@@ -15,15 +19,12 @@ import com.star.core.mapper.RoleMapper;
 import com.star.core.mapper.UserAuthMapper;
 import com.star.core.mapper.UserInfoMapper;
 import com.star.core.mapper.UserRoleMapper;
+import com.star.core.service.UserAuthService;
+import com.star.core.util.PageUtils;
+import com.star.core.util.UserUtil;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.PasswordVO;
 import com.star.core.vo.UserVO;
-import com.star.core.service.UserAuthService;
-import com.star.core.dto.EmailDTO;
-import com.star.core.dto.PageDTO;
-import com.star.core.dto.UserBackDTO;
-import com.star.core.dto.UserInfoDTO;
-import com.star.core.util.UserUtil;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -171,17 +172,15 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
     }
 
     @Override
-    public PageDTO<UserBackDTO> listUserBackDTO(ConditionVO condition) {
-        // 转换页码
-        condition.setCurrent((condition.getCurrent() - 1) * condition.getSize());
+    public PageData<UserBackDTO> listUserBackDTO(ConditionVO condition) {
         // 获取后台用户数量
         Integer count = userAuthMapper.countUser(condition);
         if (count == 0) {
-            return new PageDTO<>();
+            return new PageData<>();
         }
         // 获取后台用户列表
-        List<UserBackDTO> userBackDTOList = userAuthMapper.listUsers(condition);
-        return new PageDTO<>(userBackDTOList, count);
+        List<UserBackDTO> userBackDTOList = userAuthMapper.listUsers(PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
+        return new PageData<>(userBackDTOList, count);
     }
 
 

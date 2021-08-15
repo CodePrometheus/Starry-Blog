@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.FALSE;
 import static com.star.common.constant.RedisConst.*;
+import static com.star.common.enums.ArticleStatusEnum.PUBLIC;
 
 /**
  * 博客信息
@@ -62,7 +63,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
                 .eq(UserInfo::getId, CommonConst.BLOGGER_ID));
         // 查询文章数量
         Integer articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>()
-                .eq(Article::getIsDraft, FALSE)
+                .eq(Article::getStatus, PUBLIC.getStatus())
                 .eq(Article::getIsDelete, FALSE));
         // 查询分类数量
         Integer categoryCount = categoryMapper.selectCount(null);
@@ -95,7 +96,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         Integer userCount = userInfoMapper.selectCount(null);
         // 查询文章量
         Integer articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>()
-                .eq(Article::getIsDraft, FALSE)
+                .eq(Article::getStatus, PUBLIC.getStatus())
                 .eq(Article::getIsDelete, FALSE));
         // 查询一周用户量
         List<UniqueViewDTO> uniqueViewList = uniqueViewService.listUniqueViews();
@@ -129,8 +130,8 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         List<Article> articleList = articleMapper.listArticleRank(articleIdList);
         // 封装浏览量和标题
         List<ArticleRankDTO> articleRankDTOList = articleList.stream().map(article -> ArticleRankDTO.builder()
-                .articleTitle(article.getArticleTitle())
-                .viewsCount(articleViewsMap.get(article.getId().toString())).build())
+                        .articleTitle(article.getArticleTitle())
+                        .viewsCount(articleViewsMap.get(article.getId().toString())).build())
                 .collect(Collectors.toList());
 
         return BlogBackInfoDTO.builder()

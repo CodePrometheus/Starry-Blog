@@ -6,7 +6,7 @@ import com.star.core.entity.UserAuth;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.PasswordVO;
 import com.star.core.vo.UserVO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 
 /**
  * @author zzStar
@@ -47,6 +47,6 @@ public interface UserAuthService extends IService<UserAuth> {
      * @param condition 条件
      * @return 用户列表
      */
-    PageDTO<UserBackDTO> listUserBackDTO(ConditionVO condition);
+    PageData<UserBackDTO> listUserBackDTO(ConditionVO condition);
 
 }

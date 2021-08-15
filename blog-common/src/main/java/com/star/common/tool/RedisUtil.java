@@ -8,13 +8,16 @@ import org.springframework.data.redis.connection.BitFieldSubCommands;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 封装Redis操作
@@ -119,22 +122,56 @@ public class RedisUtil {
         return redisTemplate.opsForSet().add(key, values);
     }
 
+    /**
+     * 是否为Set中的属性
+     *
+     * @param key   key
+     * @param value value
+     * @return 返回是否存在
+     */
     public Boolean sIsMember(String key, Object value) {
         return redisTemplate.opsForSet().isMember(key, value);
     }
 
+    /**
+     * 获取Set结构的长度
+     *
+     * @param key key
+     * @return 返回长度
+     */
     public Long sSize(String key) {
         return redisTemplate.opsForSet().size(key);
     }
 
+    /**
+     * 删除Set结构中的属性
+     *
+     * @param key    key
+     * @param values value集合
+     * @return 删除掉的数据量
+     */
     public Long sRemove(String key, Object... values) {
         return redisTemplate.opsForSet().remove(key, values);
     }
 
+    /**
+     * 获取List结构中的属性
+     *
+     * @param key   key
+     * @param start 开始
+     * @param end   结束
+     * @return 返回查询的集合
+     */
     public List<Object> lRange(String key, long start, long end) {
         return redisTemplate.opsForList().range(key, start, end);
     }
 
+    /**
+     * 获取List结构的长度
+     *
+     * @param key key
+     * @return 长度
+     */
     public Long lSize(String key) {
         return redisTemplate.opsForList().size(key);
     }
@@ -218,6 +255,41 @@ public class RedisUtil {
     public List<String> geoGetHash(String key, String... place) {
         return redisTemplate.opsForGeo()
                 .hash(key, place);
+    }
+
+    /**
+     * 获取zset所有分数
+     *
+     * @param articleLikeCount
+     * @return
+     */
+    public Map<Object, Double> zAllScore(String key) {
+        return Objects.requireNonNull(redisTemplate.opsForZSet().rangeWithScores(key, 0, -1))
+                .stream().collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue,
+                        ZSetOperations.TypedTuple::getScore));
+    }
+
+    /**
+     * zset添加分数
+     *
+     * @param key   关键
+     * @param value 价值
+     * @param score 分数
+     * @return {@link Double}
+     */
+    public Double zIncr(String key, Object value, Double score) {
+        return redisTemplate.opsForZSet().incrementScore(key, value, score);
+    }
+
+    /**
+     * 获取zset指定元素分数
+     *
+     * @param key   关键
+     * @param value 价值
+     * @return {@link Double}
+     */
+    public Double zScore(String key, Object value) {
+        return redisTemplate.opsForZSet().score(key, value);
     }
 
 }

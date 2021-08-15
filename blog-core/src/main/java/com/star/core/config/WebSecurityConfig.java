@@ -79,8 +79,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 // login Or logout
-                .formLogin().loginProcessingUrl("/login").successHandler(authenticationSuccessHandler).failureHandler(authenticationFailHandler).and()
-                .logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler).and()
+                .formLogin().loginProcessingUrl("/login")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailHandler).and()
+                .logout().logoutUrl("/logout")
+                .logoutSuccessHandler(logoutSuccessHandler).and()
                 // 路由权限
                 .authorizeRequests().withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
             @Override

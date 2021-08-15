@@ -2,7 +2,7 @@ package com.star.core.rest;
 
 import com.star.common.constant.Result;
 import com.star.core.dto.ArticlePreviewListDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.TagDTO;
 import com.star.core.entity.Tag;
 import com.star.core.service.ArticleService;
@@ -35,7 +35,7 @@ public class TagController {
 
     @ApiOperation(value = "查看标签列表")
     @GetMapping("/tags")
-    private Result<PageDTO<TagDTO>> listTags() {
+    private Result<PageData<TagDTO>> listTags() {
         return Result.success(tagService.listTags());
     }
 
@@ -50,7 +50,7 @@ public class TagController {
 
     @ApiOperation(value = "查看后台标签列表")
     @GetMapping("/admin/tags")
-    private Result<PageDTO<Tag>> listTagBackDTO(ConditionVO condition) {
+    private Result<PageData<Tag>> listTagBackDTO(ConditionVO condition) {
         return Result.success(tagService.listTagBackDTO(condition));
     }
 

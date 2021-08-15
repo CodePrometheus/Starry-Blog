@@ -3,7 +3,7 @@ package com.star.core.rest;
 import com.star.common.constant.Result;
 import com.star.core.dto.FriendLinkBackDTO;
 import com.star.core.dto.FriendLinkDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.service.FriendLinkService;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.FriendLinkVO;
@@ -36,7 +36,7 @@ public class FriendLinkController {
 
     @ApiOperation(value = "查看后台友链列表")
     @GetMapping("/admin/links")
-    private Result<PageDTO<FriendLinkBackDTO>> listFriendLinkDTO(ConditionVO condition) {
+    private Result<PageData<FriendLinkBackDTO>> listFriendLinkDTO(ConditionVO condition) {
         return Result.success(friendLinkService.listFriendLinkDTO(condition));
     }
 

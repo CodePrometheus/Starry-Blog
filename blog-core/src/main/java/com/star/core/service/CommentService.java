@@ -7,7 +7,7 @@ import com.star.core.vo.ConditionVO;
 import com.star.core.vo.DeleteVO;
 import com.star.core.dto.CommentBackDTO;
 import com.star.core.dto.CommentDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.ReplyDTO;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public interface CommentService extends IService<Comment> {
      * @param current   当前页码
      * @return CommentListDTO
      */
-    PageDTO<CommentDTO> listComments(Integer articleId, Long current);
+    PageData<CommentDTO> listComments(Integer articleId, Long current);
 
     /**
      * 查看评论下的回复
@@ -62,6 +62,6 @@ public interface CommentService extends IService<Comment> {
      * @param condition 条件
      * @return 评论列表
      */
-    PageDTO<CommentBackDTO> listCommentBackDTO(ConditionVO condition);
+    PageData<CommentBackDTO> listCommentBackDTO(ConditionVO condition);
 
 }

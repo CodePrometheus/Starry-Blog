@@ -3,7 +3,7 @@ package com.star.core.rest;
 import com.star.common.constant.Result;
 import com.star.core.dto.MessageBackDTO;
 import com.star.core.dto.MessageDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.service.MessageService;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.MessageVO;
@@ -43,7 +43,7 @@ public class MessageController {
 
     @ApiOperation(value = "查看后台留言列表")
     @GetMapping("/admin/messages")
-    private Result<PageDTO<MessageBackDTO>> listMessageBackDTO(ConditionVO condition) {
+    private Result<PageData<MessageBackDTO>> listMessageBackDTO(ConditionVO condition) {
         return Result.success(messageService.listMessageBackDTO(condition));
     }
 

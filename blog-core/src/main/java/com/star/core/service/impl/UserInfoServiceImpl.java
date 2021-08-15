@@ -16,7 +16,7 @@ import com.star.core.vo.UserInfoVO;
 import com.star.core.vo.UserRoleVO;
 import com.star.core.service.UserInfoService;
 import com.star.core.service.UserRoleService;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.UserInfoDTO;
 import com.star.core.dto.UserOnlineDTO;
 import com.star.core.util.UserUtil;
@@ -125,7 +125,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     }
 
     @Override
-    public PageDTO<UserOnlineDTO> listOnlineUsers(ConditionVO conditionVO) {
+    public PageData<UserOnlineDTO> listOnlineUsers(ConditionVO conditionVO) {
         // 获取security在线session
         List<UserOnlineDTO> onlineUserList = sessionRegistry.getAllPrincipals().stream()
                 .filter(item -> sessionRegistry.getAllSessions(item, false).size() > 0)
@@ -137,7 +137,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         int size = onlineUserList.size() > conditionVO.getSize() ? current + conditionVO.getSize()
                 : onlineUserList.size();
         List<UserOnlineDTO> subList = onlineUserList.subList((conditionVO.getCurrent() - 1) * conditionVO.getSize(), size);
-        return new PageDTO<>(subList, onlineUserList.size());
+        return new PageData<>(subList, onlineUserList.size());
     }
 
     @Override

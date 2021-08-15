@@ -13,7 +13,7 @@ import com.star.core.vo.FriendLinkVO;
 import com.star.core.service.FriendLinkService;
 import com.star.core.dto.FriendLinkBackDTO;
 import com.star.core.dto.FriendLinkDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.util.BeanCopyUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,7 @@ public class FriendLinkServiceImpl extends ServiceImpl<LinkMapper, FriendLink> i
     }
 
     @Override
-    public PageDTO<FriendLinkBackDTO> listFriendLinkDTO(ConditionVO condition) {
+    public PageData<FriendLinkBackDTO> listFriendLinkDTO(ConditionVO condition) {
         Page<FriendLink> page = new Page<>(condition.getCurrent(), condition.getSize());
         Page<FriendLink> friendLinkPage = linkMapper.selectPage(page, new LambdaQueryWrapper<FriendLink>()
                 .select(FriendLink::getId, FriendLink::getLinkName, FriendLink::getLinkIntro,
@@ -52,7 +52,7 @@ public class FriendLinkServiceImpl extends ServiceImpl<LinkMapper, FriendLink> i
                 .like(StringUtils.isNotBlank(condition.getKeywords()), FriendLink::getLinkName, condition.getKeywords()));
         // 转换DTO
         List<FriendLinkBackDTO> friendLinkBackDTOList = BeanCopyUtil.copyList(friendLinkPage.getRecords(), FriendLinkBackDTO.class);
-        return new PageDTO<>(friendLinkBackDTOList, (int) friendLinkPage.getTotal());
+        return new PageData<>(friendLinkBackDTOList, (int) friendLinkPage.getTotal());
     }
 
     @Override

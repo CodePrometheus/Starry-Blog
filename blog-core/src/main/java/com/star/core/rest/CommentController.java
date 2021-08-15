@@ -3,7 +3,7 @@ package com.star.core.rest;
 import com.star.common.constant.Result;
 import com.star.core.dto.CommentBackDTO;
 import com.star.core.dto.CommentDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.ReplyDTO;
 import com.star.core.service.CommentService;
 import com.star.core.vo.CommentVO;
@@ -38,7 +38,7 @@ public class CommentController {
             @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long", dataTypeClass = Long.class)
     })
     @GetMapping("/comments")
-    private Result<PageDTO<CommentDTO>> listComments(Integer articleId, Long current) {
+    private Result<PageData<CommentDTO>> listComments(Integer articleId, Long current) {
         return Result.success(commentService.listComments(articleId, current));
     }
 
@@ -82,7 +82,7 @@ public class CommentController {
 
     @ApiOperation(value = "查询后台评论")
     @GetMapping("/admin/comments")
-    private Result<PageDTO<CommentBackDTO>> listCommentBackDTO(ConditionVO condition) {
+    private Result<PageData<CommentBackDTO>> listCommentBackDTO(ConditionVO condition) {
         return Result.success(commentService.listCommentBackDTO(condition));
     }
 

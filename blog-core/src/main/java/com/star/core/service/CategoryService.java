@@ -5,7 +5,7 @@ import com.star.core.vo.CategoryVO;
 import com.star.core.dto.CategoryDTO;
 import com.star.core.entity.Category;
 import com.star.core.vo.ConditionVO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface CategoryService extends IService<Category> {
      *
      * @return 分类列表
      */
-    PageDTO<CategoryDTO> listCategories();
+    PageData<CategoryDTO> listCategories();
 
     /**
      * 查询后台分类
@@ -28,7 +28,7 @@ public interface CategoryService extends IService<Category> {
      * @param conditionVO 条件
      * @return 分类列表
      */
-    PageDTO<Category> listCategoryBackDTO(ConditionVO conditionVO);
+    PageData<Category> listCategoryBackDTO(ConditionVO conditionVO);
 
     /**
      * 删除分类

@@ -1,7 +1,7 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.RoleDTO;
 import com.star.core.dto.UserRoleDTO;
 import com.star.core.service.RoleService;
@@ -34,7 +34,7 @@ public class RoleController {
 
     @ApiOperation(value = "查询角色列表")
     @GetMapping("/roles")
-    public Result<PageDTO<RoleDTO>> listRoles(ConditionVO conditionVO) {
+    public Result<PageData<RoleDTO>> listRoles(ConditionVO conditionVO) {
         return Result.success(roleService.listRoles(conditionVO));
     }
 

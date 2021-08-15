@@ -1,6 +1,9 @@
 package com.star.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 文章上下篇
@@ -9,6 +12,9 @@ import lombok.Data;
  * @Date: 03-30-2021 16:51
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArticlePaginationDTO {
 
     /**

@@ -7,7 +7,7 @@ import com.star.core.dto.MessageDTO;
 import com.star.core.entity.Message;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.MessageVO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 
 import java.util.List;
 
@@ -36,6 +36,6 @@ public interface MessageService extends IService<Message> {
      * @param condition 条件
      * @return 留言列表
      */
-    PageDTO<MessageBackDTO> listMessageBackDTO(ConditionVO condition);
+    PageData<MessageBackDTO> listMessageBackDTO(ConditionVO condition);
 
 }

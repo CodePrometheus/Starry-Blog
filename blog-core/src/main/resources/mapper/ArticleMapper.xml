@@ -219,20 +219,4 @@
         </foreach>
     </select>
 
-    <select id="listArticleRecommends" resultType="com.star.core.dto.ArticleRecommendDTO">
-        SELECT id,
-               article_title,
-               article_cover,
-               create_time
-        FROM (
-                 SELECT DISTINCT article_id
-                 FROM (SELECT tag_id FROM tb_article_tag WHERE article_id = #{articleId}) t
-                          JOIN tb_article_tag t1 ON t.tag_id = t1.tag_id
-                 WHERE article_id != #{articleId}
-             ) t2
-                 JOIN tb_article a ON t2.article_id = a.id
-        where a.is_delete = 0
-        ORDER BY is_top DESC, id DESC LIMIT 6
-    </select>
-
 </mapper>

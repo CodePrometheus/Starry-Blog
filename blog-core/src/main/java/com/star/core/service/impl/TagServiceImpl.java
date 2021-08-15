@@ -13,7 +13,7 @@ import com.star.core.mapper.TagMapper;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.TagVO;
 import com.star.core.service.TagService;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.TagDTO;
 import com.star.core.util.BeanCopyUtil;
 import org.springframework.stereotype.Service;
@@ -38,22 +38,22 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     private ArticleTagMapper articleTagMapper;
 
     @Override
-    public PageDTO<TagDTO> listTags() {
+    public PageData<TagDTO> listTags() {
         List<Tag> tagList = tagMapper.selectList(new LambdaQueryWrapper<Tag>().select(Tag::getId, Tag::getTagName));
         List<TagDTO> tagDTOList = BeanCopyUtil.copyList(tagList, TagDTO.class);
         // 查询标签数量
         Integer count = tagMapper.selectCount(null);
-        return new PageDTO<>(tagDTOList, count);
+        return new PageData<>(tagDTOList, count);
     }
 
     @Override
-    public PageDTO<Tag> listTagBackDTO(ConditionVO condition) {
+    public PageData<Tag> listTagBackDTO(ConditionVO condition) {
         Page<Tag> page = new Page<>(condition.getCurrent(), condition.getSize());
         Page<Tag> tagPage = tagMapper.selectPage(page, new LambdaQueryWrapper<Tag>()
                 .select(Tag::getId, Tag::getTagName, Tag::getCreateTime)
                 .like(StringUtils.isNotBlank(condition.getKeywords()), Tag::getTagName, condition.getKeywords())
                 .orderByDesc(Tag::getCreateTime));
-        return new PageDTO<>(tagPage.getRecords(), (int) tagPage.getTotal());
+        return new PageData<>(tagPage.getRecords(), (int) tagPage.getTotal());
     }
 
     @Transactional(rollbackFor = StarryException.class)

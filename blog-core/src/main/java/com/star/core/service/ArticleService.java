@@ -18,10 +18,9 @@ public interface ArticleService extends IService<Article> {
     /**
      * 查询文章归档
      *
-     * @param current 当前页码
      * @return 文章
      */
-    PageDTO<ArchiveDTO> listArchives(Long current);
+    PageData<ArchiveDTO> listArchives();
 
     /**
      * 查询后台文章
@@ -29,7 +28,7 @@ public interface ArticleService extends IService<Article> {
      * @param condition 条件
      * @return 文章列表
      */
-    PageDTO<ArticleBackDTO> listArticleBack(ConditionVO condition);
+    PageData<ArticleBackDTO> listArticleBack(ConditionVO condition);
 
     /**
      * 查询首页文章
@@ -71,13 +70,6 @@ public interface ArticleService extends IService<Article> {
     ArticleDTO getArticleById(Integer articleId);
 
     /**
-     * 查看文章分类标签选项
-     *
-     * @return 文章分类标签选项
-     */
-    ArticleOptionDTO listArticleOptionDTO();
-
-    /**
      * 点赞文章
      *
      * @param articleId 文章id
@@ -111,12 +103,5 @@ public interface ArticleService extends IService<Article> {
      * @param articleIdList 文章id集合
      */
     void deleteArticles(List<Integer> articleIdList);
-
-    /**
-     * 查看最新文章
-     *
-     * @return 最新文章
-     */
-    List<ArticleRecommendDTO> listNewestArticles();
 
 }

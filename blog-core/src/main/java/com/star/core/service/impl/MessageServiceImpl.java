@@ -14,7 +14,7 @@ import com.star.core.vo.MessageVO;
 import com.star.core.service.MessageService;
 import com.star.core.dto.MessageBackDTO;
 import com.star.core.dto.MessageDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.util.BeanCopyUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +61,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     }
 
     @Override
-    public PageDTO listMessageBackDTO(ConditionVO condition) {
+    public PageData listMessageBackDTO(ConditionVO condition) {
         Page<Message> page = new Page<>(condition.getCurrent(), condition.getSize());
         LambdaQueryWrapper<Message> messagePageQuery = new LambdaQueryWrapper<Message>()
                 .select(Message::getId, Message::getNickname, Message::getMessageContent, Message::getAvatar,
@@ -71,7 +71,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         Page<Message> messagePage = messageMapper.selectPage(page, messagePageQuery);
         //转换DTO
         List<MessageBackDTO> messageBackDTOList = BeanCopyUtil.copyList(messagePage.getRecords(), MessageBackDTO.class);
-        return new PageDTO<>(messageBackDTOList, (int) messagePage.getTotal());
+        return new PageData<>(messageBackDTOList, (int) messagePage.getTotal());
     }
 
 }

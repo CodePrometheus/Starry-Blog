@@ -7,7 +7,7 @@ import com.star.core.vo.ConditionVO;
 import com.star.core.vo.FriendLinkVO;
 import com.star.core.dto.FriendLinkBackDTO;
 import com.star.core.dto.FriendLinkDTO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public interface FriendLinkService extends IService<FriendLink> {
      * @param condition 条件
      * @return 友链列表
      */
-    PageDTO<FriendLinkBackDTO> listFriendLinkDTO(ConditionVO condition);
+    PageData<FriendLinkBackDTO> listFriendLinkDTO(ConditionVO condition);
 
     /**
      * 保存或修改友联

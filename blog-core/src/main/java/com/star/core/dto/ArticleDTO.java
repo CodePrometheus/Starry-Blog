@@ -1,8 +1,11 @@
 package com.star.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -12,6 +15,9 @@ import java.util.List;
  * @Date: 12-19-2020 15:15
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArticleDTO {
 
     /**
@@ -45,14 +51,24 @@ public class ArticleDTO {
     private Integer viewsCount;
 
     /**
+     * 文章类型
+     */
+    private Integer type;
+
+    /**
+     * 原文链接
+     */
+    private String originalUrl;
+
+    /**
      * 发表时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 文章分类id
@@ -83,5 +99,10 @@ public class ArticleDTO {
      * 推荐文章
      */
     private List<ArticleRecommendDTO> articleRecommendList;
+
+    /**
+     * 最新文章列表
+     */
+    private List<ArticleRecommendDTO> newestArticleList;
 
 }

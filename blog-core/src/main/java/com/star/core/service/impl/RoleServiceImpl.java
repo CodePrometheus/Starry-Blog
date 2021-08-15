@@ -4,22 +4,23 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
+import com.star.core.dto.PageData;
+import com.star.core.dto.RoleDTO;
+import com.star.core.dto.UserRoleDTO;
 import com.star.core.entity.Role;
 import com.star.core.entity.RoleMenu;
 import com.star.core.entity.RoleResource;
 import com.star.core.entity.UserRole;
+import com.star.core.handler.FilterInvocationSecurityMetadataSourceImpl;
 import com.star.core.mapper.RoleMapper;
 import com.star.core.mapper.UserRoleMapper;
-import com.star.core.vo.ConditionVO;
-import com.star.core.vo.RoleVO;
-import com.star.core.handler.FilterInvocationSecurityMetadataSourceImpl;
 import com.star.core.service.RoleMenuService;
 import com.star.core.service.RoleResourceService;
 import com.star.core.service.RoleService;
-import com.star.core.dto.PageDTO;
-import com.star.core.dto.RoleDTO;
-import com.star.core.dto.UserRoleDTO;
 import com.star.core.util.BeanCopyUtil;
+import com.star.core.util.PageUtils;
+import com.star.core.vo.ConditionVO;
+import com.star.core.vo.RoleVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,14 +64,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public PageDTO<RoleDTO> listRoles(ConditionVO conditionVO) {
+    public PageData<RoleDTO> listRoles(ConditionVO conditionVO) {
         // 查询角色列表
-        conditionVO.setCurrent((conditionVO.getCurrent() - 1) * conditionVO.getSize());
-        List<RoleDTO> roleDTOList = roleMapper.listRoles(conditionVO);
+        List<RoleDTO> roleDTOList = roleMapper.listRoles(PageUtils.getLimitCurrent(), PageUtils.getSize(), conditionVO);
         Integer count = roleMapper.selectCount(new LambdaQueryWrapper<Role>()
                 .like(StringUtils.isNotBlank(conditionVO.getKeywords()),
                         Role::getRoleName, conditionVO.getKeywords()));
-        return new PageDTO<>(roleDTOList, count);
+        return new PageData<>(roleDTOList, count);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.entity.Role;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.RoleVO;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.RoleDTO;
 import com.star.core.dto.UserRoleDTO;
 
@@ -29,7 +29,7 @@ public interface RoleService extends IService<Role> {
      * @param conditionVO 条件
      * @return 角色列表
      */
-    PageDTO<RoleDTO> listRoles(ConditionVO conditionVO);
+    PageData<RoleDTO> listRoles(ConditionVO conditionVO);
 
     /**
      * 保存或更新角色

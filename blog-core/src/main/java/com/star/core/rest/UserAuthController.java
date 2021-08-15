@@ -1,7 +1,7 @@
 package com.star.core.rest;
 
 import com.star.common.constant.Result;
-import com.star.core.dto.PageDTO;
+import com.star.core.dto.PageData;
 import com.star.core.dto.UserBackDTO;
 import com.star.core.service.UserAuthService;
 import com.star.core.vo.ConditionVO;
@@ -38,7 +38,7 @@ public class UserAuthController {
 
     @ApiOperation(value = "查看后台用户列表")
     @GetMapping("/admin/users")
-    private Result<PageDTO<UserBackDTO>> listUsers(ConditionVO condition) {
+    private Result<PageData<UserBackDTO>> listUsers(ConditionVO condition) {
         return Result.success(userAuthService.listUserBackDTO(condition));
     }
 

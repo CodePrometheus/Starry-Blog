@@ -41,7 +41,7 @@ public class BeanCopyUtil {
      * @param target
      * @param <T>
      * @param <S>
-     * @return
+     * @return {@link List<T>} 集合
      */
     public static <T, S> List<T> copyList(List<S> source, Class<T> target) {
         List<T> list = new ArrayList<>();
