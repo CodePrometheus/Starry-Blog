@@ -1,13 +1,10 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.entity.UserInfo;
-import com.star.core.vo.ConditionVO;
-import com.star.core.vo.EmailVO;
-import com.star.core.vo.UserInfoVO;
-import com.star.core.vo.UserRoleVO;
 import com.star.core.dto.PageData;
 import com.star.core.dto.UserOnlineDTO;
+import com.star.core.entity.UserInfo;
+import com.star.core.vo.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -40,10 +37,9 @@ public interface UserInfoService extends IService<UserInfo> {
     /**
      * 修改用户禁用状态
      *
-     * @param userInfoId 用户信息id
-     * @param isDisable  禁用状态
+     * @param userDisableVO 用户禁用信息
      */
-    void updateUserDisable(Integer userInfoId, Integer isDisable);
+    void updateUserDisable(UserDisableVO userDisableVO);
 
     /**
      * 绑定用户邮箱
@@ -62,7 +58,9 @@ public interface UserInfoService extends IService<UserInfo> {
 
     /**
      * 下线用户
+     *
      * @param userInfoId 用户信息id
      */
     void removeOnlineUser(Integer userInfoId);
+
 }

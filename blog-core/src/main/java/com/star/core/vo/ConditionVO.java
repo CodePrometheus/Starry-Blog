@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 各种查询的条件
@@ -35,16 +35,34 @@ public class ConditionVO {
     private Integer tagId;
 
     /**
+     * 登录类型
+     */
+    @ApiModelProperty(name = "type", value = "登录类型", dataType = "Integer")
+    private Integer loginType;
+
+    /**
+     * 类型
+     */
+    @ApiModelProperty(name = "type", value = "类型", dataType = "Integer")
+    private Integer type;
+
+    /**
+     * 状态
+     */
+    @ApiModelProperty(name = "status", value = "状态", dataType = "Integer")
+    private Integer status;
+
+    /**
      * 当前页码
      */
     @ApiModelProperty(name = "current", value = "当前页码", required = true, dataType = "Long")
-    private Integer current;
+    private Long current;
 
     /**
      * 显示数量
      */
     @ApiModelProperty(name = "size", value = "显示数量", required = true, dataType = "Long")
-    private Integer size;
+    private Long size;
 
     /**
      * 搜索内容
@@ -53,28 +71,27 @@ public class ConditionVO {
     private String keywords;
 
     /**
-     * 状态值
+     * 是否删除
      */
     @ApiModelProperty(name = "isDelete", value = "是否删除", dataType = "Integer")
     private Integer isDelete;
 
-
     /**
-     * 是否为草稿
+     * 是否审核
      */
-    @ApiModelProperty(name = "isDraft", value = "草稿状态", dataType = "Integer")
-    private Integer isDraft;
+    @ApiModelProperty(name = "isReview", value = "是否删除", dataType = "Integer")
+    private Integer isReview;
 
     /**
      * 开始时间
      */
     @ApiModelProperty(name = "startTime", value = "开始时间", dataType = "Date")
-    private Date startTime;
+    private LocalDateTime startTime;
 
     /**
      * 结束时间
      */
     @ApiModelProperty(name = "endTime", value = "结束时间", dataType = "Date")
-    private Date endTime;
+    private LocalDateTime endTime;
 
 }

@@ -27,7 +27,7 @@ public class LabelOptionDTO {
     /**
      * 选项名
      */
-    private String labelName;
+    private String label;
 
     /**
      * 子选项

@@ -29,9 +29,9 @@ public interface ResourceService extends IService<Resource> {
     /**
      * 删除资源
      *
-     * @param resourceIdList 资源id列表
+     * @param resourceId 资源id列表
      */
-    void deleteResources(List<Integer> resourceIdList);
+    void deleteResource(Integer resourceId);
 
     /**
      * 查看资源列表

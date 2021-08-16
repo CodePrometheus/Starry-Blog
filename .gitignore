@@ -30,6 +30,5 @@ build/
 
 rebel.xml
 rebel-remote.xml
-GiteeImgBedConfig.java
 /log/
 application-dev.yml

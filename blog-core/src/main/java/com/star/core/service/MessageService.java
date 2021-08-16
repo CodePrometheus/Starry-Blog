@@ -8,6 +8,7 @@ import com.star.core.entity.Message;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.MessageVO;
 import com.star.core.dto.PageData;
+import com.star.core.vo.ReviewVO;
 
 import java.util.List;
 
@@ -36,6 +37,13 @@ public interface MessageService extends IService<Message> {
      * @param condition 条件
      * @return 留言列表
      */
-    PageData<MessageBackDTO> listMessageBackDTO(ConditionVO condition);
+    PageData<MessageBackDTO> listMessageBack(ConditionVO condition);
+
+    /**
+     * 审核留言
+     *
+     * @param reviewVO 审查签证官
+     */
+    void updateMessagesReview(ReviewVO reviewVO);
 
 }

@@ -7,6 +7,7 @@ import com.star.core.dto.PageData;
 import com.star.core.service.MessageService;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.MessageVO;
+import com.star.core.vo.ReviewVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -43,14 +44,21 @@ public class MessageController {
 
     @ApiOperation(value = "查看后台留言列表")
     @GetMapping("/admin/messages")
-    private Result<PageData<MessageBackDTO>> listMessageBackDTO(ConditionVO condition) {
-        return Result.success(messageService.listMessageBackDTO(condition));
+    private Result<PageData<MessageBackDTO>> listMessageBack(ConditionVO condition) {
+        return Result.success(messageService.listMessageBack(condition));
     }
 
     @ApiOperation(value = "删除留言")
     @DeleteMapping("/admin/messages")
     public Result<?> deleteMessages(@RequestBody List<Integer> messageIdList) {
         messageService.removeByIds(messageIdList);
+        return Result.success();
+    }
+
+    @ApiOperation(value = "审核留言")
+    @PutMapping("/admin/messages/review")
+    public Result<?> updateMessagesReview(@Valid @RequestBody ReviewVO reviewVO) {
+        messageService.updateMessagesReview(reviewVO);
         return Result.success();
     }
 

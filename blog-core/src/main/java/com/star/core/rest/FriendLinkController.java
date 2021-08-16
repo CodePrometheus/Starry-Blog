@@ -36,8 +36,8 @@ public class FriendLinkController {
 
     @ApiOperation(value = "查看后台友链列表")
     @GetMapping("/admin/links")
-    private Result<PageData<FriendLinkBackDTO>> listFriendLinkDTO(ConditionVO condition) {
-        return Result.success(friendLinkService.listFriendLinkDTO(condition));
+    private Result<PageData<FriendLinkBackDTO>> listFriendLink(ConditionVO condition) {
+        return Result.success(friendLinkService.listFriendLink(condition));
     }
 
     @ApiOperation(value = "保存或修改友链")

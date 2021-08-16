@@ -5,41 +5,36 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
- * 留言
- *
  * @Author: zzStar
- * @Date: 12-20-2020 10:29
+ * @Date: 08-16-2021 21:09
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageDTO {
+public class TagBackDTO {
 
     /**
-     * 主键id
+     * 标签id
      */
     private Integer id;
 
     /**
-     * 昵称
+     * 标签名
      */
-    private String nickname;
+    private String tagName;
 
     /**
-     * 头像
+     * 文章量
      */
-    private String avatar;
+    private Integer articleCount;
 
     /**
-     * 留言内容
+     * 创建时间
      */
-    private String messageContent;
-
-    /**
-     * 弹幕速度
-     */
-    private Integer time;
+    private LocalDateTime createTime;
 
 }

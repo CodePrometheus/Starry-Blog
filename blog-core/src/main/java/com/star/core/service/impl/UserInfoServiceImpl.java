@@ -7,19 +7,16 @@ import com.star.common.constant.PathConst;
 import com.star.common.exception.StarryException;
 import com.star.common.tool.ImageUtil;
 import com.star.common.tool.RedisUtil;
-import com.star.core.entity.UserInfo;
-import com.star.core.entity.UserRole;
-import com.star.core.mapper.UserInfoMapper;
-import com.star.core.vo.ConditionVO;
-import com.star.core.vo.EmailVO;
-import com.star.core.vo.UserInfoVO;
-import com.star.core.vo.UserRoleVO;
-import com.star.core.service.UserInfoService;
-import com.star.core.service.UserRoleService;
 import com.star.core.dto.PageData;
 import com.star.core.dto.UserInfoDTO;
 import com.star.core.dto.UserOnlineDTO;
+import com.star.core.entity.UserInfo;
+import com.star.core.entity.UserRole;
+import com.star.core.mapper.UserInfoMapper;
+import com.star.core.service.UserInfoService;
+import com.star.core.service.UserRoleService;
 import com.star.core.util.UserUtil;
+import com.star.core.vo.*;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
@@ -29,12 +26,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.star.common.constant.RedisConst.CODE_KEY;
-
+import static com.star.core.util.PageUtils.getLimitCurrent;
+import static com.star.core.util.PageUtils.getSize;
 
 /**
  * 用户信息业务
@@ -66,8 +63,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 .id(UserUtil.getLoginUser().getUserInfoId())
                 .nickname(userInfoVO.getNickname())
                 .intro(userInfoVO.getIntro())
-                .webSite(userInfoVO.getWebSite())
-                .updateTime(new Date()).build();
+                .webSite(userInfoVO.getWebSite()).build();
         userInfoMapper.updateById(userInfo);
     }
 
@@ -104,18 +100,18 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
-    public void updateUserDisable(Integer userInfoId, Integer isDisable) {
+    public void updateUserDisable(UserDisableVO disableVO) {
         // 更新用户禁用状态
         UserInfo userInfo = UserInfo.builder()
-                .id(userInfoId)
-                .isDisable(isDisable).build();
+                .id(disableVO.getId())
+                .isDisable(disableVO.getIsDisable()).build();
         userInfoMapper.updateById(userInfo);
     }
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public void saveUserEmail(EmailVO emailVO) {
-        if (!emailVO.getCode().equals(redisUtil.get(CODE_KEY + emailVO.getEmail()))) {
+        if (!emailVO.getCode().equals(redisUtil.get(CODE_KEY + emailVO.getEmail()).toString())) {
             throw new StarryException("验证码错误");
         }
         UserInfo userInfo = UserInfo.builder()
@@ -133,11 +129,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
                 .sorted(Comparator.comparing(UserOnlineDTO::getLastLoginTime).reversed())
                 .collect(Collectors.toList());
         // 分页
-        int current = (conditionVO.getCurrent() - 1) * conditionVO.getSize();
-        int size = onlineUserList.size() > conditionVO.getSize() ? current + conditionVO.getSize()
-                : onlineUserList.size();
-        List<UserOnlineDTO> subList = onlineUserList.subList((conditionVO.getCurrent() - 1) * conditionVO.getSize(), size);
-        return new PageData<>(subList, onlineUserList.size());
+        int fromIdx = getLimitCurrent().intValue();
+        int size = getSize().intValue();
+        int toIdx = onlineUserList.size() - fromIdx > size ? fromIdx + size : onlineUserList.size();
+
+        List<UserOnlineDTO> onlineList = onlineUserList.subList(fromIdx, toIdx);
+        return new PageData<>(onlineList, onlineUserList.size());
     }
 
     @Override

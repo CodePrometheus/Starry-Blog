@@ -5,13 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.IpUtil;
 import com.star.common.tool.RedisUtil;
 import com.star.core.config.RabbitConfig;
 import com.star.core.dto.EmailDTO;
 import com.star.core.dto.PageData;
 import com.star.core.dto.UserBackDTO;
-import com.star.core.dto.UserInfoDTO;
 import com.star.core.entity.UserAuth;
 import com.star.core.entity.UserInfo;
 import com.star.core.entity.UserRole;
@@ -36,16 +34,18 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.star.common.constant.CommonConst.DEFAULT_AVATAR;
 import static com.star.common.constant.CommonConst.DEFAULT_NICKNAME;
 import static com.star.common.constant.LoginTypeConst.EMAIL;
-import static com.star.common.constant.RedisConst.*;
+import static com.star.common.constant.RedisConst.CODE_EXPIRE_TIME;
+import static com.star.common.constant.RedisConst.CODE_KEY;
 import static com.star.common.constant.RoleEnum.USER;
-import static com.star.core.util.UserUtil.convertLoginUser;
 
 /**
  * 用户业务
@@ -95,12 +95,12 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         for (int i = 0; i < 6; i++) {
             code.append(random.nextInt(10));
         }
-        EmailDTO emailDTO = EmailDTO.builder()
+        EmailDTO email = EmailDTO.builder()
                 .email(username)
                 .subject("验证码")
                 .content("您的验证码为 " + code.toString() + " 悄悄告诉你，有效期只有5分钟，不要跟别人说哦！").build();
         rabbitTemplate.convertAndSend(RabbitConfig.EMAIL_EXCHANGE,
-                "*", new Message(JSON.toJSONBytes(emailDTO),
+                "*", new Message(JSON.toJSONBytes(email),
                         new MessageProperties()));
         // 将验证码存入redis，设置过期时间为5分钟
         redisUtil.set(CODE_KEY + username, code, CODE_EXPIRE_TIME);
@@ -108,7 +108,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
-    public void saveUser(UserVO user) {
+    public void register(UserVO user) {
         if (checkUser(user)) {
             throw new StarryException("邮箱已被注册！");
         }
@@ -116,7 +116,6 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         UserInfo userInfo = UserInfo.builder()
                 .nickname(DEFAULT_NICKNAME)
                 .avatar(DEFAULT_AVATAR)
-                .createTime(new Date())
                 .email(user.getUsername()).build();
         userInfoMapper.insert(userInfo);
         // 绑定用户角色
@@ -126,8 +125,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
                 .userInfoId(userInfo.getId())
                 .username(user.getUsername())
                 .password(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()))
-                .loginType(EMAIL.getType())
-                .createTime(new Date()).build();
+                .loginType(EMAIL.getType()).build();
         userAuthMapper.insert(userAuth);
     }
 
@@ -136,6 +134,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
      *
      * @param userInfo 用户信息
      */
+    @Transactional(rollbackFor = StarryException.class)
     private void saveUserRole(UserInfo userInfo) {
         UserRole userRole = UserRole.builder()
                 .userId(userInfo.getId())
@@ -172,47 +171,15 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
     }
 
     @Override
-    public PageData<UserBackDTO> listUserBackDTO(ConditionVO condition) {
+    public PageData<UserBackDTO> listUserBack(ConditionVO condition) {
         // 获取后台用户数量
         Integer count = userAuthMapper.countUser(condition);
         if (count == 0) {
             return new PageData<>();
         }
         // 获取后台用户列表
-        List<UserBackDTO> userBackDTOList = userAuthMapper.listUsers(PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
-        return new PageData<>(userBackDTOList, count);
-    }
-
-
-    /**
-     * 获取本地第三方登录信息
-     *
-     * @param user 用户对象
-     * @return 用户登录信息
-     */
-    private UserInfoDTO getUserInfoDTO(UserAuth user) {
-        // 更新登录时间，ip
-        String ipAddr = IpUtil.getIpAddr(request);
-        String ipSource = IpUtil.getIpSource(ipAddr);
-        // update
-        userAuthMapper.update(new UserAuth(), new LambdaUpdateWrapper<UserAuth>()
-                .set(UserAuth::getIpAddr, ipAddr)
-                .set(UserAuth::getIpSource, ipSource)
-                .set(UserAuth::getLastLoginTime, new Date())
-                .eq(UserAuth::getId, user.getId()));
-        // 查询账号对应的信息
-        UserInfo userInfo = userInfoMapper.selectOne(new LambdaQueryWrapper<UserInfo>()
-                .select(UserInfo::getId, UserInfo::getEmail, UserInfo::getNickname,
-                        UserInfo::getAvatar, UserInfo::getIntro, UserInfo::getWebSite, UserInfo::getIsDisable)
-                .eq(UserInfo::getId, user.getUserInfoId()));
-
-        // 查询账号点赞信息包括文章和评论
-        Set<Integer> articleLikeSet = (Set) redisUtil.hGet(ARTICLE_USER_LIKE, userInfo.getId().toString());
-        Set<Integer> commentLikeSet = (Set) redisUtil.hGet(COMMENT_USER_LIKE, userInfo.getId().toString());
-        // 查询账号角色消息
-        List<String> roleList = roleMapper.listRolesByUserInfoId(userInfo.getId());
-        // 封装登录信息
-        return convertLoginUser(user, userInfo, roleList, articleLikeSet, commentLikeSet, request);
+        List<UserBackDTO> userBackList = userAuthMapper.listUsers(PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
+        return new PageData<>(userBackList, count);
     }
 
 

@@ -6,6 +6,7 @@ import com.star.core.vo.ConditionVO;
 import com.star.core.dto.LabelOptionDTO;
 import com.star.core.dto.MenuDTO;
 import com.star.core.dto.UserMenuDTO;
+import com.star.core.vo.MenuVO;
 
 import java.util.List;
 
@@ -33,5 +34,19 @@ public interface MenuService extends IService<Menu> {
      * @return 菜单列表
      */
     List<UserMenuDTO> listUserMenus();
+
+    /**
+     * 新增或修改菜单
+     *
+     * @param menuVO 菜单信息
+     */
+    void saveOrUpdateMenu(MenuVO menuVO);
+
+    /**
+     * 删除菜单
+     *
+     * @param menuId 菜单id
+     */
+    void deleteMenu(Integer menuId);
 
 }

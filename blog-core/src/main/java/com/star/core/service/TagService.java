@@ -2,6 +2,7 @@ package com.star.core.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.star.core.dto.TagBackDTO;
 import com.star.core.entity.Tag;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.TagVO;
@@ -28,7 +29,7 @@ public interface TagService extends IService<Tag> {
      * @param condition 条件
      * @return 标签列表
      */
-    PageData<Tag> listTagBackDTO(ConditionVO condition);
+    PageData<TagBackDTO> listTagBack(ConditionVO condition);
 
     /**
      * 删除标签
@@ -43,5 +44,13 @@ public interface TagService extends IService<Tag> {
      * @param tagVO
      */
     void saveOrUpdateTag(TagVO tagVO);
+
+    /**
+     * 搜索文章标签
+     *
+     * @param condition 条件
+     * @return {@link List<TagDTO>} 标签列表
+     */
+    List<TagDTO> listTagsBySearch(ConditionVO condition);
 
 }

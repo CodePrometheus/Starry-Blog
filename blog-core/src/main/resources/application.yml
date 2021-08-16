@@ -79,3 +79,9 @@ swagger:
   application-version: 1.5
   application-description: Starry-Blog | 你的美好，我都记得
   try-host: http://localhost:${server.port}
+
+ACCESS_TOKEN:
+OWNER:
+REPO_NAME:
+CREATE_REPOS_MESSAGE:
+CREATE_REPOS_URL:

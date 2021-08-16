@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -66,31 +65,30 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public PageData<RoleDTO> listRoles(ConditionVO conditionVO) {
         // 查询角色列表
-        List<RoleDTO> roleDTOList = roleMapper.listRoles(PageUtils.getLimitCurrent(), PageUtils.getSize(), conditionVO);
+        List<RoleDTO> roleList = roleMapper.listRoles(PageUtils.getLimitCurrent(), PageUtils.getSize(), conditionVO);
         Integer count = roleMapper.selectCount(new LambdaQueryWrapper<Role>()
                 .like(StringUtils.isNotBlank(conditionVO.getKeywords()),
                         Role::getRoleName, conditionVO.getKeywords()));
-        return new PageData<>(roleDTOList, count);
+        return new PageData<>(roleList, count);
     }
 
     @Override
     @Transactional(rollbackFor = SecurityException.class)
     public void saveOrUpdateRole(RoleVO roleVO) {
         // 是否已经存在
-        Integer count = roleMapper.selectCount(new LambdaQueryWrapper<Role>()
+        Role existRole = roleMapper.selectOne(new LambdaQueryWrapper<Role>()
+                .select(Role::getId)
                 .eq(Role::getRoleName, roleVO.getRoleName()));
-        if (Objects.isNull(roleVO.getId()) && count > 0) {
-            throw new StarryException("角色名已经存在");
+        if (Objects.nonNull(existRole) && !existRole.getId().equals(roleVO.getId())) {
+            throw new StarryException("角色名已存在");
         }
         // save Or update
         Role role = Role.builder()
                 .id(roleVO.getId())
                 .roleName(roleVO.getRoleName())
                 .roleLabel(roleVO.getRoleLabel())
-                .isDisable(FALSE)
-                .createTime(Objects.isNull(roleVO.getId()) ? new Date() : null)
-                .updateTime(Objects.nonNull(roleVO.getId()) ? new Date() : null).build();
-        this.saveOrUpdateRole(roleVO);
+                .isDisable(FALSE).build();
+        this.saveOrUpdate(role);
         // 更新对应的RoleResource
         if (CollectionUtils.isNotEmpty(roleVO.getResourceIdList())) {
             if (Objects.nonNull(roleVO.getId())) {
@@ -125,6 +123,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
+    @Transactional(rollbackFor = SecurityException.class)
     public void deleteRoles(List<Integer> roleIdList) {
         // 判断用户下是否有用户
         Integer count = userRoleMapper.selectCount(new LambdaQueryWrapper<UserRole>()

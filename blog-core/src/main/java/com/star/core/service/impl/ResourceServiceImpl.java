@@ -3,22 +3,25 @@ package com.star.core.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.core.entity.Resource;
-import com.star.core.entity.RoleResource;
-import com.star.core.mapper.ResourceMapper;
-import com.star.core.mapper.RoleResourceMapper;
-import com.star.core.vo.ResourceVO;
-import com.star.core.handler.FilterInvocationSecurityMetadataSourceImpl;
-import com.star.core.service.ResourceService;
 import com.star.core.dto.LabelOptionDTO;
 import com.star.core.dto.ResourceDTO;
+import com.star.core.entity.Resource;
+import com.star.core.entity.RoleResource;
+import com.star.core.handler.FilterInvocationSecurityMetadataSourceImpl;
+import com.star.core.mapper.ResourceMapper;
+import com.star.core.mapper.RoleResourceMapper;
+import com.star.core.service.ResourceService;
 import com.star.core.util.BeanCopyUtil;
+import com.star.core.vo.ResourceVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.FALSE;
@@ -31,6 +34,8 @@ import static com.star.common.constant.CommonConst.FALSE;
 @RequiredArgsConstructor
 @SuppressWarnings("unchecked")
 public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> implements ResourceService {
+
+    private final ResourceMapper resourceMapper;
 
     private final FilterInvocationSecurityMetadataSourceImpl metadataSource;
 
@@ -45,15 +50,12 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         this.remove(null);
         roleResourceMapper.delete(null);
         List<Resource> resourceList = new ArrayList<>();
-        Map<String, Object> data = restTemplate.getForObject("http://localhost:8080/v2/api-docs", Map.class);
+        Map<String, Object> data = restTemplate.getForObject("http://localhost:8989/v2/api-docs", Map.class);
         // 获取所有的模块
         List<Map<String, String>> tagList = (List<Map<String, String>>) data.get("tags");
         tagList.forEach(item -> {
             Resource resource = Resource.builder()
                     .resourceName(item.get("name"))
-                    .createTime(new Date())
-                    .updateTime(new Date())
-                    .isDisable(FALSE)
                     .isAnonymous(FALSE).build();
             resourceList.add(resource);
         });
@@ -75,41 +77,44 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
                     .resourceName(permissionName)
                     .url(url.replaceAll("\\{[^}]*\\}", "*"))
                     .parentId(parentId)
-                    .isDisable(FALSE)
-                    .isAnonymous(FALSE)
-                    .createTime(new Date())
-                    .updateTime(new Date()).build();
+                    .isAnonymous(FALSE).build();
             resourceList.add(resource);
         }));
         this.saveBatch(resourceList);
     }
 
     @Override
+    @Transactional(rollbackFor = SecurityException.class)
     public void saveOrUpdateResource(ResourceVO resourceVO) {
         // 更新资源信息
         Resource resource = BeanCopyUtil.copyObject(resourceVO, Resource.class);
-        resource.setCreateTime(Objects.isNull(resource.getId()) ? new Date() : null);
-        resource.setUpdateTime(Objects.nonNull(resource.getId()) ? new Date() : null);
         this.saveOrUpdate(resource);
         // 重新加载角色资源信息
         metadataSource.clearDataSource();
     }
 
     @Override
-    public void deleteResources(List<Integer> resourceIdList) {
+    @Transactional(rollbackFor = SecurityException.class)
+    public void deleteResource(Integer resourceId) {
         // 查询是否有角色关联
         Integer count = roleResourceMapper.selectCount(new LambdaQueryWrapper<RoleResource>()
-                .in(RoleResource::getResourceId, resourceIdList));
+                .eq(RoleResource::getResourceId, resourceId));
         if (count > 1) {
             throw new StarryException("该资源下存在角色");
         }
-        this.removeByIds(resourceIdList);
+        // 删除子资源
+        List<Integer> resourceIdList = resourceMapper.selectList(new LambdaQueryWrapper<Resource>()
+                        .select(Resource::getId).eq(Resource::getParentId, resourceId))
+                .stream().map(Resource::getId)
+                .collect(Collectors.toList());
+        resourceIdList.add(resourceId);
+        resourceMapper.deleteBatchIds(resourceIdList);
     }
 
     @Override
     public List<ResourceDTO> listResources() {
         // 查询资源列表
-        List<Resource> resourceList = this.list(null);
+        List<Resource> resourceList = resourceMapper.selectList(null);
         // 获取所有模块
         List<Resource> parentIdList = listResourceParent(resourceList);
         // 根据parentIdList获取模块下的资源
@@ -150,10 +155,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Override
     public List<LabelOptionDTO> listResourceOption() {
         // 查询资源列表
-        List<Resource> resourceList = this.list(new LambdaQueryWrapper<Resource>()
+        List<Resource> resourceList = resourceMapper.selectList(new LambdaQueryWrapper<Resource>()
                 .select(Resource::getId, Resource::getResourceName, Resource::getParentId)
-                .eq(Resource::getIsAnonymous, FALSE)
-                .eq(Resource::getIsDisable, FALSE));
+                .eq(Resource::getIsAnonymous, FALSE));
         // 获取所有模块
         List<Resource> parentList = listResourceParent(resourceList);
         // 根据父id分组获取模块下的资源
@@ -166,12 +170,12 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
                 list = children.stream()
                         .map(resource -> LabelOptionDTO.builder()
                                 .id(resource.getId())
-                                .labelName(resource.getResourceName()).build())
+                                .label(resource.getResourceName()).build())
                         .collect(Collectors.toList());
             }
             return LabelOptionDTO.builder()
                     .id(item.getId())
-                    .labelName(item.getResourceName())
+                    .label(item.getResourceName())
                     .children(list).build();
         }).collect(Collectors.toList());
     }

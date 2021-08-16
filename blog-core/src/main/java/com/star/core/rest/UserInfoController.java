@@ -4,9 +4,7 @@ import com.star.common.constant.Result;
 import com.star.core.dto.PageData;
 import com.star.core.dto.UserOnlineDTO;
 import com.star.core.service.UserInfoService;
-import com.star.core.vo.ConditionVO;
-import com.star.core.vo.UserInfoVO;
-import com.star.core.vo.UserRoleVO;
+import com.star.core.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -43,17 +41,24 @@ public class UserInfoController {
         return Result.success(userInfoService.updateUserAvatar(file));
     }
 
-    @ApiOperation(value = "修改用户权限")
+    @ApiOperation(value = "绑定用户邮箱")
+    @PostMapping("/users/email")
+    public Result<?> saveUserEmail(@Valid @RequestBody EmailVO emailVO) {
+        userInfoService.saveUserEmail(emailVO);
+        return Result.success();
+    }
+
+    @ApiOperation(value = "修改用户角色")
     @PutMapping("/admin/users/role")
-    private Result<String> updateUserRole(@Valid @RequestBody UserRoleVO userRoleVO) {
+    private Result<?> updateUserRole(@Valid @RequestBody UserRoleVO userRoleVO) {
         userInfoService.updateUserRole(userRoleVO);
         return Result.success();
     }
 
     @ApiOperation(value = "修改用户禁用状态")
-    @PutMapping("/admin/users/disable/{userInfoId}")
-    private Result<String> updateUserSilence(@PathVariable("userInfoId") Integer userInfoId, Integer isDisable) {
-        userInfoService.updateUserDisable(userInfoId, isDisable);
+    @PutMapping("/admin/users/disable/")
+    private Result<String> updateUserSilence(@Valid @RequestBody UserDisableVO userDisableVO) {
+        userInfoService.updateUserDisable(userDisableVO);
         return Result.success();
     }
 

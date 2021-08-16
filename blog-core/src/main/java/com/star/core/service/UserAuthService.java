@@ -25,7 +25,7 @@ public interface UserAuthService extends IService<UserAuth> {
      *
      * @param user 用户对象
      */
-    void saveUser(UserVO user);
+    void register(UserVO user);
 
     /**
      * 修改密码
@@ -47,6 +47,6 @@ public interface UserAuthService extends IService<UserAuth> {
      * @param condition 条件
      * @return 用户列表
      */
-    PageData<UserBackDTO> listUserBackDTO(ConditionVO condition);
+    PageData<UserBackDTO> listUserBack(ConditionVO condition);
 
 }

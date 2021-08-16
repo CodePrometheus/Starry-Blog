@@ -1,8 +1,11 @@
 package com.star.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 后台留言列表
@@ -11,6 +14,9 @@ import java.util.Date;
  * @Date: 12-20-2020 10:54
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MessageBackDTO {
 
     /**
@@ -44,8 +50,13 @@ public class MessageBackDTO {
     private String messageContent;
 
     /**
+     * 是否审核
+     */
+    private Integer isReview;
+
+    /**
      * 留言时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
 }

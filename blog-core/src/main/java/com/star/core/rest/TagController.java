@@ -3,6 +3,7 @@ package com.star.core.rest;
 import com.star.common.constant.Result;
 import com.star.core.dto.ArticlePreviewListDTO;
 import com.star.core.dto.PageData;
+import com.star.core.dto.TagBackDTO;
 import com.star.core.dto.TagDTO;
 import com.star.core.entity.Tag;
 import com.star.core.service.ArticleService;
@@ -39,19 +40,10 @@ public class TagController {
         return Result.success(tagService.listTags());
     }
 
-    @ApiOperation(value = "查看分类下对应的文章")
-    @GetMapping("/tags/{tagId}")
-    private Result<ArticlePreviewListDTO> listArticlesByCategoryId(@PathVariable("tagId") Integer tagId, Integer current) {
-        ConditionVO conditionVO = ConditionVO.builder()
-                .tagId(tagId)
-                .current(current).build();
-        return Result.success(articleService.listArticlesByCondition(conditionVO));
-    }
-
     @ApiOperation(value = "查看后台标签列表")
     @GetMapping("/admin/tags")
-    private Result<PageData<Tag>> listTagBackDTO(ConditionVO condition) {
-        return Result.success(tagService.listTagBackDTO(condition));
+    private Result<PageData<TagBackDTO>> listTagBack(ConditionVO condition) {
+        return Result.success(tagService.listTagBack(condition));
     }
 
     @ApiOperation(value = "添加或修改标签")
@@ -68,6 +60,11 @@ public class TagController {
         return Result.success();
     }
 
+    @ApiOperation(value = "搜索文章标签")
+    @GetMapping("/admin/tags/search")
+    public Result<List<TagDTO>> listTagsBySearch(ConditionVO condition) {
+        return Result.success(tagService.listTagsBySearch(condition));
+    }
 
 }
 

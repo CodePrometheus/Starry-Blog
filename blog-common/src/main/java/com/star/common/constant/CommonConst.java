@@ -19,11 +19,6 @@ public class CommonConst {
     public static final int TRUE = 1;
 
     /**
-     * 博主id
-     */
-    public static final int BLOGGER_ID = 1;
-
-    /**
      * 网站域名
      */
     public static final String URL = "https://github.com/CodePrometheus";

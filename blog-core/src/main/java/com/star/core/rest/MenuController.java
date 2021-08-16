@@ -6,13 +6,13 @@ import com.star.core.dto.MenuDTO;
 import com.star.core.dto.UserMenuDTO;
 import com.star.core.service.MenuService;
 import com.star.core.vo.ConditionVO;
+import com.star.core.vo.MenuVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -44,5 +44,20 @@ public class MenuController {
     public Result<List<UserMenuDTO>> listUserMenus() {
         return Result.success(menuService.listUserMenus());
     }
+
+    @ApiOperation(value = "新增或修改菜单")
+    @PostMapping("/menus")
+    public Result<?> saveOrUpdateMenu(@Valid @RequestBody MenuVO menuVO) {
+        menuService.saveOrUpdateMenu(menuVO);
+        return Result.success();
+    }
+
+    @ApiOperation(value = "删除菜单")
+    @PostMapping("/menus/{menuId}")
+    public Result<?> deleteMenu(@PathVariable("menuId") Integer menuId) {
+        menuService.deleteMenu(menuId);
+        return Result.success();
+    }
+
 
 }

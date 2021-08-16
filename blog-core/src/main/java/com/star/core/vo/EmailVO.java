@@ -15,9 +15,9 @@ import javax.validation.constraints.NotBlank;
  * @Date: 06-15-2021 14:02
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(description = "绑定邮箱")
 public class EmailVO {
 

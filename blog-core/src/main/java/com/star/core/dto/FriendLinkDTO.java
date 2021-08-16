@@ -1,6 +1,9 @@
 package com.star.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 友链列表
@@ -9,6 +12,9 @@ import lombok.Data;
  * @Date: 12-19-2020 23:40
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FriendLinkDTO {
     /**
      * id

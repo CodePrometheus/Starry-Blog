@@ -1,8 +1,9 @@
 package com.star.core.dto;
 
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 /**
  * 标签
@@ -11,6 +12,9 @@ import lombok.Data;
  * @Date: 12-19-2020 13:50
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TagDTO {
 
     /**

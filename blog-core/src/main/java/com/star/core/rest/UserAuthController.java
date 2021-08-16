@@ -21,8 +21,8 @@ import javax.validation.Valid;
  * @Author: zzStar
  * @Date: 12-21-2020 15:58
  */
-@Api(tags = "用户账号模块")
 @RestController
+@Api(tags = "用户账号模块")
 public class UserAuthController {
 
     @Resource
@@ -39,13 +39,13 @@ public class UserAuthController {
     @ApiOperation(value = "查看后台用户列表")
     @GetMapping("/admin/users")
     private Result<PageData<UserBackDTO>> listUsers(ConditionVO condition) {
-        return Result.success(userAuthService.listUserBackDTO(condition));
+        return Result.success(userAuthService.listUserBack(condition));
     }
 
     @ApiOperation(value = "用户注册")
-    @PostMapping("/users")
-    private Result<?> saveUser(@Valid @RequestBody UserVO user) {
-        userAuthService.saveUser(user);
+    @PostMapping("/register")
+    private Result<?> register(@Valid @RequestBody UserVO user) {
+        userAuthService.register(user);
         return Result.success();
     }
 

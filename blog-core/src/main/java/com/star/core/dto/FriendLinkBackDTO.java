@@ -1,8 +1,11 @@
 package com.star.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 后台友链列表
@@ -11,7 +14,11 @@ import java.util.Date;
  * @Date: 12-19-2020 23:42
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FriendLinkBackDTO {
+
     /**
      * id
      */
@@ -40,6 +47,6 @@ public class FriendLinkBackDTO {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
 }

@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static com.star.common.tool.GiteeImgBedConfig.*;
+
 /**
  * 图片上传工具类
  *
@@ -41,17 +43,17 @@ public class ImageUtil {
         }
         // 存储
         HashMap<String, Object> imgMap = new HashMap<>();
-        imgMap.put("access_token", GiteeImgBedConfig.ACCESS_TOKEN);
+        imgMap.put("access_token", ACCESS_TOKEN);
         imgMap.put("content", paramImgFile);
-        imgMap.put("message", GiteeImgBedConfig.CREATE_REPOS_MESSAGE);
+        imgMap.put("message", CREATE_REPOS_MESSAGE);
 
-        String targetDir = targetAddr + GiteeImgBedConfig.IMG_FILE_DEST_PATH + fileName;
-        String requestUrl = String.format(GiteeImgBedConfig.CREATE_REPOS_URL, GiteeImgBedConfig.OWNER, GiteeImgBedConfig.REPO_NAME, targetDir);
+        String targetDir = targetAddr + IMG_FILE_DEST_PATH + fileName;
+        String requestUrl = String.format(CREATE_REPOS_URL, OWNER, REPO_NAME, targetDir);
 
         System.out.println(requestUrl);
         String resultJson = HttpUtil.post(requestUrl, imgMap);
         JSONObject jsonObject = JSONUtil.parseObj(resultJson);
-        String resultImgUrl = GiteeImgBedConfig.GITPAGE_REQUEST_URL + targetDir;
+        String resultImgUrl = GITPAGE_REQUEST_URL + targetDir;
         if (jsonObject.getObj("commit") != null) {
             System.out.println("上传成功");
         } else {

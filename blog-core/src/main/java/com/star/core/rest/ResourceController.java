@@ -39,9 +39,9 @@ public class ResourceController {
     }
 
     @ApiOperation(value = "删除资源")
-    @DeleteMapping("/resources")
-    public Result<?> deleteResources(@RequestBody List<Integer> resourceIdList) {
-        resourceService.deleteResources(resourceIdList);
+    @DeleteMapping("/resources/{resourceId}")
+    public Result<?> deleteResource(@PathVariable("resourceId") Integer resourceId) {
+        resourceService.deleteResource(resourceId);
         return Result.success();
     }
 

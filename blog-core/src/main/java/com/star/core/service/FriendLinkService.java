@@ -29,7 +29,7 @@ public interface FriendLinkService extends IService<FriendLink> {
      * @param condition 条件
      * @return 友链列表
      */
-    PageData<FriendLinkBackDTO> listFriendLinkDTO(ConditionVO condition);
+    PageData<FriendLinkBackDTO> listFriendLink(ConditionVO condition);
 
     /**
      * 保存或修改友联
