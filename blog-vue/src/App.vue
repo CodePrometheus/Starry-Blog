@@ -20,9 +20,8 @@
     <RegisterModel/>
     <!-- 忘记密码模态框 -->
     <ForgetModel/>
-    <!--    <Note/>-->
-    <Live2D/>
-    <ChatRoom/>
+    <Live2D v-if="blogInfo.websiteConfig.isLive2D == 1"/>
+    <ChatRoom v-if="blogInfo.websiteConfig.isChatRoom == 1"/>
   </v-app>
 </template>
 
@@ -35,7 +34,6 @@ import searchModel from './components/model/SearchModel'
 import LoginModel from './components/model/LoginModel'
 import RegisterModel from './components/model/RegisterModel'
 import ForgetModel from './components/model/ForgetModel'
-// import Note from "./components/Notification";
 import Live2D from './components/Live2D'
 import ChatRoom from './components/ChatRoom'
 
@@ -52,7 +50,6 @@ export default {
     LoginModel,
     RegisterModel,
     ForgetModel,
-    // Note,
     Live2D,
     ChatRoom,
   },
@@ -64,7 +61,7 @@ export default {
     },
   },
   beforeCreate() {
-    console.log('%c Starry-Blog | 你的美好，我都记得 %c v'.concat('1.5', ' %c'),
+    console.log('%c Starry-Blog | 你的美好，我都记得 %c v'.concat('3.0', ' %c'),
       'background: #35495e;' +
       ' padding: 1px;' +
       ' border-radius: 3px 0 0 3px;' +
@@ -74,6 +71,11 @@ export default {
       'border-radius: 0 3px 3px 0; ' +
       'color: #fff',
       'background: transparent')
+  },
+  computed: {
+    blogInfo() {
+      return this.$store.state.blogInfo
+    },
   },
 }
 </script>

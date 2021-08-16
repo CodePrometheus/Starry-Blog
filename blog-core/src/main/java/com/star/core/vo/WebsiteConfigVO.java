@@ -137,8 +137,14 @@ public class WebsiteConfigVO {
     /**
      * 是否开启聊天室
      */
-    @ApiModelProperty(name = "isReward", value = "是否打赏", required = true, dataType = "Integer")
+    @ApiModelProperty(name = "isReward", value = "是否开启聊天室", required = true, dataType = "Integer")
     private Integer isChatRoom;
+
+    /**
+     * 是否开启看板娘
+     */
+    @ApiModelProperty(name = "isReward", value = "是否开启看板娘", required = true, dataType = "Integer")
+    private Integer isLive2D;
 
     /**
      * websocket地址
