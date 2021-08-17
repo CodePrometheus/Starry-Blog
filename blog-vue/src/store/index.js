@@ -7,6 +7,7 @@ export const SET_IS_BLOG_RENDER_COMPLETE = 'setIsBlogRenderComplete'
 
 export default new Vuex.Store({
   state: {
+    emailFlag: false,
     searchFlag: false,
     loginFlag: false,
     registerFlag: false,
@@ -32,6 +33,8 @@ export default new Vuex.Store({
       state.webSite = user.webSite;
       state.articleLikeSet = user.articleLikeSet ? user.articleLikeSet : [];
       state.commentLikeSet = user.commentLikeSet ? user.commentLikeSet : [];
+      state.email = user.email;
+      state.loginType = user.loginType;
     },
     logout(state) {
       state.userId = null;
@@ -41,6 +44,8 @@ export default new Vuex.Store({
       state.webSite = null;
       state.articleLikeSet = [];
       state.commentLikeSet = [];
+      state.email = null;
+      state.loginType = null;
     },
     saveLoginUrl(state, url) {
       state.loginUrl = url;
@@ -60,9 +65,10 @@ export default new Vuex.Store({
       state.registerFlag = false;
       state.loginFlag = false;
       state.searchFlag = false;
+      state.emailFlag = false;
     },
     articleLike(state, articleId) {
-      var articleLikeSet = state.articleLikeSet;
+      let articleLikeSet = state.articleLikeSet;
       if (articleLikeSet.indexOf(articleId) != -1) {
         articleLikeSet.splice(articleLikeSet.indexOf(articleId), 1);
       } else {

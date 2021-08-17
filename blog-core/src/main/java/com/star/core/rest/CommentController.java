@@ -60,8 +60,8 @@ public class CommentController {
     }
 
     @ApiOperation(value = "评论点赞")
-    @PostMapping("/comments/like")
-    private Result<?> saveCommentList(Integer commentId) {
+    @PostMapping("/comments/{commentId}/like")
+    private Result<?> saveCommentList(@PathVariable("commentId") Integer commentId) {
         commentService.saveCommentLike(commentId);
         return Result.success();
     }

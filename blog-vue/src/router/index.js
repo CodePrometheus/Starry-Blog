@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Video from '../views/video/Video'
 
 Vue.use(VueRouter)
 
@@ -38,7 +37,7 @@ const routes = [
     },
   },
   {
-    path: '/categories/*',
+    path: '/categories/:categoryId',
     component: reslove => require(['../components/ArticleList'], reslove),
   },
   {
@@ -56,13 +55,6 @@ const routes = [
     },
   },
   {
-    path: '/video',
-    component: Video,
-    meta: {
-      title: 'Video',
-    },
-  },
-  {
     path: '/message',
     component: reslove => require(['../views/message/Messsage'], reslove),
     meta: {
@@ -70,7 +62,7 @@ const routes = [
     },
   },
   {
-    path: '/tags/*',
+    path: '/tags/:tagId',
     component: reslove => require(['../components/ArticleList'], reslove),
   },
   {

@@ -20,8 +20,8 @@
     <RegisterModel/>
     <!-- 忘记密码模态框 -->
     <ForgetModel/>
-    <Live2D v-if="blogInfo.websiteConfig.isLive2D == 1"/>
-    <ChatRoom v-if="blogInfo.websiteConfig.isChatRoom == 1"/>
+    <Live2D />
+    <ChatRoom/>
   </v-app>
 </template>
 
@@ -56,6 +56,7 @@ export default {
   methods: {
     getBlogInfo() {
       this.axios.get('/api').then(({ data }) => {
+        console.log(data);
         this.$store.commit('checkBlogInfo', data.data)
       })
     },

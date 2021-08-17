@@ -93,7 +93,7 @@
             <div class="author-wrapper">
               <!-- 博主头像 -->
               <v-avatar size="110">
-                <img class="author-avatar" :src="blogInfo.avatar"/>
+                <img class="author-avatar" :src="blogInfo.websiteConfig.websiteAvatar"/>
               </v-avatar>
               <div style="font-size: 1.375rem">{{ blogInfo.nickname }}</div>
               <div style="font-size: 0.875rem;">{{ blogInfo.intro }}</div>

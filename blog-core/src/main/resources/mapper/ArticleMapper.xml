@@ -10,7 +10,7 @@
         <result column="is_top" property="isTop"/>
         <result column="category_id" property="categoryId"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="tagDTOList" ofType="com.star.core.dto.TagDTO">
+        <collection property="tagList" ofType="com.star.core.dto.TagDTO">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="tagName"/>
         </collection>
@@ -48,12 +48,10 @@
         <id column="id" property="id"/>
         <result column="article_title" property="articleTitle"/>
         <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
         <result column="is_top" property="isTop"/>
-        <result column="is_draft" property="isDraft"/>
         <result column="is_delete" property="isDelete"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="tagDTOList" ofType="com.star.core.dto.TagDTO">
+        <collection property="tagList" ofType="com.star.core.dto.TagDTO">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="tagName"/>
         </collection>
@@ -63,7 +61,8 @@
         SELECT a.id,
                article_cover,
                article_title,
-               SUBSTR( article_content, 1, 500 ) AS article_content,,
+               SUBSTR( article_content, 1, 500 ) AS article_content,
+               a.type,
                a.is_top,
                a.create_time,
                a.category_id,
@@ -75,14 +74,15 @@
                         article_cover,
                         article_title,
                         article_content,
+                        type,
                         is_top,
                         create_time,
                         category_id
                  FROM tb_article
                  WHERE is_delete = 0
-                   and is_draft = 0
+                 AND status = 1
                  ORDER BY is_top DESC, id DESC
-                     LIMIT #{current}, 10
+                     LIMIT #{current}, #{size}
              ) a
                  JOIN tb_category c ON a.category_id = c.id
                  JOIN tb_article_tag atg ON a.id = atg.article_id
@@ -123,9 +123,9 @@
             </if>
         </where>
         AND is_delete = 0
-        AND is_draft = 0
+        AND status = 1
         ORDER BY id DESC
-        LIMIT #{condition.current}, 9
+        LIMIT #{condition.current}, #{size}
         ) a
         JOIN tb_category c ON a.category_id = c.id
         JOIN tb_article_tag atg ON a.id = atg.article_id
@@ -154,7 +154,6 @@
         SELECT a.id,
         article_title,
         is_top,
-        is_draft,
         a.is_delete,
         a.create_time,
         a.update_time,

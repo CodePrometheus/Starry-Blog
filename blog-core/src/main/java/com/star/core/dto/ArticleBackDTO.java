@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -31,14 +32,14 @@ public class ArticleBackDTO {
     private String articleTitle;
 
     /**
-     * 发表时间
+     * 文章封面
      */
-    private Date createTime;
+    private String articleCover;
 
     /**
-     * 更新时间
+     * 发表时间
      */
-    private Date updateTime;
+    private LocalDateTime createTime;
 
     /**
      * 点赞量
@@ -58,7 +59,12 @@ public class ArticleBackDTO {
     /**
      * 文章标签
      */
-    private List<TagDTO> tagDTOList;
+    private List<TagDTO> tagList;
+
+    /**
+     * 文章类型
+     */
+    private Integer type;
 
     /**
      * 是否置顶
@@ -66,13 +72,13 @@ public class ArticleBackDTO {
     private Integer isTop;
 
     /**
-     * 是否为草稿
-     */
-    private Integer isDraft;
-
-    /**
      * 是否删除
      */
     private Integer isDelete;
+
+    /**
+     * 文章状态
+     */
+    private Integer status;
 
 }

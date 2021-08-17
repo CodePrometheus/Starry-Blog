@@ -1,7 +1,11 @@
 package com.star.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +16,9 @@ import java.util.List;
  * @Date: 12-19-2020 13:49
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArticleHomeDTO {
 
     /**
@@ -37,12 +44,12 @@ public class ArticleHomeDTO {
     /**
      * 发表时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 是否置顶
      */
-    private Boolean isTop;
+    private Integer isTop;
 
     /**
      * 文章分类id
@@ -55,8 +62,13 @@ public class ArticleHomeDTO {
     private String categoryName;
 
     /**
+     * 文章类型
+     */
+    private Integer type;
+
+    /**
      * 文章标签
      */
-    private List<TagDTO> tagDTOList;
+    private List<TagDTO> tagList;
 
 }

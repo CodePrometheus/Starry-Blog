@@ -8,7 +8,9 @@ a, button, img {
 ul{
   padding:0 !important;
 }
-
+* {
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Lato,Roboto,'PingFang SC','Microsoft YaHei',sans-serif !important;
+}
 .v-navigation-drawer{
   z-index: 20;
 }
@@ -21,10 +23,6 @@ ul{
 
 .v-navigation-drawer,.v-toolbar{
   transition: all 0.5s;
-}
-
-.v-application{
-  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Lato,Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
 }
 
 .v-snack__content {
@@ -149,7 +147,7 @@ p {
   }
   .banner {
     position: absolute;
-    background-color: #49b1f5;
+    background-color: #49b1f5 !important;
     top: -60px;
     left: 0;
     right: 0;
@@ -176,6 +174,7 @@ p {
     animation: main 1s;
     max-width: 1200px;
     margin: 372.5px auto 40px auto !important;
+    padding: 0 5px;
   }
   .article-wrapper{
     padding: 50px 40px;
@@ -200,6 +199,7 @@ p {
     left: 0;
     right: 0;
     height: 280px;
+    background-color: #49b1f5 !important;
     animation: header-effect 1s;
   }
   .blog-container {
@@ -313,7 +313,7 @@ p {
   resize: none;
   width: 100%;
   border-radius: 4px;
-  background: url(https://cdn.jsdelivr.net/gh/blogimg/HexoStaticFile1/imgbed/2020/02/13/20200213164243.png) 100% 100% no-repeat;
+  background: url(https://www.static.talkxj.com/commentBack.webp) 100% 100% no-repeat;
 }
 
 .upload-btn{

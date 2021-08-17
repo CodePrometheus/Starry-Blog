@@ -11,7 +11,7 @@
           />
           <img
             v-else
-            src="https://gravatar.loli.net/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mp&v=1.4.14"
+            :src="this.$store.state.blogInfo.websiteConfig.touristAvatar"
           />
         </v-avatar>
         <div style="width:100%" class="ml-3">
@@ -139,7 +139,7 @@
                   >
                     @{{ reply.replyNickname }}
                   </a>
-                  ，
+                  ,
                 </template>
                 <span v-html="reply.commentContent" />
               </p>
@@ -243,8 +243,8 @@ export default {
     },
     checkReplies(index, item) {
       this.axios
-        .get("/api/comments/replies/" + item.id, {
-          params: { current: 1 }
+        .get("/api/comments/" + item.id + "/replies",{
+          params: { current: 1 , size: 5 }
         })
         .then(({ data }) => {
           this.$refs.check[index].style.display = "none";
@@ -258,15 +258,15 @@ export default {
     changeReplyCurrent(current, index, commentId) {
       // 查看下一页回复
       this.axios
-        .get("/api/comments/replies/" + commentId,{
-          params: { current: current }
+        .get("/api/comments/" + commentId + "/replies",{
+          params: { current: current, size: 5 }
         })
         .then(({ data }) => {
-          this.commentList[index].replyDTOList = data.data;
+          this.commentList[index].replyList = data.data;
         });
     },
     listComments() {
-      //查看下一页评论
+      // 查看下一页评论
       this.current++;
       const path = this.$route.path;
       const arr = path.split("/");
@@ -279,17 +279,17 @@ export default {
         });
     },
     insertComment() {
-      //判断登录
+      // 判断登录
       if (!this.$store.state.userId) {
         this.$store.state.loginFlag = true;
         return false;
       }
-      //判空
+      // 判空
       if (this.commentContent.trim() == "") {
         this.$toast({ type: "error", message: "评论不能为空" });
         return false;
       }
-      //解析表情
+      // 解析表情
       var reg = /\[.+?\]/g;
       this.commentContent = this.commentContent.replace(reg, function(str) {
         return (
@@ -298,7 +298,7 @@ export default {
           "' width='22'height='20' style='padding: 0 1px'/>"
         );
       });
-      //发送请求
+      // 发送请求
       const path = this.$route.path;
       const arr = path.split("/");
       let comment = {
@@ -308,26 +308,30 @@ export default {
       this.commentContent = "";
       this.axios.post("/api/comments", comment).then(({ data }) => {
         if (data.flag) {
-          //查询最新评论
+          // 查询最新评论
           this.$emit("reloadComment");
-          this.$toast({ type: "success", message: data.message });
+          const isReview = this.$store.state.blogInfo.websiteConfig.isCommentReview;
+          if (isReview) {
+            this.$toast({ type: "warnning", message: "评论成功, 正在审核中" });
+          } else {
+            this.$toast({ type: "success", message: "评论成功" });
+          }
         } else {
           this.$toast({ type: "error", message: data.message });
         }
       });
     },
     like(comment) {
-      //判断登录
+      // 判断登录
       if (!this.$store.state.userId) {
         this.$store.state.loginFlag = true;
         return false;
       }
-      //发送请求
-      let param = new URLSearchParams();
-      param.append("commentId", comment.id);
-      this.axios.post("/api/comments/like", param).then(({ data }) => {
+      // 发送请求
+      this.axios.post("/api/comments/" + comment.id + "/like")
+      .then(({ data }) => {
         if (data.flag) {
-          //判断是否点赞
+          // 判断是否点赞
           if (this.$store.state.commentLikeSet.indexOf(comment.id) != -1) {
             this.$set(comment, "likeCount", comment.likeCount - 1);
           } else {
@@ -335,18 +339,18 @@ export default {
           }
           this.$store.commit("commentLike", comment.id);
         }
-      });
+      })
     },
     reloadReply(index) {
       this.axios
-        .get("/api/comments/replies/" + this.commentList[index].id, {
+        .get("/api/comments/" + this.commentList[index].id + "/replies",  {
           params: {
             current: this.$refs.page[index].current
           }
         })
         .then(({ data }) => {
           this.commentList[index].replyCount++;
-          //回复大于5条展示分页
+          // 回复大于5条展示分页
           if (this.commentList[index].replyCount > 5) {
             this.$refs.paging[index].style.display = "flex";
           }

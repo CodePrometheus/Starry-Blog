@@ -247,7 +247,7 @@ export default {
     connect() {
       let that = this
       console.log('建立连接')
-      this.webSocket = new WebSocket('ws://127.0.0.1:8989/websocket')
+      this.webSocket = new WebSocket(this.blog.websiteConfig.websocketUrl)
       // 连接发生错误回调
       this.webSocket.onerror = function (event) {
         console.log(event)
@@ -474,7 +474,7 @@ export default {
     avatar() {
       return this.$store.state.avatar != null
         ? this.$store.state.avatar
-        : 'https://gravatar.loli.net/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mp&v=1.4.14'
+        : this.$store.state.blogInfo.websiteConfig.touristAvatar
     },
 
     userId() {
@@ -507,6 +507,9 @@ export default {
       return function (item) {
         return this.isSelf(item) ? 'my-content' : 'user-content'
       }
+    },
+    blogInfo() {
+      return this.$store.state.blogInfo;
     },
 
     isInput() {
