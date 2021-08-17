@@ -2,7 +2,7 @@ package com.star.core.rest;
 
 import com.star.common.constant.PathConst;
 import com.star.common.constant.Result;
-import com.star.common.tool.ImageUtil;
+import com.star.core.util.ImageUtil;
 import com.star.core.dto.*;
 import com.star.core.service.ArticleService;
 import com.star.core.vo.ArticleTopVO;
@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * 文章逻辑
@@ -29,6 +28,9 @@ import java.util.concurrent.ExecutionException;
 @Api(tags = "文章模块")
 @RestController
 public class ArticleController {
+
+    @Resource
+    private ImageUtil imageUtil;
 
     @Resource
     private ArticleService articleService;
@@ -75,7 +77,7 @@ public class ArticleController {
     @ApiImplicitParam(name = "file", value = "文章图片", required = true, dataType = "MultipartFile", dataTypeClass = MultipartFile.class)
     @PostMapping("/admin/articles/images")
     private Result<String> saveArticleImages(MultipartFile file) {
-        return Result.success(ImageUtil.upload(file, PathConst.ARTICLE));
+        return Result.success(imageUtil.upload(file, PathConst.ARTICLE));
     }
 
     @ApiOperation(value = "恢复或删除文章")

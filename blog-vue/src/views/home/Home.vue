@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- banner -->
-    <div class="home-banner">
+    <div class="home-banner" :style="cover">
       <div class="banner-container">
         <!-- 联系方式 -->
         <h1 class="blog-title animated zoomIn">
-          zzStar's Blog
+          {{ blogInfo.websiteConfig.websiteName }}
         </h1>
         <!-- 一言 -->
         <div class="blog-intro">
@@ -23,18 +23,19 @@
     <v-row class="home-container">
       <v-col md="9" cols="12">
         <v-card
-            class="animated zoomIn article-card"
-            v-for="(item, index) of articleList"
-            :key="item.id"
+          class="animated zoomIn article-card"
+          style="border-radius: 12px 8px 8px 12px"
+          v-for="(item, index) of articleList"
+          :key="index"
         >
           <!-- 文章封面图 -->
           <div :class="isRight(index)">
             <router-link :to="'/articles/' + item.id">
               <v-img
-                  class="on-hover"
-                  width="100%"
-                  height="100%"
-                  :src="item.articleCover"
+                class="on-hover"
+                width="100%"
+                height="100%"
+                :src="item.articleCover"
               />
             </router-link>
           </div>
@@ -65,11 +66,11 @@
               <span class="separator">|</span>
               <!-- 文章标签 -->
               <router-link
-                  style="display:inline-block"
-                  :to="'/tags/' + tag.id"
-                  class="mr-1"
-                  v-for="tag of item.tagDTOList"
-                  :key="tag.id"
+                style="display:inline-block"
+                :to="'/tags/' + tag.id"
+                class="mr-1"
+                v-for="tag of item.tagList"
+                :key="tag.id"
               >
                 <v-icon size="14">mdi-tag-multiple</v-icon>
                 {{ tag.tagName }}
@@ -83,7 +84,7 @@
         </v-card>
         <!-- 无限加载 -->
         <infinite-loading @infinite="infiniteHandler">
-          <div slot="no-more"/>
+          <div slot="no-more" />
         </infinite-loading>
       </v-col>
       <!-- 博主信息 -->
@@ -93,10 +94,11 @@
             <div class="author-wrapper">
               <!-- 博主头像 -->
               <v-avatar size="110">
-                <img class="author-avatar" :src="blogInfo.websiteConfig.websiteAvatar"/>
+                <img class="author-avatar"
+                     :src="blogInfo.websiteConfig.websiteAvatar"/>
               </v-avatar>
-              <div style="font-size: 1.375rem">{{ blogInfo.nickname }}</div>
-              <div style="font-size: 0.875rem;">{{ blogInfo.intro }}</div>
+              <div style="font-size: 1.375rem">{{ blogInfo.websiteConfig.websiteAuthor }}</div>
+              <div style="font-size: 0.875rem;">{{ blogInfo.websiteConfig.websiteIntro }}</div>
             </div>
             <!-- 博客信息 -->
             <div class="blog-info-wrapper">
@@ -135,9 +137,9 @@
                 class="mr-5 iconfont icongithub"
               />
               <a
-                  target="_blank"
-                  href="https://space.bilibili.com/342251858"
-                  class="mr-5 iconfont icon-bilibili-fill"
+                target="_blank"
+                href="https://space.bilibili.com/342251858"
+                class="mr-5 iconfont icon-bilibili-fill"
               />
             </div>
           </v-card>
@@ -147,7 +149,7 @@
               公告
             </div>
             <div style="font-size:0.875rem">
-              {{ blogInfo.notice }}
+              {{ blogInfo.websiteConfig.websiteNotice }}
             </div>
           </v-card>
           <!-- 网站信息 -->
@@ -171,105 +173,121 @@
     </v-row>
     <!-- 提示消息 -->
     <v-snackbar v-model="tip" top color="#49b1f5" :timeout="2000">
-      按CTRL+D 键将本页加入书签
+      按CTRL+D 键将本博客加入你的收藏夹吧 ;)
     </v-snackbar>
   </div>
 </template>
 
 <script>
-import EasyTyper from "easy-typer-js";
+import EasyTyper from 'easy-typer-js'
 
 export default {
   created() {
-    this.init();
-    this.timer = setInterval(this.runTime, 1000);
+    this.init()
+    this.timer = setInterval(this.runTime, 1000)
   },
   data: function () {
     return {
       tip: false,
-      time: "",
+      time: '',
       obj: {
-        output: "",
+        output: '',
         isEnd: false,
         speed: 300,
         singleBack: false,
         sleep: 0,
-        type: "rollback",
+        type: 'rollback',
         backSpeed: 40,
-        sentencePause: true
+        sentencePause: true,
       },
       articleList: [],
       current: 1
-    };
+    }
   },
   methods: {
     // 初始化
     init() {
+      document.title = this.blogInfo.websiteConfig.websiteName
       // 一言Api进行打字机循环输出效果
-      fetch("https://v1.hitokoto.cn?c=i")
-          .then(res => {
-            return res.json();
-          })
-          .then(({hitokoto}) => {
-            this.initTyped(hitokoto);
-          });
+      fetch('https://v1.hitokoto.cn?c=i').then(res => {
+        return res.json()
+      }).then(({ hitokoto }) => {
+        this.initTyped(hitokoto)
+      })
     },
     initTyped(input, fn, hooks) {
-      const obj = this.obj;
+      const obj = this.obj
       // eslint-disable-next-line no-unused-vars
-      const typed = new EasyTyper(obj, input, fn, hooks);
+      const typed = new EasyTyper(obj, input, fn, hooks)
     },
     scrollDown() {
       window.scrollTo({
-        behavior: "smooth",
-        top: document.documentElement.clientHeight
-      });
+        behavior: 'smooth',
+        top: document.documentElement.clientHeight,
+      })
     },
     runTime() {
       let timeold =
-          new Date().getTime() - new Date("January 01,2021").getTime();
-      let msPerDay = 24 * 60 * 60 * 1000;
-      let daysold = Math.floor(timeold / msPerDay);
-      let str = "";
-      let day = new Date();
-      str += daysold + "天";
-      str += day.getHours() + "时";
-      str += day.getMinutes() + "分";
-      str += day.getSeconds() + "秒";
-      this.time = str;
+        new Date().getTime() -
+        new Date(this.blogInfo.websiteConfig.websiteCreateTime).getTime()
+      let msPerDay = 24 * 60 * 60 * 1000
+      let daysold = Math.floor(timeold / msPerDay)
+      let str = ''
+      let day = new Date()
+      str += daysold + '天'
+      str += day.getHours() + '时'
+      str += day.getMinutes() + '分'
+      str += day.getSeconds() + '秒'
+      this.time = str
     },
     infiniteHandler($state) {
-      this.axios
-          .get("/api/articles", {
-            params: {
-              current: this.current
-            }
+      let md = require('markdown-it')()
+      this.axios.get('/api/articles', {
+        params: {
+          current: this.current
+        }
+      }).then(({ data }) => {
+        if (data.data.length) {
+          // 去除markdown标签
+          data.data.forEach(item => {
+            item.articleContent = md.render(item.articleContent).
+              replace(/<\/?[^>]*>/g, '').
+              replace(/[|]*\n/, '').
+              replace(/&npsp;/gi, '')
           })
-          .then(({data}) => {
-            if (data.data.length) {
-              this.articleList.push(...data.data);
-              this.current++;
-              $state.loaded();
-            } else {
-              $state.complete();
-            }
-          });
-    }
+          // data里所有的数据
+          this.articleList.push(...data.data)
+          this.current++
+          $state.loaded()
+        } else {
+          $state.complete()
+        }
+      })
+    },
   },
   computed: {
     isRight() {
       return function (index) {
         if (index % 2 == 0) {
-          return "article-cover left-radius"
+          return 'article-cover left-radius'
         }
-        return "article-cover right-radius"
+        return 'article-cover right-radius'
       }
     },
     blogInfo() {
       return this.$store.state.blogInfo
-    }
-  }
-};
+    },
+    cover() {
+      let cover = ''
+      this.$store.state.blogInfo.pageList.forEach(v => {
+        if (v.pageLabel == 'home') {
+          cover = v.pageCover
+        }
+      })
+      return 'background: url(' + cover + ') center center / cover no-repeat'
+    },
+  },
+}
 </script>
 
 <style lang="stylus">
@@ -293,9 +311,6 @@ export default {
   left: 0;
   right: 0;
   height: 100vh;
-  background: url(https://cdn.pixabay.com/photo/2011/12/15/11/29/orion-nebula-11185_960_720.jpg) center center /
-    cover no-repeat;
-  background-color: #49b1f5;
   background-attachment: fixed;
   text-align: center;
   color: #fff !important;

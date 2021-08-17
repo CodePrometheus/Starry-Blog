@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.PathConst;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.ImageUtil;
+import com.star.core.util.ImageUtil;
 import com.star.common.tool.RedisUtil;
 import com.star.core.dto.PageData;
 import com.star.core.dto.UserInfoDTO;
@@ -44,6 +44,9 @@ import static com.star.core.util.PageUtils.getSize;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
     @Resource
+    private ImageUtil imageUtil;
+
+    @Resource
     private SessionRegistry sessionRegistry;
 
     @Resource
@@ -70,7 +73,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public String updateUserAvatar(MultipartFile file) {
-        String avatar = ImageUtil.upload(file, PathConst.AVATAR);
+        String avatar = imageUtil.upload(file, PathConst.AVATAR);
         UserInfo userInfo = UserInfo.builder()
                 .id(UserUtil.getLoginUser().getUserInfoId())
                 .avatar(avatar).build();

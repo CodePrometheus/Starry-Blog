@@ -19,4 +19,11 @@ public class PathConst {
      */
     public static final String ARTICLE = "articles/";
 
+    /**
+     * 页面图片路径
+     */
+    public static final String PAGE = "page/";
+
+
+
 }

@@ -23,7 +23,7 @@
         <result column="create_time" property="createTime"/>
         <result column="category_id" property="categoryId"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="tagDTOList" ofType="com.star.core.dto.TagDTO">
+        <collection property="tagList" ofType="com.star.core.dto.TagDTO">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="tagName"/>
         </collection>
@@ -38,7 +38,7 @@
         <result column="update_time" property="updateTime"/>
         <result column="category_id" property="categoryId"/>
         <result column="category_name" property="categoryName"/>
-        <collection property="tagDTOList" ofType="com.star.core.dto.TagDTO">
+        <collection property="tagList" ofType="com.star.core.dto.TagDTO">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="tagName"/>
         </collection>
@@ -194,9 +194,6 @@
         from tb_article
         <where>
             is_delete = #{condition.isDelete}
-            <if test="condition.isDraft != null">
-                and is_draft = #{condition.isDraft}
-            </if>
             <if test="condition.keywords != null">
                 and article_title like concat('%', #{condition.keywords}, '%')
             </if>

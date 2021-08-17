@@ -56,7 +56,6 @@ export default {
   methods: {
     getBlogInfo() {
       this.axios.get('/api').then(({ data }) => {
-        console.log(data);
         this.$store.commit('checkBlogInfo', data.data)
       })
     },
