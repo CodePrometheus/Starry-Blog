@@ -5,13 +5,16 @@ import com.star.core.dto.BlogBackInfoDTO;
 import com.star.core.dto.BlogHomeInfoDTO;
 import com.star.core.service.BlogInfoService;
 import com.star.core.vo.BlogInfoVo;
+import com.star.core.vo.WebsiteConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * 博客信息模块
@@ -49,6 +52,19 @@ public class BlogInfoController {
     @PutMapping("/admin/about")
     private Result<?> updateAbout(BlogInfoVo blogInfoVo) {
         blogInfoService.updateAbout(blogInfoVo);
+        return Result.success();
+    }
+
+    @ApiOperation(value = "获取网站配置")
+    @GetMapping("/admin/website/config")
+    private Result<WebsiteConfigVO> getWebsiteConfig() {
+        return Result.success(blogInfoService.getWebsiteConfig());
+    }
+
+    @ApiOperation(value = "更新网站配置")
+    @PutMapping("/admin/website/config")
+    private Result<WebsiteConfigVO> updateWebsiteConfig(@Valid @RequestBody WebsiteConfigVO websiteConfigVO) {
+        blogInfoService.updateWebsiteConfig(websiteConfigVO);
         return Result.success();
     }
 
