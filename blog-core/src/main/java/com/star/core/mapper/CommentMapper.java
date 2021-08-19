@@ -68,9 +68,11 @@ public interface CommentMapper extends BaseMapper<Comment> {
     /**
      * 查询后台评论
      *
+     * @param current   页码
+     * @param size      大小
      * @param condition 条件
      * @return 评论集合
      */
-    List<CommentBackDTO> listCommentBackDTO(@Param("condition") ConditionVO condition);
+    List<CommentBackDTO> listCommentBack(@Param("current") Long current, @Param("size") Long size, @Param("condition") ConditionVO condition);
 
 }

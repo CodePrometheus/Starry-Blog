@@ -3,7 +3,24 @@
 <mapper namespace="com.star.core.mapper.TagMapper">
 
     <select id="listTagBack" resultType="com.star.core.dto.TagBackDTO">
-
+        SELECT
+        t.id,
+        tag_name,
+        COUNT( tat.article_id ) AS article_count,
+        t.create_time
+        FROM
+        tb_tag t
+        LEFT JOIN tb_article_tag tat ON t.id = tat.tag_id
+        <where>
+            <if test="condition.keywords != null">
+                tag_name like concat('%',#{condition.keywords},'%')
+            </if>
+        </where>
+        GROUP BY
+        t.id
+        ORDER BY
+        t.id DESC
+        LIMIT #{current},#{size}
     </select>
 
 </mapper>

@@ -31,9 +31,6 @@ public class TagController {
     @Resource
     private TagService tagService;
 
-    @Resource
-    private ArticleService articleService;
-
     @ApiOperation(value = "查看标签列表")
     @GetMapping("/tags")
     private Result<PageData<TagDTO>> listTags() {

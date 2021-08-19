@@ -209,23 +209,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public PageData<CommentBackDTO> listCommentBackDTO(ConditionVO condition) {
-        // 转换页码
-        condition.setCurrent((condition.getCurrent() - 1) * condition.getSize());
-        // 统计后台所有评论量
         Integer count = commentMapper.countCommentBack(condition);
         if (count == 0) {
             return new PageData<>();
         }
-        // 查询后台评论集合
-        List<CommentBackDTO> commentBackDTOList = commentMapper.listCommentBackDTO(condition);
-        // 获取评论点赞量
-        Map<String, Integer> likeCountMap = redisUtil.hGetAll(COMMENT_LIKE_COUNT);
-        // 封装点赞量
-        for (CommentBackDTO commentBackDTO : commentBackDTOList) {
-            commentBackDTO.setLikeCount(Objects.requireNonNull(likeCountMap)
-                    .get(commentBackDTO.getId().toString()));
-        }
-        return new PageData<>(commentBackDTOList, count);
+        List<CommentBackDTO> commentBack = commentMapper.listCommentBack(PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
+        return new PageData<>(commentBack, count);
     }
 
 }
