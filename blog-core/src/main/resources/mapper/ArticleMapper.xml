@@ -46,10 +46,13 @@
 
     <resultMap id="articleBackResultMap" type="com.star.core.dto.ArticleBackDTO">
         <id column="id" property="id"/>
+        <result column="article_cover" property="articleCover"/>
         <result column="article_title" property="articleTitle"/>
         <result column="create_time" property="createTime"/>
+        <result column="type" property="type"/>
         <result column="is_top" property="isTop"/>
         <result column="is_delete" property="isDelete"/>
+        <result column="status" property="status"/>
         <result column="category_name" property="categoryName"/>
         <collection property="tagList" ofType="com.star.core.dto.TagDTO">
             <id column="tag_id" property="id"/>
@@ -153,10 +156,11 @@
     <select id="listArticlesBack" resultMap="articleBackResultMap">
         SELECT a.id,
         article_title,
+        article_cover,
+        type,
         is_top,
         a.is_delete,
         a.create_time,
-        a.update_time,
         category_name,
         t.id AS tag_id,
         t.tag_name
@@ -164,24 +168,42 @@
         (
         SELECT id,
         article_title,
+        article_cover,
+        type,
         is_top,
-        is_draft,
         is_delete,
+        status,
         create_time,
-        update_time,
         category_id
         FROM tb_article
         <where>
             is_delete = #{condition.isDelete}
-            <if test="condition.isDraft != null">
-                and is_draft = #{condition.isDraft}
+            <if test="condition.status != null">
+                and status = #{condition.status}
             </if>
             <if test="condition.keywords != null">
                 and article_title like concat('%', #{condition.keywords}, '%')
             </if>
+            <if test="condition.categoryId != null">
+                and category_id = #{condition.categoryId}
+            </if>
+            <if test="condition.type != null">
+                and type = #{condition.type}
+            </if>
+            <if test="condition.tagId != null">
+                and id in
+                (
+                SELECT
+                article_id
+                FROM
+                tb_article_tag
+                WHERE
+                tag_id = #{condition.tagId}
+                )
+            </if>
         </where>
         ORDER BY is_top DESC, id DESC
-        LIMIT #{condition.current}, #{condition.size}
+        LIMIT #{current}, #{size}
         ) a
         LEFT JOIN tb_category c ON a.category_id = c.id
         LEFT JOIN tb_article_tag atg ON a.id = atg.article_id
