@@ -41,9 +41,15 @@ public class ArticleSearchDTO {
     private String articleContent;
 
     /**
-     * 文章状态
+     * 是否删除
      */
     @Field(type = FieldType.Integer)
     private Integer isDelete;
+
+    /**
+     * 文章状态
+     */
+    @Field(type = FieldType.Integer)
+    private Integer status;
 
 }

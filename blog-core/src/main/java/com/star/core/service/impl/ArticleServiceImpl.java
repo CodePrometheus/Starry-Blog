@@ -19,6 +19,7 @@ import com.star.core.search.ArticleMqMessage;
 import com.star.core.service.ArticleService;
 import com.star.core.service.ArticleTagService;
 import com.star.core.service.TagService;
+import com.star.core.strategy.context.SearchStrategyContext;
 import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.PageUtils;
 import com.star.core.util.UserUtil;
@@ -64,6 +65,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     private static final String LAST_SQL_FIVE = "limit 5";
     private static final String LAST_SQL_ONE = "limit 1";
+
+    @Resource
+    private SearchStrategyContext searchStrategyContext;
 
     @Resource
     private TagService tagService;
@@ -376,7 +380,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public List<ArticleSearchDTO> listArticlesBySearch(ConditionVO condition) {
-        return searchArticle(buildQuery(condition));
+        return searchStrategyContext.executeSearchStrategy(condition.getKeywords());
     }
 
     @Override
@@ -400,65 +404,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleVO.setCategoryName(categoryName);
         articleVO.setTagNameList(tagNameList);
         return articleVO;
-    }
-
-    /**
-     * 搜索文章构造
-     *
-     * @param condition 条件
-     * @return es条件构造器
-     */
-    private NativeSearchQueryBuilder buildQuery(ConditionVO condition) {
-        // 条件构造器
-        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        // 根据关键词搜索文章标题或内容
-        if (Objects.nonNull(condition.getKeywords())) {
-            boolQueryBuilder.must(QueryBuilders.boolQuery().should(QueryBuilders.matchQuery("articleTitle", condition.getKeywords()))
-                            .should(QueryBuilders.matchQuery("articleContent", condition.getKeywords())))
-                    .must(QueryBuilders.termQuery("isDelete", FALSE));
-        }
-        // 查询
-        nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
-        return nativeSearchQueryBuilder;
-    }
-
-    /**
-     * 文章搜索结果高亮
-     *
-     * @param nativeSearchQueryBuilder es条件构造器
-     * @return 搜索结果
-     */
-    private List<ArticleSearchDTO> searchArticle(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
-        // 添加文章标题高亮
-        HighlightBuilder.Field titleField = new HighlightBuilder.Field("articleTitle");
-        titleField.preTags("<span style='color:#f47466'>");
-        titleField.postTags("</span>");
-        // 添加文章内容高亮
-        HighlightBuilder.Field contentField = new HighlightBuilder.Field("articleContent");
-        contentField.preTags("<span style='color:#f47466'>");
-        contentField.postTags("</span>");
-        contentField.fragmentSize(200);
-        nativeSearchQueryBuilder.withHighlightFields(titleField, contentField);
-        // 搜索
-        SearchHits<ArticleSearchDTO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), ArticleSearchDTO.class);
-
-        return search.getSearchHits().stream().map(hit -> {
-            ArticleSearchDTO article = hit.getContent();
-            // 获取文章标题高亮数据
-            List<String> titleHighList = hit.getHighlightFields().get("articleTitle");
-            if (CollectionUtils.isNotEmpty(titleHighList)) {
-                // 替换标题数据
-                article.setArticleTitle(titleHighList.get(0));
-            }
-            // 获取文章内容高亮数据
-            List<String> contentHighList = hit.getHighlightFields().get("articleContent");
-            if (CollectionUtils.isNotEmpty(contentHighList)) {
-                // 替换内容数据
-                article.setArticleContent(contentHighList.get(0));
-            }
-            return article;
-        }).collect(Collectors.toList());
     }
 
 }

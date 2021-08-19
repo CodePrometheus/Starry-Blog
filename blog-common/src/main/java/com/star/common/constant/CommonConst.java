@@ -58,5 +58,13 @@ public class CommonConst {
      */
     public static final String IP = "ip";
 
+    /**
+     * 高亮标签
+     */
+    public static final String PRE_TAG = "<span style='color:#f47466'>";
 
+    /**
+     * span over
+     */
+    public static final String SPAN = "</span>";
 }
