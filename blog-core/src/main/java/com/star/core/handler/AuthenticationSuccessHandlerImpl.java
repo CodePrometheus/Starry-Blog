@@ -7,7 +7,7 @@ import com.star.core.entity.UserAuth;
 import com.star.core.mapper.UserAuthMapper;
 import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.UserUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ import java.io.IOException;
 @Component
 public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
-    @Autowired(required = false)
+    @Resource
     private UserAuthMapper userAuthMapper;
 
     @Override
@@ -39,6 +39,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     }
 
 
+    @Async
     public void updateUserInfo() {
         UserAuth userAuth = UserAuth.builder()
                 .id(UserUtil.getLoginUser().getId())

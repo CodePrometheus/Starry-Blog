@@ -20,7 +20,9 @@ import com.star.core.service.RoleService;
 import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
+import com.star.core.vo.RoleDisableVO;
 import com.star.core.vo.RoleVO;
+import lombok.val;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Resource
     private RoleMapper roleMapper;
 
+
+    @Override
+    @Transactional(rollbackFor = SecurityException.class)
+    public void updateRoleDisable(RoleDisableVO roleDisable) {
+        Role role = Role.builder().id(roleDisable.getId())
+                .isDisable(roleDisable.getIsDisable()).build();
+        roleMapper.updateById(role);
+    }
+
     @Override
     public List<UserRoleDTO> listUserRoles() {
         // 获取用户角色选项
@@ -63,12 +74,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public PageData<RoleDTO> listRoles(ConditionVO conditionVO) {
+    public PageData<RoleDTO> listRoles(ConditionVO condition) {
         // 查询角色列表
-        List<RoleDTO> roleList = roleMapper.listRoles(PageUtils.getLimitCurrent(), PageUtils.getSize(), conditionVO);
+        List<RoleDTO> roleList = roleMapper.listRoles(PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
         Integer count = roleMapper.selectCount(new LambdaQueryWrapper<Role>()
-                .like(StringUtils.isNotBlank(conditionVO.getKeywords()),
-                        Role::getRoleName, conditionVO.getKeywords()));
+                .like(StringUtils.isNotBlank(condition.getKeywords()),
+                        Role::getRoleName, condition.getKeywords()));
         return new PageData<>(roleList, count);
     }
 

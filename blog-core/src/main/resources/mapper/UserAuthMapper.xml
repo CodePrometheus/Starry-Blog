@@ -26,24 +26,45 @@
         avatar,
         nickname,
         login_type,
+        r.id as role_id,
+        role_name,
         ip_addr,
         ip_source,
         ua.create_time,
         last_login_time,
-        ui.is_disable,
-        r.id as role_id,
-        role_name
+        ui.is_disable
         FROM
-        tb_user_auth ua
-        LEFT JOIN tb_user_info ui ON ua.user_info_id = ui.id
-        LEFT JOIN tb_user_role ur ON ui.id = ur.user_id
-        LEFT JOIN tb_role r ON ur.role_id = r.id
+        (
+        SELECT
+        id,
+        avatar,
+        nickname,
+        is_disable
+        FROM
+        tb_user_info
+        <where>
+            <if test="condition.loginType != null">
+                id in
+                (
+                SELECT
+                user_info_id
+                FROM
+                tb_user_auth
+                WHERE
+                login_type =  #{condition.loginType}
+                )
+            </if>
+        </where>
         <where>
             <if test="condition.keywords != null">
                 nickname like concat('%',#{condition.keywords},'%')
             </if>
         </where>
-        LIMIT #{condition.current},#{condition.size}
+        LIMIT #{current},#{size}
+        )   ui
+        LEFT JOIN tb_user_auth ua ON ua.user_info_id = ui.id
+        LEFT JOIN tb_user_role ur ON ui.id = ur.user_id
+        LEFT JOIN tb_role r ON ur.role_id = r.id
     </select>
 
     <select id="countUser" resultType="java.lang.Integer">
@@ -55,6 +76,9 @@
         <where>
             <if test="condition.keywords != null">
                 nickname like concat('%',#{condition.keywords},'%')
+            </if>
+            <if test="condition.loginType != null">
+                and login_type = #{condition.loginType}
             </if>
         </where>
     </select>

@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UrlRoleDTO {
+public class ResourceRoleDTO {
 
     /**
      * 资源id
@@ -36,10 +36,5 @@ public class UrlRoleDTO {
      * 角色名
      */
     private List<String> roleList;
-
-    /**
-     * 是否匿名
-     */
-    private Integer isAnonymous;
 
 }

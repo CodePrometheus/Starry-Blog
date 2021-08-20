@@ -20,7 +20,7 @@
         </collection>
     </resultMap>
 
-    <resultMap id="RolePermissionMap" type="com.star.core.dto.UrlRoleDTO">
+    <resultMap id="RolePermissionMap" type="com.star.core.dto.ResourceRoleDTO">
         <id column="id" property="id"/>
         <result column="url" property="url"/>
         <result column="request_method" property="requestMethod"/>
@@ -53,11 +53,11 @@
         ( SELECT id, role_name, role_label, create_time, is_disable
         FROM tb_role
         <where>
-            <if test="conditionVO.keywords != null ">
-                role_name like concat('%',#{conditionVO.keywords},'%')
+            <if test="condition.keywords != null ">
+                role_name like concat('%',#{condition.keywords},'%')
             </if>
         </where>
-        LIMIT #{conditionVO.current}, #{conditionVO.size} ) r
+        LIMIT #{current}, #{size} ) r
         LEFT JOIN tb_role_resource rr ON r.id = rr.role_id
         LEFT JOIN tb_role_menu rm on r.id = rm.role_id
         ORDER BY r.id

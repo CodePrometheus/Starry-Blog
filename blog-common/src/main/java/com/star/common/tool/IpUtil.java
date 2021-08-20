@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.star.common.constant.StarryConst;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
@@ -223,6 +224,16 @@ public class IpUtil {
             throw new IllegalStateException("applicaitonContext属性未注入, 请在applicationContext" +
                     ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
         }
+    }
+
+    /**
+     * 获取访问设备
+     *
+     * @param request 请求
+     * @return {@link UserAgent} 访问设备
+     */
+    public static UserAgent getUserAgent(HttpServletRequest request){
+        return UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
     }
 
 

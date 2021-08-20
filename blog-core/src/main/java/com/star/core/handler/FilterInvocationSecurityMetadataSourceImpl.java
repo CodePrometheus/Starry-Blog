@@ -1,6 +1,6 @@
 package com.star.core.handler;
 
-import com.star.core.dto.UrlRoleDTO;
+import com.star.core.dto.ResourceRoleDTO;
 import com.star.core.mapper.RoleMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
     /**
      * 接口角色列表
      */
-    private static List<UrlRoleDTO> urlRoleList;
+    private static List<ResourceRoleDTO> resourceRoleList;
 
 
     /**
@@ -38,14 +38,14 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
      */
     @PostConstruct
     private void loadDataSource() {
-        urlRoleList = roleMapper.listUrlRoles();
+        resourceRoleList = roleMapper.listUrlRoles();
     }
 
     /**
      * 清空接口角色信息
      */
     public void clearDataSource() {
-        urlRoleList = null;
+        resourceRoleList = null;
     }
 
     /**
@@ -59,7 +59,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         // 修改接口角色关系后重新加载
-        if (CollectionUtils.isEmpty(urlRoleList)) {
+        if (CollectionUtils.isEmpty(resourceRoleList)) {
             this.loadDataSource();
         }
         FilterInvocation fi = (FilterInvocation) object;
@@ -71,7 +71,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
         AntPathMatcher matcher = new AntPathMatcher();
 
         // 获取接口角色信息，若为匿名接口则放行，若无对应角色则禁止
-        for (UrlRoleDTO urlRoleDTO : urlRoleList) {
+        for (ResourceRoleDTO urlRoleDTO : resourceRoleList) {
             if (matcher.match(urlRoleDTO.getUrl(), url)
                     && urlRoleDTO.getRequestMethod().equals(method)) {
                 List<String> roleList = urlRoleDTO.getRoleList();

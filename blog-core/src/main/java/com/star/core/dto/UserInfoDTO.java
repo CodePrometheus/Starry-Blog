@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.star.common.constant.CommonConst.FALSE;
+
 /**
  * 用户登录信息
  *
@@ -84,12 +86,12 @@ public class UserInfoDTO implements UserDetails {
     /**
      * 点赞评论集合
      */
-    private Set<Integer> commentLikeSet;
+    private Set<Object> commentLikeSet;
 
     /**
      * 点赞文章集合
      */
-    private Set<Integer> articleLikeSet;
+    private Set<Object> articleLikeSet;
 
     /**
      * 用户登录ip
@@ -115,6 +117,11 @@ public class UserInfoDTO implements UserDetails {
      * 最近登录时间
      */
     private LocalDateTime lastLoginTime;
+
+    /**
+     * 是否禁用
+     */
+    private Integer isDisable;
 
 
     @Override
@@ -142,7 +149,7 @@ public class UserInfoDTO implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.isDisable == FALSE;
     }
 
     @Override

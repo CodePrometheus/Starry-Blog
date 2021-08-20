@@ -10,25 +10,26 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @Author: zzStar
- * @Date: 08-16-2021 21:33
+ * @Date: 2021/8/20
+ * @Description:
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "用户禁用状态")
-public class UserDisableVO {
+@ApiModel(description = "角色禁用状态")
+public class RoleDisableVO {
 
     /**
      * id
      */
-    @NotNull(message = "用户id不能为空")
+    @NotNull(message = "角色id不能为空")
     private Integer id;
 
     /**
      * 置顶状态
      */
-    @NotNull(message = "用户禁用状态状态不能为空")
+    @NotNull(message = "角色禁用状态状态不能为空")
     private Integer isDisable;
 
 }

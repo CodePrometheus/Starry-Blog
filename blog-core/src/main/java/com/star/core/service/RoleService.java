@@ -3,6 +3,7 @@ package com.star.core.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.entity.Role;
 import com.star.core.vo.ConditionVO;
+import com.star.core.vo.RoleDisableVO;
 import com.star.core.vo.RoleVO;
 import com.star.core.dto.PageData;
 import com.star.core.dto.RoleDTO;
@@ -26,10 +27,10 @@ public interface RoleService extends IService<Role> {
     /**
      * 查询角色列表
      *
-     * @param conditionVO 条件
+     * @param condition 条件
      * @return 角色列表
      */
-    PageData<RoleDTO> listRoles(ConditionVO conditionVO);
+    PageData<RoleDTO> listRoles(ConditionVO condition);
 
     /**
      * 保存或更新角色
@@ -44,4 +45,12 @@ public interface RoleService extends IService<Role> {
      * @param roleIdList 角色id列表
      */
     void deleteRoles(List<Integer> roleIdList);
+
+    /**
+     * 修改角色禁用状态
+     *
+     * @param roleDisable 角色禁用信息
+     */
+    void updateRoleDisable(RoleDisableVO roleDisable);
+
 }

@@ -1,4 +1,4 @@
-package com.star.core.service.impl;
+package com.star.core.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.common.exception.StarryException;
@@ -63,36 +63,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new StarryException("用户名不存在");
         }
 
-        // 查询账号对应的信息
-        UserInfo userInfo = userInfoMapper.selectOne(new LambdaQueryWrapper<UserInfo>()
-                .select(UserInfo::getId, UserInfo::getEmail, UserInfo::getNickname, UserInfo::getAvatar,
-                        UserInfo::getIntro, UserInfo::getWebSite, UserInfo::getIsDisable)
-                .eq(UserInfo::getId, user.getUserInfoId()));
-
-        // 查询账号对应的角色信息
-        List<String> roleList = roleMapper.listRolesByUserInfoId(userInfo.getId());
-        // 查询账号点赞信息
-        Set<Integer> articleLikeSet = (Set) redisUtil.hGet(ARTICLE_USER_LIKE, userInfo.getId().toString());
-        Set<Integer> commentLikeSet = (Set) redisUtil.hGet(COMMENT_USER_LIKE, userInfo.getId().toString());
         // 封装信息
-        return convertLoginUser(user, userInfo, roleList, articleLikeSet, commentLikeSet, request);
+        return convertLoginUser(user, request);
     }
 
     /**
      * 封装用户登录信息
      *
      * @param user           用户账号
-     * @param userInfo       用户信息
-     * @param articleLikeSet 点赞文章id集合
-     * @param commentLikeSet 点赞评论id集合
      * @param request        请求
      * @return 用户登录信息
      */
-    public static UserInfoDTO convertLoginUser(UserAuth user, UserInfo userInfo, List<String> roleList, Set<Integer> articleLikeSet, Set<Integer> commentLikeSet, HttpServletRequest request) {
+    public UserInfoDTO convertLoginUser(UserAuth user, HttpServletRequest request) {
+        // 查询账号对应的信息
+        UserInfo userInfo = userInfoMapper.selectById(user.getUserInfoId());
+        List<String> roleList = roleMapper.listRolesByUserInfoId(userInfo.getId());
+        Set<Object> articleLikeSet = redisUtil.sMembers(ARTICLE_USER_LIKE + userInfo.getId());
+        Set<Object> commentLikeSet = redisUtil.sMembers(COMMENT_USER_LIKE + userInfo.getId());
+
         // 获取登录信息
         String ipAddr = IpUtil.getIpAddr(request);
         String ipSource = IpUtil.getIpSource(ipAddr);
-        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+        UserAgent userAgent = IpUtil.getUserAgent(request);
 
         // 封装权限集合
         return UserInfoDTO.builder()
@@ -113,6 +105,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .ipSource(ipSource)
                 .browser(userAgent.getBrowser().getName())
                 .os(userAgent.getOperatingSystem().getName())
+                .isDisable(userInfo.getIsDisable())
                 .lastLoginTime(LocalDateTime.now(ZoneId.of("Asia/Shanghai"))).build();
     }
 

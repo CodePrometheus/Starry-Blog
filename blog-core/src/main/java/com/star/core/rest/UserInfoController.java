@@ -56,8 +56,8 @@ public class UserInfoController {
     }
 
     @ApiOperation(value = "修改用户禁用状态")
-    @PutMapping("/admin/users/disable/")
-    private Result<String> updateUserSilence(@Valid @RequestBody UserDisableVO userDisableVO) {
+    @PutMapping("/admin/user/disable/")
+    private Result<?> updateUserDisable(@Valid @RequestBody UserDisableVO userDisableVO) {
         userInfoService.updateUserDisable(userDisableVO);
         return Result.success();
     }

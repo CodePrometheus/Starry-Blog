@@ -2,7 +2,7 @@ package com.star.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.star.core.dto.RoleDTO;
-import com.star.core.dto.UrlRoleDTO;
+import com.star.core.dto.ResourceRoleDTO;
 import com.star.core.entity.Role;
 import com.star.core.vo.ConditionVO;
 import org.apache.ibatis.annotations.Param;
@@ -40,6 +40,6 @@ public interface RoleMapper extends BaseMapper<Role> {
      *
      * @return 角色标签
      */
-    List<UrlRoleDTO> listUrlRoles();
+    List<ResourceRoleDTO> listUrlRoles();
 
 }
