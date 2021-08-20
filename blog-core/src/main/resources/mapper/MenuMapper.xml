@@ -11,7 +11,8 @@
                         icon,
                         is_hidden,
                         parent_id,
-                        order_num
+                        order_num,
+                        create_time
         FROM tb_user_role ur
                  JOIN tb_role_menu rm ON ur.role_id = rm.role_id
                  JOIN tb_menu m ON rm.menu_id = m.id

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -46,17 +47,17 @@ public class MenuDTO {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     /**
      * 排序
      */
     private Integer orderNum;
-
-    /**
-     * 是否禁用
-     */
-    private Integer isDisable;
 
     /**
      * 是否隐藏
