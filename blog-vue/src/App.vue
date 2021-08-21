@@ -20,8 +20,8 @@
     <RegisterModel/>
     <!-- 忘记密码模态框 -->
     <ForgetModel/>
-    <Live2D />
-    <ChatRoom/>
+    <Live2D v-if="blogInfo.websiteConfig.isLive2D == 1"/>
+    <ChatRoom v-if="blogInfo.websiteConfig.isChatRoom == 1"/>
   </v-app>
 </template>
 

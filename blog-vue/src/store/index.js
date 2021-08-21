@@ -85,6 +85,12 @@ export default new Vuex.Store({
     },
     [SET_IS_BLOG_RENDER_COMPLETE](state, {ok}) {
       state.isBlogRenderComplete = ok
+    },
+    saveEmail(state, email) {
+      state.email = email;
+    },
+    savePageInfo(state, pageList) {
+      state.pageList = pageList;
     }
   },
   actions: {

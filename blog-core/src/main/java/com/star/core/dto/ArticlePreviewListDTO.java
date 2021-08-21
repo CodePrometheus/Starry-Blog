@@ -21,7 +21,7 @@ public class ArticlePreviewListDTO {
     /**
      * 条件对应的文章列表
      */
-    private List<ArticlePreviewDTO> articlePreviewDTOList;
+    private List<ArticlePreviewDTO> articlePreviewList;
 
     /**
      * 条件名

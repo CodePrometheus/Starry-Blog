@@ -26,7 +26,7 @@
           class="animated zoomIn article-card"
           style="border-radius: 12px 8px 8px 12px"
           v-for="(item, index) of articleList"
-          :key="index"
+          :key="item.id"
         >
           <!-- 文章封面图 -->
           <div :class="isRight(index)">
@@ -132,11 +132,13 @@
             </a>
             <div class="card-info-social">
               <a
+                v-if="isShowSocial('github')"
                 target="_blank"
-                href="https://github.com/CodePrometheus"
+                href="blogInfo.websiteConfig.github"
                 class="mr-5 iconfont icongithub"
               />
               <a
+                v-if="isShowSocial('BiliBili')"
                 target="_blank"
                 href="https://space.bilibili.com/342251858"
                 class="mr-5 iconfont icon-bilibili-fill"
@@ -266,6 +268,11 @@ export default {
     },
   },
   computed: {
+    isShowSocial() {
+      return function (social) {
+        return this.blogInfo.websiteConfig.socialUrlList.indexOf(social) != -1;
+      }
+    },
     isRight() {
       return function (index) {
         if (index % 2 == 0) {

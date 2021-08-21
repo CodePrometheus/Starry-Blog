@@ -93,6 +93,12 @@ public class WebsiteConfigVO {
     private String gitee;
 
     /**
+     * bilibili
+     */
+    @ApiModelProperty(name = "bilibili", value = "bilibili", required = true, dataType = "String")
+    private String bilibili;
+
+    /**
      * 游客头像
      */
     @ApiModelProperty(name = "touristAvatar", value = "游客头像", required = true, dataType = "String")

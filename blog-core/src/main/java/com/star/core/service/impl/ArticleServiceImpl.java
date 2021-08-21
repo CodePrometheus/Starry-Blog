@@ -148,7 +148,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ArticlePreviewListDTO listArticlesByCondition(ConditionVO condition) {
         // 搜索条件对应数据
-        List<ArticlePreviewDTO> articlePreviewDTOList = articleMapper.listArticlesByCondition(
+        List<ArticlePreviewDTO> articlePreviewList = articleMapper.listArticlesByCondition(
                 PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
         // 搜索条件对应名(标签或分类名)
         String name;
@@ -164,7 +164,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     .getTagName();
         }
         return ArticlePreviewListDTO.builder()
-                .articlePreviewDTOList(articlePreviewDTOList)
+                .articlePreviewList(articlePreviewList)
                 .name(name).build();
     }
 

@@ -75,17 +75,19 @@
             ref="article"
           />
           <!-- 版权声明 -->
-          <div class="aritcle-copyright">
+          <div class="article-copyright">
             <div>
-              <span>文章作者：</span>
-              <a href="https://github.com/CodePrometheus" target="_blank"> zzStar </a>
+              <span>文章作者: </span>
+              <router-link to="/">
+                {{ blogInfo.websiteConfig.websiteAuthor }}
+              </router-link>
             </div>
             <div>
               <span>文章链接：</span>
               <a :href="articleHref" target="_blank">{{ articleHref }} </a>
             </div>
             <div>
-              <span>版权声明：</span>本博客所有文章除特别声明外，均采用
+              <span>版权声明: </span>本博客所有文章除特别声明外，均采用
               <a
                 href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
                 target="_blank"
@@ -97,22 +99,23 @@
           </div>
 
           <!-- 文章标签 -->
-          <div class="article-tags">
+          <div class="article-operation">
             <div class="tag-container">
               <router-link
-                v-for="item of article.tagDTOList"
+                v-for="item of article.tagList"
                 :key="item.id"
                 :to="'/tags/' + item.id"
               >
                 {{ item.tagName }}
               </router-link>
             </div>
+            <share style="margin-left:auto" :config="config" />
           </div>
 
           <!-- 点赞打赏等 -->
           <div class="article-reward">
             <!-- 点赞按钮 -->
-            <a :class="isLike" @click="like" class="like-btn-active">
+            <a :class="isLike" @click="like">
               <v-icon size="14" color="#fff">mdi-thumb-up</v-icon>
               点赞
               <span v-show="article.likeCount > 0">{{ article.likeCount }}</span>
@@ -126,12 +129,14 @@
                   <li class="reward-item">
                     <img
                       class="reward-img-wechat"
+                      :src="blogInfo.websiteConfig.weiXinQRCode"
                     />
                     <div class="reward-desc">微信</div>
                   </li>
                   <li class="reward-item">
                     <img
                       class="reward-img-alipay"
+                      :src="blogInfo.websiteConfig.alipayQRCode"
                     />
                     <div class="reward-desc">支付宝</div>
                   </li>
@@ -213,13 +218,12 @@
         </v-card>
       </v-col>
 
-
       <!-- 侧边 -->
       <v-col md="3" cols="12" class="d-md-block d-none">
 
         <div style="position: sticky;top: 20px;">
           <!-- 目录组件 -->
-          <Tocbot/>
+          <Tocbot />
 
           <!-- 最新文章 -->
           <v-card class="right-container" style="margin-top:20px">
@@ -229,7 +233,7 @@
             </div>
             <div class="article-list">
               <div class="article-item"
-                   v-for="item of articleLatestList"
+                   v-for="item of article.newestArticleList"
                    :key="item.id">
                 <router-link class="content-cover"
                              :to="'/articles/' + item.id">
@@ -266,7 +270,6 @@ export default {
   created() {
     this.getArticle()
     this.listComment()
-    this.listNewestArticles()
   },
   destroyed() {
     this.clipboard.destroy()
@@ -291,8 +294,11 @@ export default {
     })
   },
 
-  data: function () {
+  data () {
     return {
+      config: {
+        sites: ["qzone", "wechat", "weibo", "qq"]
+      },
       imgList: [],
       article: {
         lastArticle: {
@@ -304,8 +310,8 @@ export default {
           articleCover: '',
         },
         articleRecommendList: [],
+        newestArticleList: []
       },
-      articleLatestList: [],
       commentList: [],
       count: 0,
       wordNum: '',
@@ -319,6 +325,7 @@ export default {
       const that = this
       // 查询文章
       this.axios.get('/api' + this.$route.path).then(({ data }) => {
+        console.log(data.data)
         document.title = data.data.articleTitle
         // 将markdown转换为Html
         this.markdownToHtml(data.data)
@@ -345,25 +352,17 @@ export default {
           }
 
           // 添加图片预览功能
-          const imgList = this.$refs.article.getElementsByTagName('img')
+          const imgList = this.$refs.article.getElementsByTagName("img")
           for (let i = 0; i < imgList.length; i++) {
             this.imgList.push(imgList[i].src)
-            imgList[i].style.cssText = 'cursor:zoom-in;'
-            imgList[i].addEventListener('click', function (e) {
-              that.previewImg(e.toElement.src)
+            imgList[i].addEventListener("click", function (e) {
+              that.previewImg(e.target.currentSrc)
             })
           }
           that.$nextTick(() => {
             this.$store.dispatch('setIsBlogRenderComplete', true)
           })
         })
-      })
-    },
-
-    // 最新文章
-    listNewestArticles() {
-      this.axios.get('/api/articles/newest').then(({ data }) => {
-        this.articleLatestList = data.data
       })
     },
 
@@ -374,6 +373,7 @@ export default {
       this.axios.get('/api/comments', {
         params: { current: 1, articleId: articleId },
       }).then(({ data }) => {
+        console.log(data.data)
         this.commentList = data.data.recordList
         this.count = data.data.count
       })
@@ -385,9 +385,7 @@ export default {
         return false
       }
       // 发送请求
-      let param = new URLSearchParams()
-      param.append('articleId', this.article.id)
-      this.axios.post('/api/articles/like', param).then(({ data }) => {
+      this.axios.post('/api/articles/' + this.article.id + "/like").then(({ data }) => {
         if (data.flag) {
           // 判断是否点赞
           if (this.$store.state.articleLikeSet.indexOf(this.article.id) != -1) {
@@ -463,6 +461,9 @@ export default {
     },
   },
   computed: {
+    blogInfo() {
+      return this.$store.state.blogInfo
+    },
     articleCover() {
       return (
         'background: url(' +
@@ -539,7 +540,7 @@ export default {
   }
 
   .post {
-    width: 50%;
+    width: 100%;
   }
 
   .recommend-item {
@@ -613,6 +614,11 @@ export default {
   line-height: 2;
 }
 
+.article-operation {
+  display: flex;
+  align-items: center;
+}
+
 .article-tags {
   display: flex;
   align-items: center;
@@ -640,7 +646,7 @@ export default {
   transition: all 0.5s;
 }
 
-.aritcle-copyright {
+.article-copyright {
   position: relative;
   margin-top: 40px;
   margin-bottom: 10px;
@@ -650,17 +656,17 @@ export default {
   border: 1px solid #eee;
 }
 
-.aritcle-copyright span {
+.article-copyright span {
   color: #49b1f5;
   font-weight: bold;
 }
 
-.aritcle-copyright a {
+.article-copyright a {
   text-decoration: underline !important;
   color: #99a9bf !important;
 }
 
-.aritcle-copyright:before {
+.article-copyright:before {
   position: absolute;
   top: 0.7rem;
   right: 0.7rem;
@@ -671,7 +677,7 @@ export default {
   content: "";
 }
 
-.aritcle-copyright:after {
+.article-copyright:after {
   position: absolute;
   top: 0.95rem;
   right: 0.95rem;
@@ -754,7 +760,6 @@ export default {
 }
 
 .reward-img-wechat {
-  background: url(https://gitee.com/codeprometheus/MyPicBed/raw/master/img/wechat.png) center center / cover no-repeat;
   background-color: #49b1f5;
   width: 130px;
   height: 130px;
@@ -762,7 +767,6 @@ export default {
 }
 
 .reward-img-alipay {
-  background: url(https://gitee.com/codeprometheus/MyPicBed/raw/master/img/alipay.jpg) center center / cover no-repeat;
   background-color: #49b1f5;
   width: 130px;
   height: 130px;
@@ -773,6 +777,16 @@ export default {
   margin: -5px 0;
   color: #858585;
   text-align: center;
+}
+
+.like-btn {
+  display: inline-block;
+  width: 100px;
+  background: #969696;
+  color: #fff !important;
+  text-align: center;
+  line-height: 36px;
+  font-size: 0.875rem;
 }
 
 .like-btn-active {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 标签或分类名 -->
-    <div :class="categoryOrTag + ' banner'">
+    <div class="banner" :style="cover">
       <h1 class="banner-title animated fadeInDown">{{ title }} - {{ name }}</h1>
     </div>
     <div class="article-list-wrapper">
@@ -22,7 +22,7 @@
             </div>
             <div class="article-item-info">
               <!-- 文章标题 -->
-              <div>
+              <div style="margin-top: 0.375rem">
                 <router-link :to="'/articles/' + item.id">
                   {{ item.articleTitle }}
                 </router-link>
@@ -36,18 +36,19 @@
                   :to="'/categories/' + item.categoryId"
                   class="float-right"
                 >
-                  <v-icon>mdi-bookmark</v-icon>{{ item.categoryName }}
+                  <v-icon>mdi-bookmark</v-icon>
+                  {{ item.categoryName }}
                 </router-link>
               </div>
             </div>
             <!-- 分割线 -->
-            <v-divider></v-divider>
+            <v-divider/>
             <!-- 文章标签 -->
             <div class="tag-wrapper">
               <router-link
                 :to="'/tags/' + tag.id"
                 class="tag-btn"
-                v-for="tag of item.tagDTOList"
+                v-for="tag of item.tagList"
                 :key="tag.id"
               >
                 {{ tag.tagName }}
@@ -58,7 +59,8 @@
       </v-row>
       <!-- 无限加载 -->
       <infinite-loading @infinite="infiniteHandler">
-        <div slot="no-more" />
+        <div slot="no-results"/>
+        <div slot="no-more"/>
       </infinite-loading>
     </div>
   </div>
@@ -67,116 +69,128 @@
 <script>
 export default {
   created() {
-    const path = this.$route.path;
-    if (path.indexOf("/categories") != -1) {
-      this.title = "分类";
-      this.categoryOrTag = "category-banner";
+    const path = this.$route.path
+    if (path.indexOf('/categories') != -1) {
+      this.title = '分类'
     } else {
-      this.title = "标签";
-      this.categoryOrTag = "tag-banner";
+      this.title = '标签'
     }
   },
-  data: function() {
+  data: function () {
     return {
       current: 1,
       articleList: [],
-      name: "",
-      title: "",
-      categoryOrTag: ""
-    };
+      name: '',
+      title: '',
+    }
   },
   methods: {
     infiniteHandler($state) {
-      const path = this.$route.path;
-      this.axios
-        .get("/api" + path, {
-          params: {
-            current: this.current
-          }
-        })
-        .then(({ data }) => {
-          if (data.data.articlePreviewDTOList.length) {
-            this.current++;
-            this.name = data.data.name;
-            // 修改标题
-            document.titile = this.title + " - " + this.name;
-            this.articleList.push(...data.data.articlePreviewDTOList);
-            $state.loaded();
-          } else {
-            $state.complete();
-          }
-        });
-    }
-  }
-};
+      this.axios.get('/api/articles/condition', {
+        params: {
+          categoryId: this.$route.params.categoryId,
+          tagId: this.$route.params.tagId,
+          current: this.current,
+        },
+      }).then(({ data }) => {
+        console.log(data.data)
+        if (data.data.articlePreviewList.length) {
+          this.current++
+          this.name = data.data.name
+          // 修改标题
+          document.titile = this.title + ' - ' + this.name
+          this.articleList.push(...data.data.articlePreviewList)
+          $state.loaded()
+        } else {
+          $state.complete()
+        }
+      })
+    },
+  },
+  computed: {
+    cover() {
+      let cover = ''
+      this.$store.state.blogInfo.pageList.forEach(v => {
+        if (v.pageLabel == 'articleList') {
+          cover = v.pageCover
+        }
+      })
+      return "background: url(" + cover + ") center center / cover no-repeat";
+    },
+  },
+}
 </script>
 
 <style scoped>
-.tag-banner {
-  background: url(https://p.pstatp.com/origin/13812000114accf0f004e)
-    center center / cover no-repeat;
-  background-color: #49b1f5;
-}
-.category-banner {
-  background: url(https://cdn.jsdelivr.net/gh/gudaonanfeng/Hexo/Pic/backord123.jpg)
-    center center / cover no-repeat;
-  background-color: #49b1f5;
-}
 @media (min-width: 760px) {
   .article-list-wrapper {
     max-width: 1106px;
     margin: 370px auto 1rem auto;
   }
+
   .article-item-card:hover {
     transition: all 0.3s;
     box-shadow: 0 4px 12px 12px rgba(7, 17, 27, 0.15);
   }
+
   .article-item-card:not(:hover) {
     transition: all 0.3s;
   }
+
   .article-item-card:hover .on-hover {
     transition: all 0.6s;
     transform: scale(1.1);
   }
+
   .article-item-card:not(:hover) .on-hover {
     transition: all 0.6s;
   }
+
   .article-item-info {
     line-height: 1.7;
     padding: 15px 15px 12px 18px;
     font-size: 15px;
   }
 }
+
 @media (max-width: 759px) {
   .article-list-wrapper {
     margin-top: 230px;
     padding: 0 12px;
   }
+
   .article-item-info {
     line-height: 1.7;
     padding: 15px 15px 12px 18px;
   }
 }
+
 .article-item-card {
   border-radius: 8px !important;
   box-shadow: 0 4px 8px 6px rgba(7, 17, 27, 0.06);
 }
+
 .article-item-card a {
   transition: all 0.3s;
 }
+
 .article-item-cover {
   height: 220px;
   overflow: hidden;
 }
+
 .article-item-card a:hover {
   color: #8e8cd8;
 }
+
 .tag-wrapper {
   padding: 10px 15px 10px 18px;
 }
+
 .tag-wrapper a {
   color: #fff !important;
 }
+
 .tag-btn {
   display: inline-block;
   font-size: 0.725rem;

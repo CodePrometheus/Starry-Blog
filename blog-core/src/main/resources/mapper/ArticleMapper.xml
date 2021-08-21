@@ -128,7 +128,7 @@
         AND is_delete = 0
         AND status = 1
         ORDER BY id DESC
-        LIMIT #{condition.current}, #{size}
+        LIMIT #{current}, #{size}
         ) a
         JOIN tb_category c ON a.category_id = c.id
         JOIN tb_article_tag atg ON a.id = atg.article_id
