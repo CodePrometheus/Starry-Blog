@@ -1,6 +1,5 @@
-package com.star.core.entity;
+package com.star.core.dto;
 
-import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,19 +9,17 @@ import java.time.LocalDateTime;
 
 /**
  * @Author: zzStar
- * @Date: 06-25-2021 22:24
+ * @Date: 2021/8/21
+ * @Description:
  */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@TableName("tb_operation_log")
-public class OperationLog {
-
+@NoArgsConstructor
+public class OperationLogDTO {
     /**
      * 日志id
      */
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -66,11 +63,6 @@ public class OperationLog {
     private String responseData;
 
     /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
      * 用户昵称
      */
     private String nickname;
@@ -88,13 +80,6 @@ public class OperationLog {
     /**
      * 创建时间
      */
-    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
-    /**
-     * 修改时间
-     */
-    @TableField(fill = FieldFill.UPDATE)
-    private LocalDateTime updateTime;
 
 }

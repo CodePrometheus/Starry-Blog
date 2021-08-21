@@ -82,9 +82,7 @@ public class OptLogAspect {
         String ipAddr = IpUtil.getIpAddr(request);
         operationLog.setIpAddr(ipAddr);
         operationLog.setIpSource(IpUtil.getIpSource(ipAddr));
-
         operationLog.setOptUrl(request.getRequestURI());
-        operationLog.setCreateTime(new Date());
         operationLogMapper.insert(operationLog);
     }
 
