@@ -21,17 +21,10 @@ public class InitializationRunner implements ApplicationRunner {
     @Resource
     private ElasticSearchUtil elasticSearchUtil;
 
-    @Resource
-    private ElasticsearchMapper elasticsearchMapper;
-
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-        long count = elasticsearchMapper.count();
-        if (count == 0) {
-            elasticSearchUtil.async();
-            log.info("es 异步导入完成");
-        } else {
-            log.info("es 已存在索引");
-        }
+    public void run(ApplicationArguments args) {
+        elasticSearchUtil.async();
+        log.info("ES更新完毕");
     }
+
 }

@@ -1,4 +1,4 @@
-package com.star.core.util;
+package com.star.core.consumer;
 
 import com.alibaba.fastjson.JSON;
 import com.star.core.config.RabbitConfig;

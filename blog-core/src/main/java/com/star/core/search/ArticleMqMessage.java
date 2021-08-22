@@ -16,7 +16,7 @@ public class ArticleMqMessage implements Serializable {
     public static final String CREATE_OR_UPDATE = "create_update";
     public static final String REMOVE = "remove";
 
-    private int articleId;
+    private Integer articleId;
 
     private String type;
 

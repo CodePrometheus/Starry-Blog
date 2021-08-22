@@ -1,5 +1,6 @@
 package com.star.core.search;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.star.core.entity.Article;
 import com.star.core.mapper.ArticleMapper;
@@ -36,14 +37,13 @@ public class ElasticSearchUtil {
         elasticsearchMapper.deleteAll();
         List<Article> articles = articleMapper.selectList(null);
         List<ArticleSearchDTO> articleSearch = new ArrayList<>();
-        for (Article article : articles) {
-            ArticleSearchDTO searchDTO = new ArticleSearchDTO();
-            searchDTO.setId(article.getId());
-            searchDTO.setArticleContent(article.getArticleContent());
-            searchDTO.setArticleTitle(article.getArticleTitle());
-            searchDTO.setIsDelete(article.getIsDelete());
-            articleSearch.add(searchDTO);
-        }
+        articles.forEach(article -> {
+            ArticleSearchDTO search = ArticleSearchDTO.builder().id(article.getId())
+                    .articleContent(article.getArticleContent())
+                    .articleTitle(article.getArticleTitle())
+                    .isDelete(article.getIsDelete()).build();
+            articleSearch.add(search);
+        });
         elasticsearchMapper.saveAll(articleSearch);
     }
 
@@ -65,18 +65,21 @@ public class ElasticSearchUtil {
     }
 
 
+    @Async
     public void createOrUpdateIndex(ArticleMqMessage mqMessage) {
-        int articleId = mqMessage.getArticleId();
-        Article article = articleMapper.selectOne(new QueryWrapper<Article>().eq("id", articleId));
+        Integer articleId = mqMessage.getArticleId();
+        Article article = articleMapper.selectOne(new LambdaQueryWrapper<Article>().eq(Article::getId, articleId));
         ModelMapper modelMapper = new ModelMapper();
         ArticleSearchDTO map = modelMapper.map(article, ArticleSearchDTO.class);
         elasticsearchMapper.save(map);
-        log.info("index updated successfully --> {}", map.toString());
+        log.info("index updated successfully --> {}", map);
     }
 
+    @Async
     public void removeIndex(ArticleMqMessage mqMessage) {
         int articleId = mqMessage.getArticleId();
         elasticsearchMapper.deleteById(articleId);
         log.info("index remove successfully --> {}", mqMessage.toString());
     }
+
 }
