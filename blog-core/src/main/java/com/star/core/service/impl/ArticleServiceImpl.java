@@ -112,8 +112,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .eq(Article::getIsDelete, FALSE));
 
         // 拷贝dto集合
-        List<ArchiveDTO> archiveDTOList = BeanCopyUtil.copyList(articlePage.getRecords(), ArchiveDTO.class);
-        return new PageData<>(archiveDTOList, (int) articlePage.getTotal());
+        List<ArchiveDTO> archiveList = BeanCopyUtil.copyList(articlePage.getRecords(), ArchiveDTO.class);
+        return new PageData<>(archiveList, (int) articlePage.getTotal());
     }
 
 

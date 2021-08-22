@@ -1,8 +1,7 @@
 <template>
   <div>
-
     <!-- banner -->
-    <div class="message-banner">
+    <div class="message-banner" :style="cover">
       <!-- 弹幕输入框 -->
       <div class="message-container">
         <h1 class="message-title">留言板</h1>
@@ -62,7 +61,7 @@ export default {
       }
       const userAvatar = this.$store.state.avatar
         ? this.$store.state.avatar
-        : "https://gravatar.loli.net/avatar/d41d8cd98f00b204e9800998ecf8427e?d=mp&v=1.4.14";
+        : this.$store.state.blogInfo.websiteConfig.touristAvatar
       const userNickname = this.$store.state.nickname
         ? this.$store.state.nickname
         : "游客";
@@ -83,6 +82,17 @@ export default {
         }
       });
     }
+  },
+  computed: {
+    cover() {
+      let cover = ''
+      this.$store.state.blogInfo.pageList.forEach(v => {
+        if (v.pageLabel == 'message') {
+          cover = v.pageCover
+        }
+      })
+      return 'background: url(' + cover + ') center center / cover no-repeat'
+    },
   }
 };
 </script>
@@ -94,8 +104,7 @@ export default {
   left: 0;
   right: 0;
   height: 100vh;
-  background: #49b1f5 url(https://view.amogu.cn/images/2020/09/17/20200917003756.jpg)  center center /
-    cover no-repeat;
+  background-color: #49b1f5;
   animation: header-effect 1s;
 }
 .message-title {

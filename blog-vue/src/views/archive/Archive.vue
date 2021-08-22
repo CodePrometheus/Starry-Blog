@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- banner -->
-    <div class="archive-banner banner">
+    <div class="banner" :style="cover">
       <h1 class="banner-title">归档</h1>
     </div>
     <!-- 归档列表 -->
     <v-card class="blog-container">
       <timeline>
-        <timeline-title> 目前共计{{ count }}篇文章，努力吧 </timeline-title>
+        <timeline-title> 目前共计{{ count }}篇文章，努力吧</timeline-title>
         <timeline-item v-for="item of archiveList" :key="item.id">
           <!-- 日期 -->
           <span class="time">{{ item.createTime | date }}</span>
@@ -32,56 +32,59 @@
 </template>
 
 <script>
-import { Timeline, TimelineItem, TimelineTitle } from "vue-cute-timeline";
+import { Timeline, TimelineItem, TimelineTitle } from 'vue-cute-timeline'
+
 export default {
   created() {
-    this.listArchives();
+    this.listArchives()
   },
   components: {
     Timeline,
     TimelineItem,
-    TimelineTitle
+    TimelineTitle,
   },
-  data: function() {
+  data: function () {
     return {
       current: 1,
       count: 0,
-      archiveList: []
-    };
+      archiveList: [],
+    }
   },
   methods: {
     listArchives() {
-      this.axios
-        .get("/api/articles/archives", {
-          params: { current: this.current }
-        })
-        .then(({ data }) => {
-          this.archiveList = data.data.recordList;
-          this.count = data.data.count;
-        });
-    }
+      this.axios.get('/api/articles/archives', {
+        params: { current: this.current },
+      }).then(({ data }) => {
+        this.archiveList = data.data.recordList
+        this.count = data.data.count
+      })
+    },
   },
   watch: {
     current(value) {
-      this.axios
-        .get("/api/articles/archives", {
-          params: { current: value }
-        })
-        .then(({ data }) => {
-          this.archiveList = data.data.recordList;
-          this.count = data.data.count;
-        });
-    }
+      this.axios.get('/api/articles/archives', {
+        params: { current: value },
+      }).then(({ data }) => {
+        this.archiveList = data.data.recordList
+        this.count = data.data.count
+      })
+    },
+  },
+  computed: {
+    cover() {
+      let cover = ''
+      this.$store.state.blogInfo.pageList.forEach(v => {
+        if (v.pageLabel == 'archive') {
+          cover = v.pageCover
+        }
+      })
+      return 'background: url(' + cover + ') center center / cover no-repeat'
+    },
   }
-};
+}
 </script>
 
 <style scoped>
-.archive-banner {
-  background: url(https://rmt.dogedoge.com/fetch/tzk/storage/20200815214126.jpg?fmt=webp) center center /
-    cover no-repeat;
-  background-color: #49b1f5;
-}
 .time {
   font-size: 0.75rem;
   color: #555;

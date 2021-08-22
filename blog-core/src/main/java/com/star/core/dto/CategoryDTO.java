@@ -24,6 +24,6 @@ public class CategoryDTO {
     /**
      * 分类下的文章数量
      */
-    private Long articleCount;
+    private Integer articleCount;
 
 }

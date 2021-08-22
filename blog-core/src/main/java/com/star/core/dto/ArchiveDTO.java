@@ -1,7 +1,11 @@
 package com.star.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -11,6 +15,9 @@ import java.util.Date;
  * @Date: 12-19-2020 13:40
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArchiveDTO {
     /**
      * id
@@ -25,6 +32,6 @@ public class ArchiveDTO {
     /**
      * 发表时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
 }
