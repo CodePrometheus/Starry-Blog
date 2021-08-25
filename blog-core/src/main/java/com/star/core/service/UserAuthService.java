@@ -1,12 +1,15 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.star.core.dto.UserAreaDTO;
 import com.star.core.dto.UserBackDTO;
 import com.star.core.entity.UserAuth;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.PasswordVO;
 import com.star.core.vo.UserVO;
 import com.star.core.dto.PageData;
+
+import java.util.List;
 
 /**
  * @author zzStar
@@ -48,5 +51,13 @@ public interface UserAuthService extends IService<UserAuth> {
      * @return 用户列表
      */
     PageData<UserBackDTO> listUserBack(ConditionVO condition);
+
+    /**
+     * 获取用户区域分布
+     *
+     * @param condition 条件签证官
+     * @return {@link List <UserAreaDTO>} 用户区域分布
+     */
+    List<UserAreaDTO> listUserAreas(ConditionVO condition);
 
 }

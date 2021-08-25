@@ -6,8 +6,8 @@
         SELECT DATE_FORMAT(create_time, "%Y-%m-%d") as `day`,
                views_count
         FROM `tb_unique_view`
-        WHERE create_time &gt; #{startTime}
-          AND create_time &lt;= #{endTime}
+        WHERE create_time &gt; #{start}
+          AND create_time &lt;= #{end}
         ORDER BY create_time
     </select>
 

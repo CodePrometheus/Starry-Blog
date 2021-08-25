@@ -39,7 +39,8 @@ import ChatRoom from './components/ChatRoom'
 
 export default {
   created() {
-    this.getBlogInfo()
+    this.getBlogInfo();
+    this.axios.post("/api/report");
   },
   components: {
     TopNavBar,

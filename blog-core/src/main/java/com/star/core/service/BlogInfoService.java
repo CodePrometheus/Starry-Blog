@@ -53,4 +53,9 @@ public interface BlogInfoService {
      */
     void updateWebsiteConfig(WebsiteConfigVO websiteConfigVO);
 
+    /**
+     * 上传访客信息
+     */
+    void report();
+
 }

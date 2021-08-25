@@ -83,4 +83,15 @@ public class RedisConst {
      */
     public static final String UNIQUE_VISITOR = "unique_visitor";
 
+    /**
+     * 用户地区
+     */
+    public static final String USER_AREA = "user_area";
+
+    /**
+     * 访客地区
+     */
+    public static final String VISITOR_AREA = "visitor_area";
+
+
 }

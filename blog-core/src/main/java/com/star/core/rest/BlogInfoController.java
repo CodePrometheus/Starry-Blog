@@ -8,10 +8,7 @@ import com.star.core.vo.BlogInfoVo;
 import com.star.core.vo.WebsiteConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -50,7 +47,7 @@ public class BlogInfoController {
 
     @ApiOperation(value = "修改关于我信息")
     @PutMapping("/admin/about")
-    private Result<?> updateAbout(BlogInfoVo blogInfoVo) {
+    private Result<?> updateAbout(@Valid @RequestBody BlogInfoVo blogInfoVo) {
         blogInfoService.updateAbout(blogInfoVo);
         return Result.success();
     }
@@ -65,6 +62,17 @@ public class BlogInfoController {
     @PutMapping("/admin/website/config")
     private Result<WebsiteConfigVO> updateWebsiteConfig(@Valid @RequestBody WebsiteConfigVO websiteConfigVO) {
         blogInfoService.updateWebsiteConfig(websiteConfigVO);
+        return Result.success();
+    }
+
+    /**
+     * 上传访客信息
+     *
+     * @return {@link Result}
+     */
+    @PostMapping("/report")
+    public Result<?> report() {
+        blogInfoService.report();
         return Result.success();
     }
 

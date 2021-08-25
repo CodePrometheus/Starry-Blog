@@ -2,6 +2,7 @@ package com.star.core.rest;
 
 import com.star.common.constant.Result;
 import com.star.core.dto.PageData;
+import com.star.core.dto.UserAreaDTO;
 import com.star.core.dto.UserBackDTO;
 import com.star.core.service.UserAuthService;
 import com.star.core.vo.ConditionVO;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 用户逻辑
@@ -61,6 +63,18 @@ public class UserAuthController {
     private Result<?> updateAdminPassword(@Valid @RequestBody PasswordVO passwordVO) {
         userAuthService.updateAdminPassword(passwordVO);
         return Result.success();
+    }
+
+    /**
+     * 获取用户区域分布
+     *
+     * @param condition 条件
+     * @return {@link Result<UserAreaDTO>} 用户区域分布
+     */
+    @ApiOperation(value = "获取用户区域分布")
+    @GetMapping("/admin/user/area")
+    public Result<List<UserAreaDTO>> listUserAreas(ConditionVO condition) {
+        return Result.success(userAuthService.listUserAreas(condition));
     }
 
 }

@@ -57,6 +57,11 @@ public class BlogBackInfoDTO {
     private List<ArticleRankDTO> articleRankList;
 
     /**
+     * 标签列表
+     */
+    private List<TagDTO> tagList;
+
+    /**
      * 文章统计列表
      */
     private List<ArticleStatisticsDTO> articleStatisticsList;

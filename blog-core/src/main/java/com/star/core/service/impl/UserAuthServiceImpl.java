@@ -9,6 +9,7 @@ import com.star.common.tool.RedisUtil;
 import com.star.core.config.RabbitConfig;
 import com.star.core.dto.EmailDTO;
 import com.star.core.dto.PageData;
+import com.star.core.dto.UserAreaDTO;
 import com.star.core.dto.UserBackDTO;
 import com.star.core.entity.UserAuth;
 import com.star.core.entity.UserInfo;
@@ -34,18 +35,17 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.DEFAULT_AVATAR;
 import static com.star.common.constant.CommonConst.DEFAULT_NICKNAME;
 import static com.star.common.constant.LoginTypeConst.EMAIL;
-import static com.star.common.constant.RedisConst.CODE_EXPIRE_TIME;
-import static com.star.common.constant.RedisConst.CODE_KEY;
+import static com.star.common.constant.RedisConst.*;
 import static com.star.common.constant.RoleEnum.USER;
+import static com.star.common.enums.UserAreaTypeEnum.*;
 
 /**
  * 用户业务
@@ -213,6 +213,34 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
                 .select(UserAuth::getUsername)
                 .eq(UserAuth::getUsername, user.getUsername()));
         return Objects.nonNull(userAuth);
+    }
+
+    @Override
+    public List<UserAreaDTO> listUserAreas(ConditionVO condition) {
+        List<UserAreaDTO> userAreaList = new ArrayList<>();
+        switch (Objects.requireNonNull(getUserAreaType(condition.getType()))) {
+            case USER:
+                // 查询注册用户区域分布
+                Object userArea = redisUtil.get(USER_AREA);
+                if (Objects.nonNull(userArea)) {
+                    userAreaList = JSON.parseObject(userArea.toString(), List.class);
+                }
+                return userAreaList;
+            case VISITOR:
+                // 查询游客区域分布
+                Map<String, Object> visitorArea = redisUtil.hGetAll(VISITOR_AREA);
+                if (Objects.nonNull(visitorArea)) {
+                    userAreaList = visitorArea.entrySet().stream()
+                            .map(v -> UserAreaDTO.builder()
+                                    .name(v.getKey())
+                                    .value(Long.valueOf(v.getValue().toString())).build())
+                            .collect(Collectors.toList());
+                }
+                return userAreaList;
+            default:
+                break;
+        }
+        return userAreaList;
     }
 
 }
