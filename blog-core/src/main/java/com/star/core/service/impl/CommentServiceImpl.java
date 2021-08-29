@@ -21,6 +21,7 @@ import com.star.core.vo.CommentVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.ReviewVO;
 import com.star.core.vo.WebsiteConfigVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -29,10 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.*;
@@ -81,6 +79,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         // 查询评论集合
         List<CommentDTO> commentList = commentMapper.listComments(PageUtils.getLimitCurrent(), PageUtils.getSize(), articleId);
+        if (CollectionUtils.isEmpty(commentList)) {
+            return new PageData<>();
+        }
         // 查询redis的评论点赞数据
         Map<String, Object> likeCountMap = redisUtil.hGetAll(COMMENT_LIKE_COUNT);
         // 提取评论id集合
@@ -152,6 +153,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      */
     @Async
     public void notice(Comment comment) {
+        Integer commentId = comment.getId();
         // 判断是回复用户还是评论作者
         Integer authorId = articleMapper.selectById(comment.getArticleId()).getUserId();
         Integer userId = Optional.ofNullable(comment.getReplyUserId()).orElse(authorId);
@@ -161,26 +163,35 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         if (StringUtils.isBlank(emailStr)) {
             return;
         }
-        EmailDTO email = new EmailDTO();
         // 判断页面路径
         String url = Objects.nonNull(comment.getArticleId()) ? URL + ARTICLE_PATH + comment.getArticleId() : URL + LINK_PATH;
         // 发送消息
         if (comment.getIsReview().equals(TRUE)) {
-            email = EmailDTO.builder()
-                    .email(emailStr)
-                    .subject("评论提醒")
-                    .content("你收到了一条新的回复，请前往 " + url + "页面查看").build();
+            EmailDTO email = new EmailDTO();
+            email.setEmail(emailStr);
+            email.setSubject("评论提醒");
+            email.setContent("你收到了一条新的回复，请前往 " + url + "页面查看");
+            rabbitTemplate.convertAndSend(RabbitConfig.EMAIL_EXCHANGE, "*",
+                    new Message(JSON.toJSONBytes(email),
+                            new MessageProperties()));
         } else {
             // 管理员审核提醒
+            EmailDTO email = new EmailDTO();
             String adminEmail = userInfoMapper.selectById(authorId).getEmail();
-            email = EmailDTO.builder()
-                    .email(adminEmail)
-                    .subject("审核提醒")
-                    .content("您收到了一条新的回复，请前往后台管理页面审核").build();
+            email.setEmail(adminEmail);
+            email.setSubject("审核提醒");
+            email.setContent("您收到了一条新的回复，请前往后台管理页面审核，如果一天之内没有做出处理，本系统将会将其推送自动审核机制");
+            rabbitTemplate.convertAndSend(RabbitConfig.EMAIL_EXCHANGE, "*",
+                    new Message(JSON.toJSONBytes(email),
+                            new MessageProperties()));
+            // 如果评论在规定时间内未处理，将交付给自动评审机制
+            rabbitTemplate.convertAndSend(RabbitConfig.REVIEW_QUEUE_DELAY, commentId, msg -> {
+                // 毫秒值 1min * 60 * 1000
+                msg.getMessageProperties().setExpiration("60000");
+                return msg;
+            });
         }
-        rabbitTemplate.convertAndSend(RabbitConfig.EMAIL_EXCHANGE, "*",
-                new Message(JSON.toJSONBytes(email),
-                        new MessageProperties()));
+
     }
 
 

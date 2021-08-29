@@ -212,7 +212,6 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         if (!redisUtil.sIsMember(UNIQUE_VISITOR, md5)) {
             // 统计游客地域分布
             String ipSource = IpUtil.getIpSource(ipAddr);
-            System.out.println("ipSource = " + ipSource);
             if (StringUtils.isNotBlank(ipSource)) {
                 ipSource = ipSource.substring(0, 2)
                         .replaceAll(PROVINCE, "")

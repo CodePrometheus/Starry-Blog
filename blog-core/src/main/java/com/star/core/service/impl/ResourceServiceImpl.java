@@ -12,10 +12,13 @@ import com.star.core.mapper.ResourceMapper;
 import com.star.core.mapper.RoleResourceMapper;
 import com.star.core.service.ResourceService;
 import com.star.core.util.BeanCopyUtil;
+import com.star.core.vo.ConditionVO;
 import com.star.core.vo.ResourceVO;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -99,7 +102,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         // 查询是否有角色关联
         Integer count = roleResourceMapper.selectCount(new LambdaQueryWrapper<RoleResource>()
                 .eq(RoleResource::getResourceId, resourceId));
-        if (count > 1) {
+        if (count > 0) {
             throw new StarryException("该资源下存在角色");
         }
         // 删除子资源
@@ -112,20 +115,31 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     }
 
     @Override
-    public List<ResourceDTO> listResources() {
+    public List<ResourceDTO> listResources(ConditionVO condition) {
         // 查询资源列表
-        List<Resource> resourceList = resourceMapper.selectList(null);
+        List<Resource> resourceList = resourceMapper.selectList(new LambdaQueryWrapper<Resource>()
+                .like(StringUtils.isNotBlank(condition.getKeywords()),
+                        Resource::getResourceName, condition.getKeywords()));
         // 获取所有模块
         List<Resource> parentIdList = listResourceParent(resourceList);
         // 根据parentIdList获取模块下的资源
         Map<Integer, List<Resource>> childrenMap = listResourceChildren(resourceList);
         // 绑定模块下的所有接口
-        return parentIdList.stream().map(item -> {
-            ResourceDTO resourceDTO = BeanCopyUtil.copyObject(item, ResourceDTO.class);
-            List<ResourceDTO> childrenList = BeanCopyUtil.copyList(childrenMap.get(item.getId()), ResourceDTO.class);
+        List<ResourceDTO> resourceDTOList = parentIdList.stream().map(v -> {
+            ResourceDTO resourceDTO = BeanCopyUtil.copyObject(v, ResourceDTO.class);
+            List<ResourceDTO> childrenList = BeanCopyUtil.copyList(childrenMap.get(v.getId()), ResourceDTO.class);
             resourceDTO.setChildren(childrenList);
+            childrenMap.remove(v.getId());
             return resourceDTO;
         }).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(childrenMap)) {
+            List<Resource> childrenList = new ArrayList<>();
+            childrenMap.values().forEach(childrenList::addAll);
+            List<ResourceDTO> collect = childrenList.stream().map(v -> BeanCopyUtil.copyObject(v, ResourceDTO.class))
+                    .collect(Collectors.toList());
+            resourceDTOList.addAll(collect);
+        }
+        return resourceDTOList;
     }
 
     /**

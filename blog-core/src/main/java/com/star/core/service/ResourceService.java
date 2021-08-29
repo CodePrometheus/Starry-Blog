@@ -2,6 +2,7 @@ package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.entity.Resource;
+import com.star.core.vo.ConditionVO;
 import com.star.core.vo.ResourceVO;
 import com.star.core.dto.LabelOptionDTO;
 import com.star.core.dto.ResourceDTO;
@@ -36,9 +37,10 @@ public interface ResourceService extends IService<Resource> {
     /**
      * 查看资源列表
      *
+     * @param condition 条件
      * @return 资源列表
      */
-    List<ResourceDTO> listResources();
+    List<ResourceDTO> listResources(ConditionVO condition);
 
     /**
      * 查看资源选项

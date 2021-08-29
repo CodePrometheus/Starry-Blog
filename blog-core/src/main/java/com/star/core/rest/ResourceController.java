@@ -4,6 +4,7 @@ import com.star.common.constant.Result;
 import com.star.core.dto.LabelOptionDTO;
 import com.star.core.dto.ResourceDTO;
 import com.star.core.service.ResourceService;
+import com.star.core.vo.ConditionVO;
 import com.star.core.vo.ResourceVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,8 +35,8 @@ public class ResourceController {
 
     @ApiOperation(value = "查看资源列表")
     @GetMapping("/resources")
-    public Result<List<ResourceDTO>> listResources() {
-        return Result.success(resourceService.listResources());
+    public Result<List<ResourceDTO>> listResources(ConditionVO condition) {
+        return Result.success(resourceService.listResources(condition));
     }
 
     @ApiOperation(value = "删除资源")
