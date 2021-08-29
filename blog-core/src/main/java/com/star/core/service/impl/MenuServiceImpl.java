@@ -51,16 +51,26 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         // 获取parentMenu下的子菜单
         Map<Integer, List<Menu>> childrenMenu = listChildrenMenu(menuList);
         // 组装目录菜单数据
-        return parentMenu.stream().map(item -> {
+        List<MenuDTO> menuDTOList = parentMenu.stream().map(item -> {
                     MenuDTO menuDTO = BeanCopyUtil.copyObject(item, MenuDTO.class);
                     // 获取目录下的菜单排序
-                    List<MenuDTO> menuDTOList = BeanCopyUtil.copyList(childrenMenu.get(item.getId()), MenuDTO.class).stream()
+                    List<MenuDTO> list = BeanCopyUtil.copyList(childrenMenu.get(item.getId()), MenuDTO.class).stream()
                             .sorted(Comparator.comparing(MenuDTO::getOrderNum))
                             .collect(Collectors.toList());
-                    menuDTO.setChildren(menuDTOList);
+                    menuDTO.setChildren(list);
+                    childrenMenu.remove(item.getId());
                     return menuDTO;
                 }).sorted(Comparator.comparing(MenuDTO::getOrderNum))
                 .collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(childrenMenu)) {
+            List<Menu> childrenList = new ArrayList<>();
+            childrenMenu.values().forEach(childrenList::addAll);
+            List<MenuDTO> collect = childrenList.stream().map(v -> BeanCopyUtil.copyObject(v, MenuDTO.class))
+                    .sorted(Comparator.comparing(MenuDTO::getOrderNum))
+                    .collect(Collectors.toList());
+            menuDTOList.addAll(collect);
+        }
+        return menuDTOList;
     }
 
     /**
