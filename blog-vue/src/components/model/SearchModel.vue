@@ -3,7 +3,7 @@
   <v-dialog v-model="searchFlag" max-width="600" :fullscreen="isMobile">
     <v-card class="search-wrapper" style="border-radius:4px">
       <div class="mb-3">
-        <span class="search-title">本地搜索</span>
+        <span class="search-title">搜索</span>
         <!-- 关闭按钮 -->
         <v-icon class="float-right" @click="searchFlag = false">
           mdi-close
@@ -12,18 +12,18 @@
       <!-- 输入框 -->
       <div class="search-input-wrapper">
         <v-icon>mdi-magnify</v-icon>
-        <input v-model="keywords" placeholder="输入文章标题或内容..." />
+        <input v-model="keywords" placeholder="输入文章标题或内容" />
       </div>
       <!-- 搜索结果 -->
       <div class="search-result-wrapper">
         <hr class="divider" />
         <ul>
-          <li class="search-reslut" v-for="item of articleList" :key="item.id">
+          <li class="search-result" v-for="item of articleList" :key="item.id">
             <!-- 文章标题 -->
             <a @click="goTo(item.id)" v-html="item.articleTitle" />
             <!-- 文章内容 -->
             <p
-              class="search-reslut-content text-justify"
+              class="search-result-content text-justify"
               v-html="item.articleContent"
             />
           </li>
@@ -125,13 +125,13 @@ export default {
     overflow: auto;
   }
 }
-.search-reslut a {
+.search-result a {
   color: #555;
   font-weight: bold;
   border-bottom: 1px solid #999;
   text-decoration: none;
 }
-.search-reslut-content {
+.search-result-content {
   color: #555;
   cursor: pointer;
   border-bottom: 1px dashed #ccc;

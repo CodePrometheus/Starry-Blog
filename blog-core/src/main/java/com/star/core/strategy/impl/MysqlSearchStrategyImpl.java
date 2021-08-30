@@ -20,7 +20,7 @@ import static com.star.common.enums.ArticleStatusEnum.PUBLIC;
  * @Author: zzStar
  * @Date: 08-19-2021 23:20
  */
-@Service
+@Service("MysqlSearchStrategyImpl")
 public class MysqlSearchStrategyImpl implements SearchStrategy {
 
     @Resource
@@ -28,6 +28,7 @@ public class MysqlSearchStrategyImpl implements SearchStrategy {
 
     @Override
     public List<ArticleSearchDTO> searchArticle(String keywords) {
+        System.out.println("keywords = " + keywords);
         if (StringUtils.isBlank(keywords)) {
             return new ArrayList<>();
         }

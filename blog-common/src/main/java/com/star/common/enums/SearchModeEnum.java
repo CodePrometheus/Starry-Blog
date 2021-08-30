@@ -14,12 +14,12 @@ public enum SearchModeEnum {
     /**
      * mysql
      */
-    MYSQL("mysql", "mySqlSearchStrategyImpl"),
+    MYSQL("mysql", "MySqlSearchStrategyImpl"),
 
     /**
      * elasticsearch
      */
-    ELASTICSEARCH("elasticsearch", "esSearchStrategyImpl");
+    ELASTICSEARCH("elasticsearch", "EsSearchStrategyImpl");
 
     /**
      * 模式
