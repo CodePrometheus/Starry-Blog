@@ -140,17 +140,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
                     .uniqueViewList(uniqueViewList).build();
         }
 
-        // 访问量前五具体数据
-        List<Integer> articleIdList = new ArrayList<>();
-        articleMap.forEach((k, v) -> articleIdList.add((Integer) k));
-        List<ArticleRankDTO> articleRankList = articleMapper.selectList(new LambdaQueryWrapper<Article>()
-                        .select(Article::getId, Article::getArticleTitle)
-                        .in(Article::getId, articleIdList))
-                .stream().map(v -> ArticleRankDTO.builder()
-                        .articleTitle(v.getArticleTitle())
-                        .viewsCount(articleMap.get(v.getId()).intValue()).build())
-                .sorted(Comparator.comparingInt(ArticleRankDTO::getViewsCount).reversed())
-                .collect(Collectors.toList());
+        List<ArticleRankDTO> articleRankList = articleRankListQuery(articleMap);
         return BlogBackInfoDTO.builder().viewsCount(viewsCount)
                 .messageCount(messageCount)
                 .userCount(userCount)
@@ -160,6 +150,20 @@ public class BlogInfoServiceImpl implements BlogInfoService {
                 .articleStatisticsList(articleStatisticsList)
                 .uniqueViewList(uniqueViewList)
                 .articleRankList(articleRankList).build();
+    }
+
+    private List<ArticleRankDTO> articleRankListQuery(Map<Object, Double> articleMap) {
+        // 访问量前五具体数据
+        List<Integer> articleIdList = new ArrayList<>();
+        articleMap.forEach((k, v) -> articleIdList.add((Integer) k));
+        return articleMapper.selectList(new LambdaQueryWrapper<Article>()
+                        .select(Article::getId, Article::getArticleTitle)
+                        .in(Article::getId, articleIdList))
+                .stream().map(v -> ArticleRankDTO.builder()
+                        .articleTitle(v.getArticleTitle())
+                        .viewsCount(articleMap.get(v.getId()).intValue()).build())
+                .sorted(Comparator.comparingInt(ArticleRankDTO::getViewsCount).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override
