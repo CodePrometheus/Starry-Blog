@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.PathConst;
 import com.star.common.exception.StarryException;
-import com.star.core.util.ImageUtil;
 import com.star.common.tool.RedisUtil;
 import com.star.core.dto.PageData;
 import com.star.core.dto.UserInfoDTO;
@@ -15,8 +14,10 @@ import com.star.core.entity.UserRole;
 import com.star.core.mapper.UserInfoMapper;
 import com.star.core.service.UserInfoService;
 import com.star.core.service.UserRoleService;
+import com.star.core.util.ImageUtil;
 import com.star.core.util.UserUtil;
 import com.star.core.vo.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
@@ -129,6 +130,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         List<UserOnlineDTO> onlineUserList = sessionRegistry.getAllPrincipals().stream()
                 .filter(item -> sessionRegistry.getAllSessions(item, false).size() > 0)
                 .map(item -> JSON.parseObject(JSON.toJSONString(item), UserOnlineDTO.class))
+                .filter(v -> StringUtils.isBlank(conditionVO.getKeywords()) ||
+                        v.getNickname().contains(conditionVO.getKeywords()))
                 .sorted(Comparator.comparing(UserOnlineDTO::getLastLoginTime).reversed())
                 .collect(Collectors.toList());
         // 分页

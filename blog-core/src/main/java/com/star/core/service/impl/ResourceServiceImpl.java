@@ -117,15 +117,15 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Override
     public List<ResourceDTO> listResources(ConditionVO condition) {
         // 查询资源列表
-        List<Resource> resourceList = resourceMapper.selectList(new LambdaQueryWrapper<Resource>()
+        List<Resource> resourceListAll = resourceMapper.selectList(new LambdaQueryWrapper<Resource>()
                 .like(StringUtils.isNotBlank(condition.getKeywords()),
                         Resource::getResourceName, condition.getKeywords()));
         // 获取所有模块
-        List<Resource> parentIdList = listResourceParent(resourceList);
+        List<Resource> parentIdList = listResourceParent(resourceListAll);
         // 根据parentIdList获取模块下的资源
-        Map<Integer, List<Resource>> childrenMap = listResourceChildren(resourceList);
+        Map<Integer, List<Resource>> childrenMap = listResourceChildren(resourceListAll);
         // 绑定模块下的所有接口
-        List<ResourceDTO> resourceDTOList = parentIdList.stream().map(v -> {
+        List<ResourceDTO> resourceList = parentIdList.stream().map(v -> {
             ResourceDTO resourceDTO = BeanCopyUtil.copyObject(v, ResourceDTO.class);
             List<ResourceDTO> childrenList = BeanCopyUtil.copyList(childrenMap.get(v.getId()), ResourceDTO.class);
             resourceDTO.setChildren(childrenList);
@@ -137,9 +137,9 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
             childrenMap.values().forEach(childrenList::addAll);
             List<ResourceDTO> collect = childrenList.stream().map(v -> BeanCopyUtil.copyObject(v, ResourceDTO.class))
                     .collect(Collectors.toList());
-            resourceDTOList.addAll(collect);
+            resourceList.addAll(collect);
         }
-        return resourceDTOList;
+        return resourceList;
     }
 
     /**

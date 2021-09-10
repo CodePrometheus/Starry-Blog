@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cn.hutool.poi.excel.sax.ElementName.v;
 import static com.star.common.constant.CommonConst.COMPONENT;
 import static com.star.common.constant.CommonConst.TRUE;
 
@@ -43,15 +44,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<MenuDTO> listMenus(ConditionVO conditionVO) {
         // 查询菜单数据
-        List<Menu> menuList = menuMapper.selectList(new LambdaQueryWrapper<Menu>()
+        List<Menu> menuListAll = menuMapper.selectList(new LambdaQueryWrapper<Menu>()
                 .like(StringUtils.isNotBlank(conditionVO.getKeywords()),
                         Menu::getName, conditionVO.getKeywords()));
         // 获取目录列表
-        List<Menu> parentMenu = listParentMenu(menuList);
+        List<Menu> parentMenu = listParentMenu(menuListAll);
         // 获取parentMenu下的子菜单
-        Map<Integer, List<Menu>> childrenMenu = listChildrenMenu(menuList);
+        Map<Integer, List<Menu>> childrenMenu = listChildrenMenu(menuListAll);
         // 组装目录菜单数据
-        List<MenuDTO> menuDTOList = parentMenu.stream().map(item -> {
+        List<MenuDTO> menuList = parentMenu.stream().map(item -> {
                     MenuDTO menuDTO = BeanCopyUtil.copyObject(item, MenuDTO.class);
                     // 获取目录下的菜单排序
                     List<MenuDTO> list = BeanCopyUtil.copyList(childrenMenu.get(item.getId()), MenuDTO.class).stream()
@@ -62,15 +63,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                     return menuDTO;
                 }).sorted(Comparator.comparing(MenuDTO::getOrderNum))
                 .collect(Collectors.toList());
+        // 若还有菜单未取出则拼接
         if (CollectionUtils.isNotEmpty(childrenMenu)) {
             List<Menu> childrenList = new ArrayList<>();
             childrenMenu.values().forEach(childrenList::addAll);
             List<MenuDTO> collect = childrenList.stream().map(v -> BeanCopyUtil.copyObject(v, MenuDTO.class))
                     .sorted(Comparator.comparing(MenuDTO::getOrderNum))
                     .collect(Collectors.toList());
-            menuDTOList.addAll(collect);
+            menuList.addAll(collect);
         }
-        return menuDTOList;
+        return menuList;
     }
 
     /**
