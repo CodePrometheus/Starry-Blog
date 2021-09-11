@@ -28,15 +28,10 @@ import com.star.core.vo.ArticleVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.DeleteVO;
 import org.apache.commons.collections.CollectionUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -170,9 +165,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleDTO getArticleById(Integer articleId) {
+        // 查询id对应的文章
+        ArticleDTO article = articleMapper.getArticleById(articleId);
+        if (Objects.isNull(article)) {
+            throw new StarryException("文章不存在");
+        }
+        // 更新文章浏览量
+        updateArticleViewsCount(articleId);
+
         // 查询推荐文章
         CompletableFuture<List<ArticleRecommendDTO>> recommendArticleList = CompletableFuture.supplyAsync(() ->
-                articleMapper.listArticleRecommends(articleId));
+                        articleMapper.listArticleRecommends(articleId))
+                .whenComplete((v, t) -> article.setArticleRecommendList(v));
         // 查询最新文章
         CompletableFuture<List<ArticleRecommendDTO>> newestArticleList = CompletableFuture.supplyAsync(() -> {
             List<Article> articleList = articleMapper.selectList(new LambdaQueryWrapper<Article>()
@@ -182,32 +186,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     .orderByDesc(Article::getCreateTime)
                     .last(LAST_SQL_FIVE));
             return BeanCopyUtil.copyList(articleList, ArticleRecommendDTO.class);
-        });
-        // 更新文章浏览量
-        updateArticleViewsCount(articleId);
-        // 查询id对应的文章
-        ArticleDTO article = articleMapper.getArticleById(articleId);
-        if (Objects.isNull(article)) {
-            throw new StarryException("文章不存在");
-        }
+        }).whenComplete((v, t) -> article.setNewestArticleList(v));
+        CompletableFuture.allOf(newestArticleList, recommendArticleList).join();
 
         // 查询上一篇下一篇文章
-        Article lastArticle = articleMapper.selectOne(new LambdaQueryWrapper<Article>()
-                .select(Article::getId, Article::getArticleTitle, Article::getArticleCover)
-                .eq(Article::getIsDelete, FALSE)
-                .eq(Article::getStatus, PUBLIC.getStatus())
-                .lt(Article::getId, articleId)
-                .orderByDesc(Article::getId)
-                .last(LAST_SQL_ONE));
-
-        Article nextArticle = articleMapper.selectOne(new LambdaQueryWrapper<Article>()
-                .select(Article::getId, Article::getArticleTitle, Article::getArticleCover)
-                .eq(Article::getIsDelete, FALSE)
-                .eq(Article::getStatus, FALSE)
-                .gt(Article::getId, articleId)
-                .orderByAsc(Article::getId)
-                .last(LAST_SQL_ONE));
-
+        Article lastArticle = getLastArticle(articleId);
+        Article nextArticle = getNextArticle(articleId);
         article.setLastArticle(BeanCopyUtil.copyObject(lastArticle, ArticlePaginationDTO.class));
         article.setNextArticle(BeanCopyUtil.copyObject(nextArticle, ArticlePaginationDTO.class));
 
@@ -218,14 +202,27 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         article.setLikeCount((Integer) redisUtil.hGet(ARTICLE_LIKE_COUNT, articleId.toString()));
 
-        // 封装相关推荐和最新文章
-        try {
-            article.setArticleRecommendList(recommendArticleList.get());
-            article.setNewestArticleList(newestArticleList.get());
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
         return article;
+    }
+
+    private Article getLastArticle(Integer articleId) {
+        return articleMapper.selectOne(new LambdaQueryWrapper<Article>()
+                .select(Article::getId, Article::getArticleTitle, Article::getArticleCover)
+                .eq(Article::getIsDelete, FALSE)
+                .eq(Article::getStatus, PUBLIC.getStatus())
+                .lt(Article::getId, articleId)
+                .orderByDesc(Article::getId)
+                .last(LAST_SQL_ONE));
+    }
+
+    private Article getNextArticle(Integer articleId) {
+        return articleMapper.selectOne(new LambdaQueryWrapper<Article>()
+                .select(Article::getId, Article::getArticleTitle, Article::getArticleCover)
+                .eq(Article::getIsDelete, FALSE)
+                .eq(Article::getStatus, FALSE)
+                .gt(Article::getId, articleId)
+                .orderByAsc(Article::getId)
+                .last(LAST_SQL_ONE));
     }
 
     /**
