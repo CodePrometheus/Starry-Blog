@@ -36,7 +36,6 @@ public class EsSearchStrategyImpl implements SearchStrategy {
 
     @Override
     public List<ArticleSearchDTO> searchArticle(String keywords) {
-        System.out.println("keywords = " + keywords);
         if (StringUtils.isBlank(keywords)) {
             return new ArrayList<>();
         }
