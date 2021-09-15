@@ -125,7 +125,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         List<Tag> tags = tagMapper.selectList(null);
         List<TagDTO> tagList = BeanCopyUtil.copyList(tags, TagDTO.class);
         // 查询redis访问量前五的文章
-        Map<Object, Double> articleMap = redisUtil.zReverseRangeWithScore(ARTICLE_VIEWS_COUNT, Long.valueOf(0), Long.valueOf(4));
+        Map<Object, Double> articleMap = redisUtil.zReverseRangeWithScore(ARTICLE_VIEWS_COUNT, 0L, 4L);
 
         // 文章为空直接返回
         if (CollectionUtils.isEmpty(articleMap)) {

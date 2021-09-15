@@ -31,7 +31,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,9 +83,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Resource
     private ArticleTagMapper articleTagMapper;
-
-    @Resource
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Resource
     private HttpSession session;
