@@ -22,7 +22,6 @@ import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.RoleDisableVO;
 import com.star.core.vo.RoleVO;
-import lombok.val;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

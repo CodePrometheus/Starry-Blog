@@ -1,16 +1,13 @@
 package com.star.core.consumer;
 
-import com.alibaba.fastjson.JSON;
 import com.rabbitmq.client.Channel;
 import com.star.core.config.RabbitConfig;
 import com.star.core.entity.Comment;
 import com.star.core.mapper.CommentMapper;
 import com.star.core.util.SensitiveUtils;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

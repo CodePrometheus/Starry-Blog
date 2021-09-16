@@ -1,8 +1,8 @@
 package com.star.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.star.core.entity.UniqueView;
 import com.star.core.dto.UniqueViewDTO;
+import com.star.core.entity.UniqueView;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

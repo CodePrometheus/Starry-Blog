@@ -1,9 +1,5 @@
 package com.star.core.config;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
-import org.apache.http.protocol.HttpContext;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;

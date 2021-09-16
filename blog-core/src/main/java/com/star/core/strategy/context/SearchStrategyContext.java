@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-import static com.star.common.enums.SearchModeEnum.*;
+import static com.star.common.enums.SearchModeEnum.getStrategy;
 
 /**
  * 搜索策略上下文

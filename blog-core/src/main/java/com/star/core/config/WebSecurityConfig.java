@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -86,13 +85,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler(logoutSuccessHandler).and()
                 // 路由权限
                 .authorizeRequests().withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-            @Override
-            public <O extends FilterSecurityInterceptor> O postProcess(O fsi) {
-                fsi.setSecurityMetadataSource(securityMetadataSource());
-                fsi.setAccessDecisionManager(accessDecisionManager());
-                return fsi;
-            }
-        })
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O fsi) {
+                        fsi.setSecurityMetadataSource(securityMetadataSource());
+                        fsi.setAccessDecisionManager(accessDecisionManager());
+                        return fsi;
+                    }
+                })
 
                 .anyRequest().permitAll()
                 .and()

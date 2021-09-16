@@ -45,7 +45,7 @@ import static com.star.common.constant.CommonConst.DEFAULT_NICKNAME;
 import static com.star.common.constant.LoginTypeConst.EMAIL;
 import static com.star.common.constant.RedisConst.*;
 import static com.star.common.constant.RoleEnum.USER;
-import static com.star.common.enums.UserAreaTypeEnum.*;
+import static com.star.common.enums.UserAreaTypeEnum.getUserAreaType;
 
 /**
  * 用户业务

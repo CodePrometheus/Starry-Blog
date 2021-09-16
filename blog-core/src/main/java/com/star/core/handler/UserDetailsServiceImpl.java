@@ -70,8 +70,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * 封装用户登录信息
      *
-     * @param user           用户账号
-     * @param request        请求
+     * @param user    用户账号
+     * @param request 请求
      * @return 用户登录信息
      */
     public UserInfoDTO convertLoginUser(UserAuth user, HttpServletRequest request) {

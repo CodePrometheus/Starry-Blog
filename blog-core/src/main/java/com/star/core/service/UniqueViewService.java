@@ -1,8 +1,8 @@
 package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.star.core.entity.UniqueView;
 import com.star.core.dto.UniqueViewDTO;
+import com.star.core.entity.UniqueView;
 
 import java.util.List;
 

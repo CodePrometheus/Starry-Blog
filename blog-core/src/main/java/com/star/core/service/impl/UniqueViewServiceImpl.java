@@ -5,10 +5,10 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.tool.RedisUtil;
+import com.star.core.dto.UniqueViewDTO;
 import com.star.core.entity.UniqueView;
 import com.star.core.mapper.UniqueViewMapper;
 import com.star.core.service.UniqueViewService;
-import com.star.core.dto.UniqueViewDTO;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +18,8 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-import static com.star.common.constant.RedisConst.IP_SET;
 import static com.star.common.constant.RedisConst.UNIQUE_VISITOR;
 
 

@@ -1,6 +1,5 @@
 package com.star.core.search;
 
-import com.star.core.mapper.ElasticsearchMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;

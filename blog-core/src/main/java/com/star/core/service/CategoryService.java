@@ -2,12 +2,12 @@ package com.star.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.dto.CategoryBackDTO;
-import com.star.core.dto.CategoryOptionDTO;
-import com.star.core.vo.CategoryVO;
 import com.star.core.dto.CategoryDTO;
-import com.star.core.entity.Category;
-import com.star.core.vo.ConditionVO;
+import com.star.core.dto.CategoryOptionDTO;
 import com.star.core.dto.PageData;
+import com.star.core.entity.Category;
+import com.star.core.vo.CategoryVO;
+import com.star.core.vo.ConditionVO;
 
 import java.util.List;
 
@@ -41,6 +41,7 @@ public interface CategoryService extends IService<Category> {
 
     /**
      * 添加或修改分类
+     *
      * @param categoryVO 分类
      */
     void saveOrUpdateCategory(CategoryVO categoryVO);
