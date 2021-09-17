@@ -24,6 +24,4 @@ public class PathConst {
      */
     public static final String PAGE = "page/";
 
-
-
 }

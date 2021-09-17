@@ -19,7 +19,12 @@ public enum SearchModeEnum {
     /**
      * elasticsearch
      */
-    ELASTICSEARCH("elasticsearch", "EsSearchStrategyImpl");
+    ELASTICSEARCH("elasticsearch", "EsSearchStrategyImpl"),
+
+    /**
+     * solr
+     */
+    SOLR("solr", "SolrStrategyImpl");
 
     /**
      * 模式
