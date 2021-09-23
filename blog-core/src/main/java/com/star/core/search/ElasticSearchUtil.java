@@ -40,7 +40,8 @@ public class ElasticSearchUtil {
             ArticleSearchDTO search = ArticleSearchDTO.builder().id(article.getId())
                     .articleContent(article.getArticleContent())
                     .articleTitle(article.getArticleTitle())
-                    .isDelete(article.getIsDelete()).build();
+                    .isDelete(article.getIsDelete())
+                    .status(article.getStatus()).build();
             articleSearch.add(search);
         });
         elasticsearchMapper.saveAll(articleSearch);

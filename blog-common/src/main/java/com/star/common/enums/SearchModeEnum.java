@@ -24,7 +24,7 @@ public enum SearchModeEnum {
     /**
      * solr
      */
-    SOLR("solr", "SolrStrategyImpl");
+    SOLR("solr", "SolrSearchStrategyImpl");
 
     /**
      * 模式
