@@ -19,11 +19,19 @@ public class InitializationRunner implements ApplicationRunner {
 
     @Resource
     private ElasticSearchUtil elasticSearchUtil;
+    @Resource
+    private SolrSearchUtil solrSearchUtil;
 
     @Override
     public void run(ApplicationArguments args) {
-        elasticSearchUtil.async();
-        log.info("ES更新完毕");
+        try {
+            elasticSearchUtil.async();
+            log.info("ES更新完毕");
+            solrSearchUtil.async();
+            log.info("Solr更新完毕");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
 }

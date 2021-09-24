@@ -26,30 +26,35 @@ public class ArticleSearchDTO {
      * 文章id
      */
     @Id
-    private Integer id;
+    @org.apache.solr.client.solrj.beans.Field("id")
+    private String id;
 
     /**
      * 文章标题
      */
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    @org.apache.solr.client.solrj.beans.Field("articleTitle")
     private String articleTitle;
 
     /**
      * 文章内容
      */
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    @org.apache.solr.client.solrj.beans.Field("articleContent")
     private String articleContent;
 
     /**
      * 是否删除
      */
     @Field(type = FieldType.Integer)
+    @org.apache.solr.client.solrj.beans.Field("isDelete")
     private Integer isDelete;
 
     /**
      * 文章状态
      */
     @Field(type = FieldType.Integer)
+    @org.apache.solr.client.solrj.beans.Field("status")
     private Integer status;
 
 }

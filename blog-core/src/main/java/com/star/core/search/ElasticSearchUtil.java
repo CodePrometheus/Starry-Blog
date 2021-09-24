@@ -27,7 +27,6 @@ public class ElasticSearchUtil {
 
     @Resource
     private ArticleMapper articleMapper;
-
     @Resource
     private ElasticsearchMapper elasticsearchMapper;
 
@@ -37,7 +36,7 @@ public class ElasticSearchUtil {
         List<Article> articles = articleMapper.selectList(null);
         List<ArticleSearchDTO> articleSearch = new ArrayList<>();
         articles.forEach(article -> {
-            ArticleSearchDTO search = ArticleSearchDTO.builder().id(article.getId())
+            ArticleSearchDTO search = ArticleSearchDTO.builder().id(String.valueOf(article.getId()))
                     .articleContent(article.getArticleContent())
                     .articleTitle(article.getArticleTitle())
                     .isDelete(article.getIsDelete())
@@ -79,7 +78,7 @@ public class ElasticSearchUtil {
     public void removeIndex(ArticleMqMessage mqMessage) {
         int articleId = mqMessage.getArticleId();
         elasticsearchMapper.deleteById(articleId);
-        log.info("index remove successfully --> {}", mqMessage.toString());
+        log.info("index remove successfully --> {}", mqMessage);
     }
 
 }

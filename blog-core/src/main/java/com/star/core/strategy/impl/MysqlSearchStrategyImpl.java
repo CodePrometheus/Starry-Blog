@@ -57,7 +57,7 @@ public class MysqlSearchStrategyImpl implements SearchStrategy {
             }
             // 文章标题高亮
             String articleTitle = v.getArticleTitle().replaceAll(keywords, PRE_TAG + keywords + SPAN);
-            return ArticleSearchDTO.builder().id(v.getId())
+            return ArticleSearchDTO.builder().id(String.valueOf(v.getId()))
                     .articleTitle(articleTitle)
                     .articleContent(articleContent).build();
         }).collect(Collectors.toList());
