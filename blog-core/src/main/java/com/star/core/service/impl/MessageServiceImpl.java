@@ -77,7 +77,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         Page<Message> messagePage = messageMapper.selectPage(page, messagePageQuery);
         // 转换DTO
         List<MessageBackDTO> messageBackDTOList = BeanCopyUtil.copyList(messagePage.getRecords(), MessageBackDTO.class);
-        return new PageData<>(messageBackDTOList, (int) messagePage.getTotal());
+        return new PageData<>(messageBackDTOList, messagePage.getTotal());
     }
 
     @Override

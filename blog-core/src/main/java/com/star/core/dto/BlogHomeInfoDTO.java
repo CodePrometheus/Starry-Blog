@@ -24,17 +24,17 @@ public class BlogHomeInfoDTO {
     /**
      * 文章数量
      */
-    private Integer articleCount;
+    private Long articleCount;
 
     /**
      * 分类数量
      */
-    private Integer categoryCount;
+    private Long categoryCount;
 
     /**
      * 标签数量
      */
-    private Integer tagCount;
+    private Long tagCount;
 
     /**
      * 访问量

@@ -100,7 +100,7 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
     @Transactional(rollbackFor = SecurityException.class)
     public void deleteResource(Integer resourceId) {
         // 查询是否有角色关联
-        Integer count = roleResourceMapper.selectCount(new LambdaQueryWrapper<RoleResource>()
+        Long count = roleResourceMapper.selectCount(new LambdaQueryWrapper<RoleResource>()
                 .eq(RoleResource::getResourceId, resourceId));
         if (count > 0) {
             throw new StarryException("该资源下存在角色");

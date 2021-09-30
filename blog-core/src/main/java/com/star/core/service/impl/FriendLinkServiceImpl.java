@@ -46,7 +46,7 @@ public class FriendLinkServiceImpl extends ServiceImpl<LinkMapper, FriendLink> i
                         condition.getKeywords()));
         // 转换DTO
         List<FriendLinkBackDTO> friendLinkBackDTOList = BeanCopyUtil.copyList(friendLinkPage.getRecords(), FriendLinkBackDTO.class);
-        return new PageData<>(friendLinkBackDTOList, (int) friendLinkPage.getTotal());
+        return new PageData<>(friendLinkBackDTOList, friendLinkPage.getTotal());
     }
 
     @Override

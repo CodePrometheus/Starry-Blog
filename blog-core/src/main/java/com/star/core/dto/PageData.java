@@ -32,6 +32,6 @@ public class PageData<T> {
      * 总数
      */
     @ApiModelProperty(name = "count", value = "总数", required = true, dataType = "Integer")
-    private Integer count;
+    private Long count;
 
 }

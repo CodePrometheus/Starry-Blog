@@ -33,7 +33,7 @@ public class OperationLogServiceImpl extends ServiceImpl<OperationLogMapper, Ope
                 .like(StringUtils.isNotBlank(condition.getKeywords()), OperationLog::getOptDesc, condition.getKeywords())
                 .orderByDesc(OperationLog::getCreateTime));
         List<OperationLogDTO> operationLogList = BeanCopyUtil.copyList(operationLog.getRecords(), OperationLogDTO.class);
-        return new PageData<>(operationLogList, (int) operationLog.getTotal());
+        return new PageData<>(operationLogList, operationLog.getTotal());
     }
 
 }

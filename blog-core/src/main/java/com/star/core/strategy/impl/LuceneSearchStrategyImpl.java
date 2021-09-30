@@ -126,5 +126,4 @@ public class LuceneSearchStrategyImpl implements SearchStrategy {
         return new ArrayList<>();
     }
 
-
 }

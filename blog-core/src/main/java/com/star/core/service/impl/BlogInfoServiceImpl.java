@@ -78,13 +78,13 @@ public class BlogInfoServiceImpl implements BlogInfoService {
     @Override
     public BlogHomeInfoDTO getBlogInfo() {
         // 查询文章数量
-        Integer articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>()
+        Long articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>()
                 .eq(Article::getStatus, PUBLIC.getStatus())
                 .eq(Article::getIsDelete, FALSE));
         // 查询分类数量
-        Integer categoryCount = categoryMapper.selectCount(null);
+        Long categoryCount = categoryMapper.selectCount(null);
         // 查询标签数量
-        Integer tagCount = tagMapper.selectCount(null);
+        Long tagCount = tagMapper.selectCount(null);
         // 查询访问量
         Object count = redisUtil.get(BLOG_VIEWS_COUNT);
         String viewCount = Optional.ofNullable(count).orElse(0).toString();
@@ -108,11 +108,11 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         Object count = redisUtil.get(BLOG_VIEWS_COUNT);
         Integer viewsCount = Integer.parseInt(Optional.of(count).orElse(0).toString());
         // 查询留言量
-        Integer messageCount = messageMapper.selectCount(null);
+        Long messageCount = messageMapper.selectCount(null);
         // 查询用户量
-        Integer userCount = userInfoMapper.selectCount(null);
+        Long userCount = userInfoMapper.selectCount(null);
         // 查询文章量
-        Integer articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>()
+        Long articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>()
                 .eq(Article::getIsDelete, FALSE)
                 .eq(Article::getStatus, PUBLIC.getStatus()));
         // 查询一周用户量

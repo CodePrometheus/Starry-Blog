@@ -33,6 +33,6 @@ public interface UserAuthMapper extends BaseMapper<UserAuth> {
      * @param condition 条件
      * @return 用户数量
      */
-    Integer countUser(@Param("condition") ConditionVO condition);
+    Long countUser(@Param("condition") ConditionVO condition);
 
 }

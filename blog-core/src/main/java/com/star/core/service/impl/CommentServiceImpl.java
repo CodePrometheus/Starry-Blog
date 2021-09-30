@@ -71,7 +71,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public PageData<CommentDTO> listComments(Integer articleId) {
         // 查询文章评论量
-        Integer commentCount = commentMapper.selectCount(new LambdaQueryWrapper<Comment>()
+        Long commentCount = commentMapper.selectCount(new LambdaQueryWrapper<Comment>()
                 .eq(Objects.isNull(articleId), Comment::getArticleId, articleId)
                 .isNull(Objects.isNull(articleId), Comment::getArticleId)
                 .isNull(Comment::getParentId)
@@ -223,7 +223,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public PageData<CommentBackDTO> listCommentBackDTO(ConditionVO condition) {
-        Integer count = commentMapper.countCommentBack(condition);
+        Long count = commentMapper.countCommentBack(condition);
         if (count == 0) {
             return new PageData<>();
         }

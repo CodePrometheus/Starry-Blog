@@ -76,7 +76,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public PageData<RoleDTO> listRoles(ConditionVO condition) {
         // 查询角色列表
         List<RoleDTO> roleList = roleMapper.listRoles(PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
-        Integer count = roleMapper.selectCount(new LambdaQueryWrapper<Role>()
+        Long count = roleMapper.selectCount(new LambdaQueryWrapper<Role>()
                 .like(StringUtils.isNotBlank(condition.getKeywords()),
                         Role::getRoleName, condition.getKeywords()));
         return new PageData<>(roleList, count);
@@ -136,7 +136,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional(rollbackFor = SecurityException.class)
     public void deleteRoles(List<Integer> roleIdList) {
         // 判断用户下是否有用户
-        Integer count = userRoleMapper.selectCount(new LambdaQueryWrapper<UserRole>()
+        Long count = userRoleMapper.selectCount(new LambdaQueryWrapper<UserRole>()
                 .in(UserRole::getId, roleIdList));
         if (count > 0) {
             throw new StarryException("该角色下存在用户");

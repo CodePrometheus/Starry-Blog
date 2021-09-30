@@ -29,17 +29,17 @@ public class BlogBackInfoDTO {
     /**
      * 留言量
      */
-    private Integer messageCount;
+    private Long messageCount;
 
     /**
      * 用户量
      */
-    private Integer userCount;
+    private Long userCount;
 
     /**
      * 文章量
      */
-    private Integer articleCount;
+    private Long articleCount;
 
     /**
      * 分类统计

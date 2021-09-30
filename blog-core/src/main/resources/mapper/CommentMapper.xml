@@ -139,7 +139,7 @@
         LIMIT #{current},#{size}
     </select>
 
-    <select id="countCommentBack" resultType="java.lang.Integer">
+    <select id="countCommentBack" resultType="java.lang.Long">
         SELECT
         count(1)
         from

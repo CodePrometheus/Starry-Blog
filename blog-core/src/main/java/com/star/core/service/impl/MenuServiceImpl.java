@@ -151,7 +151,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Transactional(rollbackFor = SecurityException.class)
     public void deleteMenu(Integer menuId) {
         // 菜单下有角色关联不能删除
-        Integer menuCount = roleMenuMapper.selectCount(new LambdaQueryWrapper<RoleMenu>()
+        Long menuCount = roleMenuMapper.selectCount(new LambdaQueryWrapper<RoleMenu>()
                 .eq(RoleMenu::getMenuId, menuId));
         if (menuCount > 0) {
             throw new StarryException("菜单有对应的角色关联");

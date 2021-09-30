@@ -41,13 +41,13 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         List<Tag> tagList = tagMapper.selectList(null);
         List<TagDTO> tags = BeanCopyUtil.copyList(tagList, TagDTO.class);
         // 查询标签数量
-        Integer count = tagMapper.selectCount(null);
+        Long count = tagMapper.selectCount(null);
         return new PageData<>(tags, count);
     }
 
     @Override
     public PageData<TagBackDTO> listTagBack(ConditionVO condition) {
-        Integer tagCount = tagMapper.selectCount(new LambdaQueryWrapper<Tag>()
+        Long tagCount = tagMapper.selectCount(new LambdaQueryWrapper<Tag>()
                 .like(StringUtils.isNotBlank(condition.getKeywords()),
                         Tag::getTagName, condition.getKeywords()));
         if (tagCount == 0) {
@@ -61,7 +61,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Transactional(rollbackFor = StarryException.class)
     public void deleteTag(List<Integer> tagIdList) {
         // 查询标签下是否有文章
-        Integer count = articleTagMapper.selectCount(new LambdaQueryWrapper<ArticleTag>()
+        Long count = articleTagMapper.selectCount(new LambdaQueryWrapper<ArticleTag>()
                 .in(ArticleTag::getTagId, tagIdList));
         if (count > 0) {
             throw new StarryException("删除失败，该标签下存在文章");

@@ -140,7 +140,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         int toIdx = onlineUserList.size() - fromIdx > size ? fromIdx + size : onlineUserList.size();
 
         List<UserOnlineDTO> onlineList = onlineUserList.subList(fromIdx, toIdx);
-        return new PageData<>(onlineList, onlineUserList.size());
+        return new PageData<>(onlineList, (long) onlineUserList.size());
     }
 
     @Override

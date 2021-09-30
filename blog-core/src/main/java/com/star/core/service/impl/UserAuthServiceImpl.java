@@ -173,7 +173,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
     @Override
     public PageData<UserBackDTO> listUserBack(ConditionVO condition) {
         // 获取后台用户数量
-        Integer count = userAuthMapper.countUser(condition);
+        Long count = userAuthMapper.countUser(condition);
         if (count == 0) {
             return new PageData<>();
         }

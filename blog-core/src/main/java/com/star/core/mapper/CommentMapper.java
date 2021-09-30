@@ -63,7 +63,7 @@ public interface CommentMapper extends BaseMapper<Comment> {
      * @param condition 条件
      * @return 评论数量
      */
-    Integer countCommentBack(@Param("condition") ConditionVO condition);
+    Long countCommentBack(@Param("condition") ConditionVO condition);
 
     /**
      * 查询后台评论

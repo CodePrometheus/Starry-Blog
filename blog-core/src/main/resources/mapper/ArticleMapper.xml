@@ -211,7 +211,7 @@
         ORDER BY is_top DESC, a.id DESC
     </select>
 
-    <select id="countArticlesBack" resultType="java.lang.Integer">
+    <select id="countArticlesBack" resultType="java.lang.Long">
         SELECT count(1)
         from tb_article
         <where>

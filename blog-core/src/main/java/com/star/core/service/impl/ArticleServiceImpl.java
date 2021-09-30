@@ -104,14 +104,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 拷贝dto集合
         List<ArchiveDTO> archiveList = BeanCopyUtil.copyList(articlePage.getRecords(), ArchiveDTO.class);
-        return new PageData<>(archiveList, (int) articlePage.getTotal());
+        return new PageData<>(archiveList, articlePage.getTotal());
     }
 
 
     @Override
     public PageData<ArticleBackDTO> listArticleBack(ConditionVO condition) {
         // 查询文章总量
-        Integer count = articleMapper.countArticlesBack(condition);
+        Long count = articleMapper.countArticlesBack(condition);
         if (count == 0) {
             return new PageData<>();
         }

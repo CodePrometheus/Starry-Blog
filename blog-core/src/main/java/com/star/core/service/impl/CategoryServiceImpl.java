@@ -55,7 +55,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public PageData<CategoryBackDTO> listCategoryBack(ConditionVO condition) {
-        Integer categoryCount = categoryMapper.selectCount(new LambdaQueryWrapper<Category>()
+        Long categoryCount = categoryMapper.selectCount(new LambdaQueryWrapper<Category>()
                 .like(StringUtils.isNotBlank(condition.getKeywords()), Category::getCategoryName,
                         condition.getKeywords()));
         if (categoryCount == 0) {
@@ -69,7 +69,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Transactional(rollbackFor = StarryException.class)
     public void deleteCategory(List<Integer> categoryIdList) {
         // categoryIdList内是有文章in查询
-        Integer articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>()
+        Long articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>()
                 .in(Article::getCategoryId, categoryIdList));
         if (articleCount > 0) {
             throw new StarryException("删除失败，该分类下存在文章");

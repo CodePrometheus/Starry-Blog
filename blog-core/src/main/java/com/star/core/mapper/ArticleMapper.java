@@ -50,7 +50,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param condition 条件
      * @return 文章总量
      */
-    Integer countArticlesBack(@Param("condition") ConditionVO condition);
+    Long countArticlesBack(@Param("condition") ConditionVO condition);
 
     /**
      * 查询后台文章

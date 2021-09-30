@@ -67,7 +67,7 @@
         LEFT JOIN tb_role r ON ur.role_id = r.id
     </select>
 
-    <select id="countUser" resultType="java.lang.Integer">
+    <select id="countUser" resultType="java.lang.Long">
         SELECT
         count( 1 )
         FROM
