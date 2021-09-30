@@ -24,7 +24,12 @@ public enum SearchModeEnum {
     /**
      * solr
      */
-    SOLR("solr", "SolrSearchStrategyImpl");
+    SOLR("solr", "SolrSearchStrategyImpl"),
+
+    /**
+     * lucene
+     */
+    LUCENE("lucene", "LuceneSearchStrategyImpl");
 
     /**
      * 模式

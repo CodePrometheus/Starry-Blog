@@ -1,6 +1,7 @@
 package com.star.core.vo;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,12 +24,14 @@ public class UserDisableVO {
      * id
      */
     @NotNull(message = "用户id不能为空")
+    @ApiModelProperty(name = "id", value = "用户id不能为空", required = true, dataType = "Integer")
     private Integer id;
 
     /**
      * 置顶状态
      */
     @NotNull(message = "用户禁用状态状态不能为空")
+    @ApiModelProperty(name = "isDisable", value = "用户禁用状态状态不能为空", required = true, dataType = "Integer")
     private Integer isDisable;
 
 }

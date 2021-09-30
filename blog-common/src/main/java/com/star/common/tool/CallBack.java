@@ -8,6 +8,7 @@ package com.star.common.tool;
  * @Date: 03-30-2021 10:46
  */
 public interface CallBack {
+
     /**
      * 回调执行方法
      */
@@ -19,7 +20,7 @@ public interface CallBack {
      * @return /
      */
     default String getCallBackName() {
-
         return Thread.currentThread().getId() + ":" + this.getClass().getName();
     }
+
 }

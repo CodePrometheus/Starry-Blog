@@ -52,13 +52,13 @@ public class ArticleVO {
     /**
      * 文章分类
      */
-    @ApiModelProperty(name = "category", value = "文章分类", dataType = "Integer")
+    @ApiModelProperty(name = "category", value = "文章分类", dataType = "String")
     private String categoryName;
 
     /**
      * 文章标签
      */
-    @ApiModelProperty(name = "tagNameList", value = "文章标签", dataType = "List<Integer>")
+    @ApiModelProperty(name = "tagNameList", value = "文章标签", dataType = "List<String>")
     private List<String> tagNameList;
 
     /**
@@ -82,7 +82,7 @@ public class ArticleVO {
     /**
      * 文章状态 1.公开 2.私密 3.评论可见
      */
-    @ApiModelProperty(name = "status", value = "文章状态", dataType = "String")
+    @ApiModelProperty(name = "status", value = "文章状态", dataType = "Integer")
     private Integer status;
 
 }

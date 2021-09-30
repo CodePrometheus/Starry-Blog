@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public class SolrSearchUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(ElasticSearchUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(SolrSearchUtil.class);
 
     @Value("${spring.solr.core}")
     private String core;
@@ -51,6 +51,5 @@ public class SolrSearchUtil {
             }
         });
     }
-
 
 }

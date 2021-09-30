@@ -85,13 +85,13 @@ public class ConditionVO {
     /**
      * 开始时间
      */
-    @ApiModelProperty(name = "startTime", value = "开始时间", dataType = "Date")
+    @ApiModelProperty(name = "startTime", value = "开始时间", dataType = "LocalDateTime")
     private LocalDateTime startTime;
 
     /**
      * 结束时间
      */
-    @ApiModelProperty(name = "endTime", value = "结束时间", dataType = "Date")
+    @ApiModelProperty(name = "endTime", value = "结束时间", dataType = "LocalDateTime")
     private LocalDateTime endTime;
 
 }

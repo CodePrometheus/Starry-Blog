@@ -21,6 +21,8 @@ public class InitializationRunner implements ApplicationRunner {
     private ElasticSearchUtil elasticSearchUtil;
     @Resource
     private SolrSearchUtil solrSearchUtil;
+    @Resource
+    private LuceneSearchUtil luceneSearchUtil;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -29,6 +31,8 @@ public class InitializationRunner implements ApplicationRunner {
             log.info("ES更新完毕");
             solrSearchUtil.async();
             log.info("Solr更新完毕");
+            luceneSearchUtil.async();
+            log.info("Lucene更新完毕");
         } catch (Exception e) {
             log.error(e.getMessage());
         }

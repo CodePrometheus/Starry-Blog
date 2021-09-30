@@ -29,7 +29,7 @@ import static com.star.common.enums.ArticleStatusEnum.PUBLIC;
 @Service("SolrSearchStrategyImpl")
 public class SolrSearchStrategyImpl implements SearchStrategy {
 
-    private static final Logger log = LoggerFactory.getLogger(EsSearchStrategyImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(SolrSearchStrategyImpl.class);
 
     @Resource
     private SolrTemplate solrTemplate;

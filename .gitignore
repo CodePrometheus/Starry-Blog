@@ -32,3 +32,4 @@ rebel.xml
 rebel-remote.xml
 /log/
 application-dev.yml
+/lucene/

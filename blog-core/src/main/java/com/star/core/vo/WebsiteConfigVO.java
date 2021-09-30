@@ -53,7 +53,7 @@ public class WebsiteConfigVO {
     /**
      * 网站创建时间
      */
-    @ApiModelProperty(name = "websiteCreateTime", value = "网站创建时间", required = true, dataType = "LocalDateTime")
+    @ApiModelProperty(name = "websiteCreateTime", value = "网站创建时间", required = true, dataType = "String")
     private String websiteCreateTime;
 
     /**
@@ -143,13 +143,13 @@ public class WebsiteConfigVO {
     /**
      * 是否开启聊天室
      */
-    @ApiModelProperty(name = "isReward", value = "是否开启聊天室", required = true, dataType = "Integer")
+    @ApiModelProperty(name = "isChatRoom", value = "是否开启聊天室", required = true, dataType = "Integer")
     private Integer isChatRoom;
 
     /**
      * 是否开启看板娘
      */
-    @ApiModelProperty(name = "isReward", value = "是否开启看板娘", required = true, dataType = "Integer")
+    @ApiModelProperty(name = "isLive2D", value = "是否开启看板娘", required = true, dataType = "Integer")
     private Integer isLive2D;
 
     /**
