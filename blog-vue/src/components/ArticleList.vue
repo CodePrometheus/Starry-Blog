@@ -42,7 +42,7 @@
               </div>
             </div>
             <!-- 分割线 -->
-            <v-divider/>
+            <v-divider />
             <!-- 文章标签 -->
             <div class="tag-wrapper">
               <router-link
@@ -59,8 +59,8 @@
       </v-row>
       <!-- 无限加载 -->
       <infinite-loading @infinite="infiniteHandler">
-        <div slot="no-results"/>
-        <div slot="no-more"/>
+        <div slot="no-results" />
+        <div slot="no-more" />
       </infinite-loading>
     </div>
   </div>
@@ -69,56 +69,58 @@
 <script>
 export default {
   created() {
-    const path = this.$route.path
-    if (path.indexOf('/categories') != -1) {
-      this.title = '分类'
+    const path = this.$route.path;
+    if (path.indexOf("/categories") != -1) {
+      this.title = "分类";
     } else {
-      this.title = '标签'
+      this.title = "标签";
     }
   },
-  data: function () {
+  data: function() {
     return {
       current: 1,
       articleList: [],
-      name: '',
-      title: '',
-    }
+      name: "",
+      title: ""
+    };
   },
   methods: {
     infiniteHandler($state) {
-      this.axios.get('/api/articles/condition', {
-        params: {
-          categoryId: this.$route.params.categoryId,
-          tagId: this.$route.params.tagId,
-          current: this.current,
-        },
-      }).then(({ data }) => {
-        console.log(data.data)
-        if (data.data.articlePreviewList.length) {
-          this.current++
-          this.name = data.data.name
-          // 修改标题
-          document.titile = this.title + ' - ' + this.name
-          this.articleList.push(...data.data.articlePreviewList)
-          $state.loaded()
-        } else {
-          $state.complete()
-        }
-      })
-    },
+      this.axios
+        .get("/api/articles/condition", {
+          params: {
+            categoryId: this.$route.params.categoryId,
+            tagId: this.$route.params.tagId,
+            current: this.current
+          }
+        })
+        .then(({ data }) => {
+          console.log(data.data);
+          if (data.data.articlePreviewList.length) {
+            this.current++;
+            this.name = data.data.name;
+            // 修改标题
+            document.titile = this.title + " - " + this.name;
+            this.articleList.push(...data.data.articlePreviewList);
+            $state.loaded();
+          } else {
+            $state.complete();
+          }
+        });
+    }
   },
   computed: {
     cover() {
-      let cover = ''
+      let cover = "";
       this.$store.state.blogInfo.pageList.forEach(v => {
-        if (v.pageLabel == 'articleList') {
-          cover = v.pageCover
+        if (v.pageLabel == "articleList") {
+          cover = v.pageCover;
         }
-      })
+      });
       return "background: url(" + cover + ") center center / cover no-repeat";
-    },
-  },
-}
+    }
+  }
+};
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
 ${AnsiColor.BRIGHT_YELLOW}
-Starry Blog Version: 3.0
+Starry Blog Version: 5.0
 Spring Boot Version: ${spring-boot.version}
  _____  _                              ______  _
 /  ___|| |                             | ___ \| |

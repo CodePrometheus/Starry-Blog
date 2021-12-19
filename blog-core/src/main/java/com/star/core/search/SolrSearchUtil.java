@@ -52,4 +52,30 @@ public class SolrSearchUtil {
         });
     }
 
+    @Async
+    public void insertOrUpdateIdx(ArticleSearchDTO article) {
+        ArticleSearchDTO search = ArticleSearchDTO.builder()
+                .id(String.valueOf(article.getId()))
+                .articleContent(article.getArticleContent())
+                .articleTitle(article.getArticleTitle())
+                .isDelete(article.getIsDelete())
+                .status(article.getStatus()).build();
+        try {
+            solrClient.addBean(search);
+            solrClient.commit();
+        } catch (IOException | SolrServerException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Async
+    public void deleteIdx(String isList) {
+        try {
+            solrClient.deleteById(isList);
+            solrClient.commit();
+        } catch (SolrServerException | IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
 }

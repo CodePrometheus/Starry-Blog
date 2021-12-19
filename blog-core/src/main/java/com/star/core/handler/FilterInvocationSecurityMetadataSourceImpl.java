@@ -3,7 +3,6 @@ package com.star.core.handler;
 import com.star.core.dto.ResourceRoleDTO;
 import com.star.core.mapper.RoleMapper;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,14 +24,13 @@ import java.util.List;
 @Component
 public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocationSecurityMetadataSource {
 
-    @Autowired
+    @Resource
     private RoleMapper roleMapper;
 
     /**
      * 接口角色列表
      */
     private static List<ResourceRoleDTO> resourceRoleList;
-
 
     /**
      * 加载接口角色信息

@@ -37,7 +37,6 @@ export default {
   methods: {
     listCategories() {
       this.axios.get("/api/categories").then(({ data }) => {
-        console.log(data.data)
         this.categoryList = data.data.recordList;
         this.count = data.data.count;
       });

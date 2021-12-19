@@ -1,4 +1,4 @@
-package com.star.common.annotation;
+package com.star.core.util;
 
 import java.lang.annotation.*;
 

@@ -30,17 +30,23 @@ public class ReviewSend {
     @RabbitListener(queues = RabbitConfig.REVIEW_QUEUE_DEAD)
     @Transactional(rollbackFor = Exception.class)
     public void autoReview(Integer commentId, Channel channel, Message message) throws IOException {
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        long tagId = message.getMessageProperties().getDeliveryTag();
+        channel.basicAck(tagId, false);
         try {
             Comment comment = commentMapper.selectById(commentId);
-            // 我是木里十机器人，自动审核程序开始，利用前缀树对评论进行过滤
+            if (comment.getIsReview() == 1) {
+                logger.info("该评论已经审核");
+                channel.basicReject(tagId, false);
+                return;
+            }
+            // 我是木立十机器人，自动审核程序开始，利用前缀树对评论进行过滤
             String filteredComment = SensitiveUtils.filter(comment.getCommentContent());
             comment.setCommentContent(filteredComment);
             comment.setIsReview(1);
             commentMapper.updateById(comment);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+            channel.basicNack(tagId, false, true);
         }
     }
 

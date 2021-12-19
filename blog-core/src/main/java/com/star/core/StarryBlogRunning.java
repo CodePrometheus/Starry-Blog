@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 项目启动
- * 奔跑吧 zzStar :)
+ * 奔跑吧 zzStar ;)
  *
  * @Author: zzStar
  * @Date: 12-16-2020 19:37

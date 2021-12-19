@@ -1,7 +1,6 @@
 package com.star.core.util;
 
 import com.alibaba.fastjson.JSON;
-import com.star.common.annotation.OptLog;
 import com.star.common.tool.IpUtil;
 import com.star.core.entity.OperationLog;
 import com.star.core.mapper.OperationLogMapper;
@@ -35,9 +34,10 @@ public class OptLogAspect {
     /**
      * 设置操作日志切入点 记录操作日志 在注解的位置切入代码
      */
-    @Pointcut("@annotation(com.star.common.annotation.OptLog)")
-    public void optLogPointcut() {
+    @Pointcut("@annotation(com.star.core.util.OptLog)")
+    public void optLogPointCut() {
     }
+
 
     /**
      * 正常返回通知，拦截用户操作日志，连接点正常执行完成后执行， 如果连接点抛出异常，则不会执行
@@ -45,45 +45,51 @@ public class OptLogAspect {
      * @param joinPoint 切入点
      * @param keys      返回结果
      */
-    @AfterReturning(value = "optLogPointcut()", returning = "keys")
-    public void saveOptLog(JoinPoint joinPoint, Objects keys) {
+    @AfterReturning(value = "optLogPointCut()", returning = "keys")
+    public void saveOptLog(JoinPoint joinPoint, Object keys) {
+        // 获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         // 从获取RequestAttributes中获取HttpServletRequest的信息
         HttpServletRequest request = (HttpServletRequest) Objects.requireNonNull(requestAttributes).resolveReference(RequestAttributes.REFERENCE_REQUEST);
         OperationLog operationLog = new OperationLog();
-        // 获取织入点处的方法
+        // 从切面织入点处通过反射机制获取织入点处的方法
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        // 获取切入点所在的方法
         Method method = signature.getMethod();
-        // 模块名
+        // 获取操作
         Api api = (Api) signature.getDeclaringType().getAnnotation(Api.class);
-        // 方法操作具体内容
         ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
-        // 操作类型
         OptLog optLog = method.getAnnotation(OptLog.class);
-
-        // 为实体类填充内容
+        // 操作模块
         operationLog.setOptModule(api.tags()[0]);
+        // 操作类型
         operationLog.setOptType(optLog.optType());
+        // 操作描述
         operationLog.setOptDesc(apiOperation.value());
-        // 请求的类名
+        // 获取请求的类名
         String className = joinPoint.getTarget().getClass().getName();
+        // 获取请求的方法名
         String methodName = method.getName();
         methodName = className + "." + methodName;
         // 请求方式
         operationLog.setRequestMethod(Objects.requireNonNull(request).getMethod());
+        // 请求方法
         operationLog.setOptMethod(methodName);
+        // 请求参数
         operationLog.setRequestParam(JSON.toJSONString(joinPoint.getArgs()));
-        // 结果
+        // 返回结果
         operationLog.setResponseData(JSON.toJSONString(keys));
+        // 请求用户ID
         operationLog.setUserId(UserUtil.getLoginUser().getId());
+        // 请求用户
         operationLog.setNickname(UserUtil.getLoginUser().getNickname());
-
-        String ipAddr = IpUtil.getIpAddr(request);
-        operationLog.setIpAddr(ipAddr);
-        operationLog.setIpSource(IpUtil.getIpSource(ipAddr));
+        // 请求IP
+        String ipAddress = IpUtil.getIpAddr(request);
+        operationLog.setIpAddr(ipAddress);
+        operationLog.setIpSource(IpUtil.getIpSource(ipAddress));
+        // 请求URL
         operationLog.setOptUrl(request.getRequestURI());
         operationLogMapper.insert(operationLog);
     }
-
 
 }

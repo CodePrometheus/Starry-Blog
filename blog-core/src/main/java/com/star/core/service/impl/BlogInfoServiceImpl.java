@@ -2,6 +2,7 @@ package com.star.core.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.star.common.exception.StarryException;
 import com.star.common.tool.IpUtil;
 import com.star.common.tool.RedisUtil;
@@ -23,7 +24,6 @@ import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
@@ -126,30 +126,21 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         List<TagDTO> tagList = BeanCopyUtil.copyList(tags, TagDTO.class);
         // 查询redis访问量前五的文章
         Map<Object, Double> articleMap = redisUtil.zReverseRangeWithScore(ARTICLE_VIEWS_COUNT, 0L, 4L);
-
-        // 文章为空直接返回
-        if (CollectionUtils.isEmpty(articleMap)) {
-            return BlogBackInfoDTO.builder()
-                    .viewsCount(viewsCount)
-                    .messageCount(messageCount)
-                    .userCount(userCount)
-                    .articleCount(articleCount)
-                    .categoryList(categoryList)
-                    .tagList(tagList)
-                    .articleStatisticsList(articleStatisticsList)
-                    .uniqueViewList(uniqueViewList).build();
-        }
-
-        List<ArticleRankDTO> articleRankList = articleRankListQuery(articleMap);
-        return BlogBackInfoDTO.builder().viewsCount(viewsCount)
+        BlogBackInfoDTO backInfo = BlogBackInfoDTO.builder()
+                .viewsCount(viewsCount)
                 .messageCount(messageCount)
                 .userCount(userCount)
                 .articleCount(articleCount)
                 .categoryList(categoryList)
                 .tagList(tagList)
                 .articleStatisticsList(articleStatisticsList)
-                .uniqueViewList(uniqueViewList)
-                .articleRankList(articleRankList).build();
+                .uniqueViewList(uniqueViewList).build();
+
+        if (CollectionUtils.isNotEmpty(articleMap)) {
+            List<ArticleRankDTO> articleRankList = articleRankListQuery(articleMap);
+            backInfo.setArticleRankList(articleRankList);
+        }
+        return backInfo;
     }
 
     private List<ArticleRankDTO> articleRankListQuery(Map<Object, Double> articleMap) {

@@ -11,6 +11,8 @@ spring:
     username: root
     password: root
     druid:
+      mysql:
+        usePingMethod: false
       minimum-idle: 5
       # 空闲连接存活最大时间，默认600000（10分钟）
       idle-timeout: 180000

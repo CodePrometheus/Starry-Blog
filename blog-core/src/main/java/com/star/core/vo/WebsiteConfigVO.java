@@ -87,12 +87,6 @@ public class WebsiteConfigVO {
     private String github;
 
     /**
-     * gitee
-     */
-    @ApiModelProperty(name = "gitee", value = "gitee", required = true, dataType = "String")
-    private String gitee;
-
-    /**
      * bilibili
      */
     @ApiModelProperty(name = "bilibili", value = "bilibili", required = true, dataType = "String")
@@ -103,6 +97,12 @@ public class WebsiteConfigVO {
      */
     @ApiModelProperty(name = "touristAvatar", value = "游客头像", required = true, dataType = "String")
     private String touristAvatar;
+
+    /**
+     * 用户头像
+     */
+    @ApiModelProperty(name = "userAvatar", value = "用户头像", required = true, dataType = "String")
+    private String userAvatar;
 
     /**
      * 是否评论审核

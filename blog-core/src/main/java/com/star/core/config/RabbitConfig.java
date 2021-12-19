@@ -14,9 +14,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    public final static String CANAL_ES_CHANGE = "canal_es_change";
-    public final static String CANAL_ES_QUEUE = "canal_es_queue";
-    public final static String CANAL_ES_KEY = "canal_es_key";
+    public final static String CANAL_SEARCH_CHANGE = "canal_search_change";
+    public final static String CANAL_SEARCH_QUEUE = "canal_search_queue";
+    public final static String CANAL_SEARCH_KEY = "canal_search_key";
 
     public final static String ES_QUEUE = "starry_article_queue";
     public final static String ES_CHANGE = "starry_article_change";
@@ -50,20 +50,20 @@ public class RabbitConfig {
     public final static String REVIEW_KEY_DEAD = "review_key_dead";
 
 
-    @Bean(CANAL_ES_CHANGE)
-    public Exchange canalEsExchange() {
-        return ExchangeBuilder.directExchange(CANAL_ES_CHANGE).build();
+    @Bean(CANAL_SEARCH_CHANGE)
+    public Exchange canalSearchExchange() {
+        return ExchangeBuilder.directExchange(CANAL_SEARCH_CHANGE).build();
     }
 
-    @Bean(CANAL_ES_QUEUE)
-    public Queue canalEsQueue() {
-        return QueueBuilder.durable(CANAL_ES_QUEUE).build();
+    @Bean(CANAL_SEARCH_QUEUE)
+    public Queue canalSearchQueue() {
+        return QueueBuilder.durable(CANAL_SEARCH_QUEUE).build();
     }
 
     @Bean
-    public Binding canalEsBind(@Qualifier(CANAL_ES_CHANGE) Exchange exchange,
-                               @Qualifier(CANAL_ES_QUEUE) Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with(CANAL_ES_KEY).noargs();
+    public Binding canalSearchBind(@Qualifier(CANAL_SEARCH_CHANGE) Exchange exchange,
+                                   @Qualifier(CANAL_SEARCH_QUEUE) Queue queue) {
+        return BindingBuilder.bind(queue).to(exchange).with(CANAL_SEARCH_KEY).noargs();
     }
 
     /**

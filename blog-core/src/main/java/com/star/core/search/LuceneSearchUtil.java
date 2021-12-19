@@ -1,5 +1,6 @@
 package com.star.core.search;
 
+import com.star.core.dto.ArticleSearchDTO;
 import com.star.core.entity.Article;
 import com.star.core.mapper.ArticleMapper;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
@@ -9,6 +10,7 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
@@ -41,7 +43,7 @@ public class LuceneSearchUtil {
 
     @Async
     public void async() throws IOException {
-        deleteIdx();
+        deleteAllIdx();
         List<Article> articles = articleMapper.selectList(null);
         IndexWriter writer = getIndexWriter();
         Document document = new Document();
@@ -54,6 +56,7 @@ public class LuceneSearchUtil {
                 document.add(new StringField("isDelete", String.valueOf(v.getIsDelete()), Field.Store.YES));
             });
             writer.addDocument(document);
+            writer.commit();
         } catch (IOException e) {
             log.error(e.getMessage());
         } finally {
@@ -67,12 +70,50 @@ public class LuceneSearchUtil {
      *
      * @throws IOException
      */
-    private void deleteIdx() throws IOException {
+    private void deleteAllIdx() throws IOException {
         IndexWriter writer = getIndexWriter();
         writer.deleteAll();
         writer.commit();
         writer.close();
-        log.info("删除索引");
+        log.info("Lucene删除全部索引");
+    }
+
+    @Async
+    public void deleteIdx(String id) {
+        try {
+            IndexWriter writer = getIndexWriter();
+            writer.deleteDocuments(new Term("id", id));
+            writer.flush();
+            writer.commit();
+            writer.close();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    @Async
+    public void insertOrUpdateIdx(ArticleSearchDTO dto) {
+        IndexWriter writer = null;
+        try {
+            writer = getIndexWriter();
+            Document document = new Document();
+            document.add(new StringField("id", String.valueOf(dto.getId()), Field.Store.YES));
+            document.add(new TextField("articleTitle", dto.getArticleTitle(), Field.Store.YES));
+            document.add(new TextField("articleContent", dto.getArticleContent(), Field.Store.YES));
+            document.add(new StringField("status", String.valueOf(dto.getStatus()), Field.Store.YES));
+            document.add(new StringField("isDelete", String.valueOf(dto.getIsDelete()), Field.Store.YES));
+            writer.addDocument(document);
+            writer.commit();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            try {
+                writer.close();
+                writer.getDirectory().close();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
     }
 
     /**
@@ -89,9 +130,7 @@ public class LuceneSearchUtil {
         // 注册中文解析器到写索引配置
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
         // 实例化写索引对象
-        IndexWriter indexWriter = new IndexWriter(directory, config);
-        log.info("获得索引");
-        return indexWriter;
+        return new IndexWriter(directory, config);
     }
 
 }

@@ -387,12 +387,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             categoryName = category.getCategoryName();
         }
         // 查询文章标签
+        System.out.println("articleId = " + articleId);
         List<ArticleTag> articleTagIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>()
                 .select(ArticleTag::getTagId)
-                .eq(ArticleTag::getArticleId, article.getId()));
+                .eq(ArticleTag::getArticleId, articleId));
+        System.out.println("articleTagIds = " + articleTagIds);
         List<String> tagNameList = articleTagIds.stream().map(v ->
                         tagMapper.selectOne(new LambdaQueryWrapper<Tag>().eq(Tag::getId, v.getTagId())).getTagName())
                 .collect(Collectors.toList());
+        System.out.println("tagNameList = " + tagNameList);
         ArticleVO articleVO = BeanCopyUtil.copyObject(article, ArticleVO.class);
         articleVO.setCategoryName(categoryName);
         articleVO.setTagNameList(tagNameList);

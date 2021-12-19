@@ -17,5 +17,4 @@ public class LuceneConfig {
         return new SmartChineseAnalyzer();
     }
 
-
 }

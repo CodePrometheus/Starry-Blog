@@ -156,9 +156,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      */
     @Async
     public void notice(Comment comment) {
+        Integer authorId;
+        if (Objects.isNull(comment.getArticleId())) {
+            authorId = BLOGGER_ID;
+        } else {
+            authorId = articleMapper.selectById(comment.getArticleId()).getUserId();
+        }
         Integer commentId = comment.getId();
         // 判断是回复用户还是评论作者
-        Integer authorId = articleMapper.selectById(comment.getArticleId()).getUserId();
         Integer userId = Optional.ofNullable(comment.getReplyUserId()).orElse(authorId);
 
         // 查询邮箱号

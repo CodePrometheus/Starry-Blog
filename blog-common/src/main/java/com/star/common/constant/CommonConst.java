@@ -34,9 +34,14 @@ public class CommonConst {
     public static final String LINK_PATH = "/links";
 
     /**
+     * 博主id
+     */
+    public static final Integer BLOGGER_ID = 1;
+
+    /**
      * 默认用户昵称
      */
-    public static final String DEFAULT_NICKNAME = "用户" + System.currentTimeMillis();
+    public static final String DEFAULT_NICKNAME = "用户";
 
     /**
      * 默认用户头像

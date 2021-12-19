@@ -19,7 +19,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "starry-article", replicas = 0)
+@Document(indexName = "starry-article")
 public class ArticleSearchDTO {
 
     /**

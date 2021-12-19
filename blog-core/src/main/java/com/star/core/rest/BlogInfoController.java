@@ -15,7 +15,6 @@ import javax.validation.Valid;
 
 /**
  * 博客信息模块
- * about me + notice
  *
  * @Author: zzStar
  * @Date: 12-19-2020 19:36
@@ -65,11 +64,6 @@ public class BlogInfoController {
         return Result.success();
     }
 
-    /**
-     * 上传访客信息
-     *
-     * @return {@link Result}
-     */
     @PostMapping("/report")
     public Result<?> report() {
         blogInfoService.report();

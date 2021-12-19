@@ -17,3 +17,8 @@ echo "===Elasticsearch 启动==="
 set ES_HOME=D:\Elasticsearch\elasticsearch-7.12.0
 start %ES_HOME%/bin/elasticsearch.bat
 echo "===Elasticsearch 启动成功==="
+
+echo "===Canal 启动==="
+set CANAL_HOME=D:\canal.deployer-1.1.5
+start %CANAL_HOME%/bin/startup.bat
+echo "===Canal 启动成功==="

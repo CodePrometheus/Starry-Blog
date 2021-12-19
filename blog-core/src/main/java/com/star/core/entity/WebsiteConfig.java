@@ -20,9 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @TableName(value = "tb_website_config")
 public class WebsiteConfig {
-    /**
-     *
-     */
+
     @TableId(type = IdType.AUTO)
     private Integer id;
 

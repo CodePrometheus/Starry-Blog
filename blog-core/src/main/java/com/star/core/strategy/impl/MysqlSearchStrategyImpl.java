@@ -40,7 +40,7 @@ public class MysqlSearchStrategyImpl implements SearchStrategy {
                         .like(Article::getArticleContent, keywords)));
         // 处理高亮
         return articleList.stream().map(v -> {
-            String articleContent;
+            String articleContent = v.getArticleContent();
             int idx = v.getArticleContent().indexOf(keywords);
             if (idx != -1) {
                 // 获取关键词前面的文字
@@ -52,8 +52,6 @@ public class MysqlSearchStrategyImpl implements SearchStrategy {
                 int postIdx = postLength > 175 ? last + 175 : last + postLength;
                 String postText = v.getArticleContent().substring(idx, postIdx);
                 articleContent = (preText + postText).replaceAll(keywords, PRE_TAG + keywords + SPAN);
-            } else {
-                articleContent = v.getArticleContent();
             }
             // 文章标题高亮
             String articleTitle = v.getArticleTitle().replaceAll(keywords, PRE_TAG + keywords + SPAN);

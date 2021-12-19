@@ -325,7 +325,6 @@ export default {
       const that = this
       // 查询文章
       this.axios.get('/api' + this.$route.path).then(({ data }) => {
-        console.log(data.data)
         document.title = data.data.articleTitle
         // 将markdown转换为Html
         this.markdownToHtml(data.data)
@@ -373,7 +372,6 @@ export default {
       this.axios.get('/api/comments', {
         params: { current: 1, articleId: articleId },
       }).then(({ data }) => {
-        console.log(data.data)
         this.commentList = data.data.recordList
         this.count = data.data.count
       })

@@ -3,6 +3,7 @@ package com.star.core.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
 import com.star.common.tool.RedisUtil;
@@ -18,6 +19,7 @@ import com.star.core.mapper.RoleMapper;
 import com.star.core.mapper.UserAuthMapper;
 import com.star.core.mapper.UserInfoMapper;
 import com.star.core.mapper.UserRoleMapper;
+import com.star.core.service.BlogInfoService;
 import com.star.core.service.UserAuthService;
 import com.star.core.util.PageUtils;
 import com.star.core.util.UserUtil;
@@ -56,6 +58,9 @@ import static com.star.common.enums.UserAreaTypeEnum.getUserAreaType;
 @Service
 @SuppressWarnings("all")
 public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> implements UserAuthService {
+
+    @Resource
+    private BlogInfoService blogInfoService;
 
     @Resource
     private RabbitTemplate rabbitTemplate;
@@ -114,9 +119,11 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         }
         // 新增用户信息
         UserInfo userInfo = UserInfo.builder()
-                .nickname(DEFAULT_NICKNAME)
+                .nickname(DEFAULT_NICKNAME + IdWorker.getId())
                 .avatar(DEFAULT_AVATAR)
-                .email(user.getUsername()).build();
+                .email(user.getUsername())
+                .avatar(blogInfoService.getWebsiteConfig().getUserAvatar())
+                .build();
         userInfoMapper.insert(userInfo);
         // 绑定用户角色
         saveUserRole(userInfo);

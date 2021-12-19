@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @TableName("tb_resource")
 public class Resource {
+
     /**
      * 权限id
      */

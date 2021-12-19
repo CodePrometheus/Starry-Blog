@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
  * @Date: 08-15-2021 20:42
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @TableName(value = "tb_page")
 public class Page {
 
