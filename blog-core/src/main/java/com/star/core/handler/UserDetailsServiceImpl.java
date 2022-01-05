@@ -10,7 +10,6 @@ import com.star.core.entity.UserInfo;
 import com.star.core.mapper.RoleMapper;
 import com.star.core.mapper.UserAuthMapper;
 import com.star.core.mapper.UserInfoMapper;
-import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -84,7 +83,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 获取登录信息
         String ipAddr = IpUtil.getIpAddr(request);
         String ipSource = IpUtil.getIpSource(ipAddr);
-        UserAgent userAgent = IpUtil.getUserAgent(request);
 
         // 封装权限集合
         return UserInfoDTO.builder()
@@ -103,8 +101,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .commentLikeSet(commentLikeSet)
                 .ipAddr(ipAddr)
                 .ipSource(ipSource)
-                .browser(userAgent.getBrowser().getName())
-                .os(userAgent.getOperatingSystem().getName())
                 .isDisable(userInfo.getIsDisable())
                 .lastLoginTime(LocalDateTime.now(ZoneId.of("Asia/Shanghai"))).build();
     }

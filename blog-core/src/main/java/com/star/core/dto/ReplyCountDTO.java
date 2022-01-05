@@ -1,6 +1,9 @@
 package com.star.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 回复数量
@@ -9,6 +12,9 @@ import lombok.Data;
  * @Date: 12-20-2020 16:08
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReplyCountDTO {
 
     /**

@@ -1,6 +1,7 @@
 package com.star.core.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +14,9 @@ import java.time.LocalDateTime;
  * @Date: 03-30-2021 16:33
  */
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ArticleRecommendDTO {
 
     /**

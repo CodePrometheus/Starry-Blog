@@ -4,7 +4,8 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.star.common.constant.StarryConst;
-import eu.bitwalker.useragentutils.UserAgent;
+import nl.basjes.parse.useragent.UserAgent;
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -20,15 +22,20 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 用户工具类
  * @Author: zzStar
  * @Date: 12-23-2020 17:25
  */
+@Component
 @SuppressWarnings("all")
 public class IpUtil {
+
+    private UserAgentAnalyzer uaa;
 
     private static boolean ipLocal = false;
     private static File file = null;
@@ -39,7 +46,6 @@ public class IpUtil {
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
     private static ApplicationContext applicationContext = null;
     private static final Logger log = LoggerFactory.getLogger(IpUtil.class);
-
 
     static {
         addCallBacks(() -> {
@@ -232,9 +238,24 @@ public class IpUtil {
      * @param request 请求
      * @return {@link UserAgent} 访问设备
      */
-    public static UserAgent getUserAgent(HttpServletRequest request) {
-        return UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+    public UserAgent getUserAgent(HttpServletRequest request) {
+        return uaa.parse(request.getHeader("User-Agent"));
     }
 
+    /**
+     * 从User-Agent解析客户端操作系统和浏览器版本
+     *
+     * @param userAgent
+     * @return
+     */
+    public Map<String, String> parseOsAndBrowser() {
+        UserAgent agent = uaa.parse("User-Agent");
+        String os = agent.getValue("OperatingSystemNameVersionMajor");
+        String browser = agent.getValue("AgentNameVersion");
+        Map<String, String> map = new HashMap<>();
+        map.put("os", os);
+        map.put("browser", browser);
+        return map;
+    }
 
 }

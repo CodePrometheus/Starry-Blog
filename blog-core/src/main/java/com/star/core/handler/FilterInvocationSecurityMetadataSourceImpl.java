@@ -1,17 +1,24 @@
 package com.star.core.handler;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.core.dto.ResourceRoleDTO;
+import com.star.core.entity.Resource;
+import com.star.core.entity.UserInfo;
+import com.star.core.hook.LogPointer;
+import com.star.core.mapper.ResourceMapper;
 import com.star.core.mapper.RoleMapper;
+import com.star.core.util.BeanCopyUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,7 +31,15 @@ import java.util.List;
 @Component
 public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocationSecurityMetadataSource {
 
-    @Resource
+    private static final String ADMIN = "admin";
+
+    @javax.annotation.Resource
+    private ResourceMapper resourceMapper;
+
+    @javax.annotation.Resource
+    private LogPointer logPointer;
+
+    @javax.annotation.Resource
     private RoleMapper roleMapper;
 
     /**
@@ -68,6 +83,18 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
         String url = fi.getRequest().getRequestURI();
         // 路径匹配符 直接用以匹配路径
         AntPathMatcher matcher = new AntPathMatcher();
+
+        // Log
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserInfo userInfo = BeanCopyUtil.copyObject(authentication.getPrincipal(), UserInfo.class);
+        Resource resource;
+        resource = resourceMapper.selectOne(new LambdaQueryWrapper<>(Resource.builder()
+                .url(url).requestMethod(method).build()));
+        if (fi.getRequest().getRequestURI().contains(ADMIN)) {
+            logPointer.doPoint(fi.getRequest(), fi.getResponse(), userInfo, resource, true);
+        } else {
+            logPointer.doPoint(fi.getRequest(), fi.getResponse(), userInfo, resource, false);
+        }
 
         // 获取接口角色信息，若为匿名接口则放行，若无对应角色则禁止
         for (ResourceRoleDTO urlRoleDTO : resourceRoleList) {

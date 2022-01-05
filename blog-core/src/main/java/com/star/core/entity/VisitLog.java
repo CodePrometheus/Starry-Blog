@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 
 /**
  * @Author: zzStar
- * @Date: 06-25-2021 22:24
+ * @Date: 01-04-2022 01:34
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("tb_operation_log")
-public class OperationLog {
+@TableName("tb_visit_log")
+public class VisitLog {
 
     /**
      * 日志id
@@ -26,27 +26,22 @@ public class OperationLog {
     private Integer id;
 
     /**
-     * 操作模块
+     * 访问路径
      */
-    private String optModule;
+    private String visitUrl;
 
     /**
-     * 操作路径
+     * 访问描述
      */
-    private String optUrl;
+    private String visitDesc;
 
     /**
-     * 操作方法
+     * 操作内容
      */
-    private String optMethod;
+    private String content;
 
     /**
-     * 操作描述
-     */
-    private String optDesc;
-
-    /**
-     * 请求方式
+     * 请求方法
      */
     private String requestMethod;
 
@@ -71,7 +66,7 @@ public class OperationLog {
     private String nickname;
 
     /**
-     * 用户登录ip
+     * ip
      */
     private String ipAddr;
 
@@ -79,6 +74,16 @@ public class OperationLog {
      * ip来源
      */
     private String ipSource;
+
+    /**
+     * browser
+     */
+    private String browser;
+
+    /**
+     * os
+     */
+    private String os;
 
     /**
      * 创建时间

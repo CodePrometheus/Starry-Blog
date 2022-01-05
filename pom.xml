@@ -83,6 +83,10 @@
                     <artifactId>solr-solrj</artifactId>
                     <groupId>org.apache.solr</groupId>
                 </exclusion>
+                <exclusion>
+                     <artifactId>spring-boot-starter-logging</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -102,11 +106,10 @@
             </exclusions>
         </dependency>
 
-
         <dependency>
-            <groupId>eu.bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
-            <version>1.21</version>
+            <groupId>nl.basjes.parse.useragent</groupId>
+            <artifactId>yauaa</artifactId>
+            <version>6.7</version>
         </dependency>
 
         <dependency>

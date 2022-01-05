@@ -18,9 +18,6 @@ import com.star.core.util.BeanCopyUtil;
 import com.star.core.vo.BlogInfoVo;
 import com.star.core.vo.PageVO;
 import com.star.core.vo.WebsiteConfigVO;
-import eu.bitwalker.useragentutils.Browser;
-import eu.bitwalker.useragentutils.OperatingSystem;
-import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +41,9 @@ import static com.star.common.enums.ArticleStatusEnum.PUBLIC;
 @Service
 @SuppressWarnings("unchecked")
 public class BlogInfoServiceImpl implements BlogInfoService {
+
+    @Resource
+    private IpUtil ipUtil;
 
     @Resource
     private HttpServletRequest request;
@@ -197,11 +197,11 @@ public class BlogInfoServiceImpl implements BlogInfoService {
     @Override
     public void report() {
         String ipAddr = IpUtil.getIpAddr(request);
-        UserAgent userAgent = IpUtil.getUserAgent(request);
-        Browser browser = userAgent.getBrowser();
-        OperatingSystem operatingSystem = userAgent.getOperatingSystem();
+        Map<String, String> userAgentMap = ipUtil.parseOsAndBrowser();
+        String os = userAgentMap.get("os");
+        String browser = userAgentMap.get("browser");
         // 生成唯一用户标识
-        String uuid = ipAddr + browser.getName() + operatingSystem.getName();
+        String uuid = ipAddr + browser + os;
         String md5 = DigestUtils.md5DigestAsHex(uuid.getBytes());
         // 判断是否访问
         if (!redisUtil.sIsMember(UNIQUE_VISITOR, md5)) {
