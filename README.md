@@ -4,26 +4,28 @@
 
 ### Server
 
-|       技术       |       说明        |   版本    |                                            官网                                            |
-|:--------------:|:---------------:|:-------:|:----------------------------------------------------------------------------------------:|
-|   SpringBoot   |      MVC框架      |  2.5.5  |     [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)     |
-| SpringSecurity |     认证和授权框架     |  2.5.5  | [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security) |
-|  MyBatis-Plus  |      ORM框架      | 3.4.3.4 |                   [https://mp.baomidou.com/](https://mp.baomidou.com/)                   |
-|   Swagger-UI   |     文档生产工具      |  3.0.0  | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)  |
-|     Kibana     |    分析和可视化平台     | 7.12.0  |           [https://www.elastic.co/cn/kibana](https://www.elastic.co/cn/kibana)           |
-| Elasticsearch  |      搜索引擎       | 7.12.0  |  [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch)   |
-|     Beats      |    轻量型数据采集器     | 7.12.0  |           [https://www.elastic.co/cn/beats/](https://www.elastic.co/cn/beats/)           |
-|    Logstash    | 用于接收Beats的数据并处理 | 7.12.0  |         [https://www.elastic.co/cn/logstash](https://www.elastic.co/cn/logstash)         |
-|      Solr      |      搜索引擎       |  8.9.0  |                   [https://solr.apache.org/](https://solr.apache.org/)                   |
-|     Lucene     |      搜索引擎       |  8.9.0  |                 [https://lucene.apache.org/](https://lucene.apache.org/)                 |
-|    RabbitMQ    |      消息队列       |  3.9.7  |                 [ https://www.rabbitmq.com/](https://www.rabbitmq.com/)                  |
-|     Redis      |      分布式缓存      |   6.x   |                          [https://redis.io/](https://redis.io/)                          |
-|     Canal      |      数据同步       |  1.1.5  |          [https://github.com/alibaba/canal/](https://github.com/alibaba/canal/)          |
-|     Druid      |     数据库连接池      |  1.2.7  |          [ https://github.com/alibaba/druid](https://github.com/alibaba/druid)           |
-|     Lombok     |    简化对象封装工具     | 1.8.20  |    [ https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok)     |
-|     Nginx      | HTTP和反向代理web服务器 | 1.20.1  |                          [http://nginx.org/](http://nginx.org/)                          |
-|     Hutool     |    Java工具包类库    | 5.7.13  |                    [https://hutool.cn/docs/](https://hutool.cn/docs/)                    |
-|   Ip2region    |    离线IP地址定位库    |  1.7.2  |  [https://github.com/lionsoul2014/ip2region](https://github.com/lionsoul2014/ip2region)  |
+|       技术       |       说明        |    版本    |                                            官网                                            |
+|:--------------:|:---------------:|:--------:|:----------------------------------------------------------------------------------------:|
+|   SpringBoot   |      MVC框架      |  2.5.5   |     [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)     |
+| SpringSecurity |     认证和授权框架     |  2.5.5   | [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security) |
+|  MyBatis-Plus  |      ORM框架      | 3.4.3.4  |                   [https://mp.baomidou.com/](https://mp.baomidou.com/)                   |
+|   Swagger-UI   |     文档生产工具      |  3.0.0   | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)  |
+|     Kibana     |    分析和可视化平台     |  7.12.0  |           [https://www.elastic.co/cn/kibana](https://www.elastic.co/cn/kibana)           |
+| Elasticsearch  |      搜索引擎       |  7.12.0  |  [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch)   |
+|     Beats      |    轻量型数据采集器     |  7.12.0  |           [https://www.elastic.co/cn/beats/](https://www.elastic.co/cn/beats/)           |
+|    Logstash    | 用于接收Beats的数据并处理 |  7.12.0  |         [https://www.elastic.co/cn/logstash](https://www.elastic.co/cn/logstash)         |
+|      Solr      |      搜索引擎       |  8.9.0   |                   [https://solr.apache.org/](https://solr.apache.org/)                   |
+|     Lucene     |      搜索引擎       |  8.9.0   |                 [https://lucene.apache.org/](https://lucene.apache.org/)                 |
+|    RabbitMQ    |      消息队列       |  3.9.7   |                 [ https://www.rabbitmq.com/](https://www.rabbitmq.com/)                  |
+|     Redis      |      分布式缓存      |   6.x    |                          [https://redis.io/](https://redis.io/)                          |
+|     Canal      |      数据同步       |  1.1.5   |          [https://github.com/alibaba/canal/](https://github.com/alibaba/canal/)          |
+|     Docker     |      容器引擎       | 20.10.11 |                    [https://www.docker.com/](https://www.docker.com/)                    |
+| Docker Compose |      容器编排       |   3.9    |           [https://docs.docker.com/compose/](https://docs.docker.com/compose/)           |
+|     Druid      |     数据库连接池      |  1.2.7   |          [ https://github.com/alibaba/druid](https://github.com/alibaba/druid)           |
+|     Lombok     |    简化对象封装工具     |  1.8.20  |    [ https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok)     |
+|     Nginx      | HTTP和反向代理web服务器 |  1.20.1  |                          [http://nginx.org/](http://nginx.org/)                          |
+|     Hutool     |    Java工具包类库    |  5.7.13  |                    [https://hutool.cn/docs/](https://hutool.cn/docs/)                    |
+|   Ip2region    |    离线IP地址定位库    |  1.7.2   |  [https://github.com/lionsoul2014/ip2region](https://github.com/lionsoul2014/ip2region)  |
 
 ### Front
 
@@ -53,6 +55,8 @@
 
 - 2021/12/19 v5.0 数据同步
 
+- 2022/01/08 v6.0 部署
+
 ### Feature
 
 - Redis存储点赞、浏览量，score排序
@@ -65,4 +69,4 @@
 
 - Canal通过RabbitMQ同步数据Solr，Lucene
 
-
+- Docker Compose，日志埋点

@@ -30,15 +30,9 @@ services:
     image: canal/canal-server
     container_name: canal
     volumes:
-      - ./canal/conf:/admin/canal-server/conf/
-      - ./canal/logs:/admin/canal-server/logs/
-    environment:
-      - canal.instance.master.address=172.69.0.21:3306
-      - canal.instance.dbUsername=root
-      - canal.instance.dbPassword=root
-      - rabbitmq.host=172.69.0.22
-      - canal.mq.topic=canal_search_key
-      - canal.instance.filter.regex=mysql\\.slave_.*
+      - ./canal/conf/canal.properties:/home/admin/canal-server/conf/canal.properties
+      - ./canal/conf/instance.properties:/home/admin/canal-server/conf/example/instance.properties
+      - ./canal/logs:/home/admin/canal-server/logs
     ports:
       - "11111:11111"
     networks:
@@ -59,13 +53,15 @@ services:
         ipv4_address: 172.69.0.24
 
   elasticsearch:
-    image: elasticsearch:7.10.1
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: elasticsearch
     volumes:
       - ./es/data:/usr/share/elasticsearch/data:rw
       - ./es/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./es/logs:/user/share/elasticsearch/logs:rw
-      - ./es/plugins/ik:/use/share/elasticsearch/plugins/ik
+      - ./es/plugins:/use/share/elasticsearch/plugins
     ports:
       - "9200:9200"
       - "9300:9300"
