@@ -54,31 +54,20 @@ public class ElasticSearchUtil {
     }
 
     @Async
-    public void deleteById(int id) {
-        elasticsearchMapper.deleteById(id);
-    }
-
-    @Async
-    public void deleteAll(List<ArticleSearchDTO> articleSearch) {
-        elasticsearchMapper.deleteAll(articleSearch);
-    }
-
-
-    @Async
     public void createOrUpdateIndex(ArticleMqMessage mqMessage) {
         Integer articleId = mqMessage.getArticleId();
         Article article = articleMapper.selectOne(new LambdaQueryWrapper<Article>().eq(Article::getId, articleId));
         ModelMapper modelMapper = new ModelMapper();
         ArticleSearchDTO map = modelMapper.map(article, ArticleSearchDTO.class);
         elasticsearchMapper.save(map);
-        log.info("index updated successfully --> {}", map);
+        log.info("index updated successfully --> {}", map.getArticleTitle());
     }
 
     @Async
     public void removeIndex(ArticleMqMessage mqMessage) {
         int articleId = mqMessage.getArticleId();
         elasticsearchMapper.deleteById(articleId);
-        log.info("index remove successfully --> {}", mqMessage);
+        log.info("index remove successfully --> {}", mqMessage.getArticleId());
     }
 
 }

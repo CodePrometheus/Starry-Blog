@@ -2,16 +2,15 @@ package com.star.core.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.star.common.tool.IpUtil;
 import com.star.common.tool.UserAgentUtil;
-import com.star.core.dto.ArticleDTO;
 import com.star.core.dto.PageData;
 import com.star.core.dto.VisitLogDTO;
+import com.star.core.entity.Article;
 import com.star.core.entity.Resource;
 import com.star.core.entity.UserInfo;
 import com.star.core.entity.VisitLog;
@@ -19,6 +18,7 @@ import com.star.core.mapper.ArticleMapper;
 import com.star.core.mapper.VisitLogMapper;
 import com.star.core.service.VisitLogService;
 import com.star.core.util.BeanCopyUtil;
+import com.star.core.util.HTMLUtil;
 import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
 import org.apache.commons.lang3.StringUtils;
@@ -76,9 +76,16 @@ public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> i
         log.setRequestParam(param);
         if (url.contains("search")) {
             Map parseMap = JSONArray.parseObject(param, Map.class);
-            StringBuilder builder = new StringBuilder();
-            builder.append("Keywords: " + parseMap.get("keywords"));
-            log.setVisitDesc(builder.toString());
+            log.setVisitDesc("Keywords: " + parseMap.get("keywords"));
+        }
+        if (url.equals("/comments")) {
+            Map json = JSON.parseObject(param, Map.class);
+            String res = String.valueOf(json.get("articleId"));
+            String articleId = res.replace("[\"", "").replace("\"]", "");
+            Article article = articleMapper.selectById(articleId);
+            String builder = "ArticleTitle: " + article.getArticleTitle() +
+                    "; ArticleContent: " + HTMLUtil.deleteCommentTag(article.getArticleContent().substring(0, 10));
+            log.setVisitDesc(builder);
         }
 
         log.setRequestMethod(Objects.requireNonNull(request).getMethod());

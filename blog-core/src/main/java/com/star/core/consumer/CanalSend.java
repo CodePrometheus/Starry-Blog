@@ -37,7 +37,7 @@ public class CanalSend {
     private LuceneSearchUtil luceneSearchUtil;
 
     @RabbitHandler
-    public void doSolrChange(byte[] message, Channel channel, Message msg) throws IOException {
+    public void doSearchChange(byte[] message, Channel channel, Message msg) throws IOException {
         String res = new String(message, StandardCharsets.UTF_8);
         CanalDTO searchDTO = JSONObject.parseObject(res, CanalDTO.class);
         List<Map<String, String>> data = searchDTO.getData();

@@ -75,7 +75,6 @@ public class LuceneSearchUtil {
         writer.deleteAll();
         writer.commit();
         writer.close();
-        log.info("Lucene删除全部索引");
     }
 
     @Async
