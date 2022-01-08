@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.star.common.exception.StarryException;
 import com.star.common.tool.IpUtil;
 import com.star.common.tool.RedisUtil;
+import com.star.common.tool.UserAgentUtil;
 import com.star.core.dto.*;
 import com.star.core.entity.Article;
 import com.star.core.entity.Tag;
@@ -43,7 +44,7 @@ import static com.star.common.enums.ArticleStatusEnum.PUBLIC;
 public class BlogInfoServiceImpl implements BlogInfoService {
 
     @Resource
-    private IpUtil ipUtil;
+    private UserAgentUtil userAgentUtil;
 
     @Resource
     private HttpServletRequest request;
@@ -197,7 +198,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
     @Override
     public void report() {
         String ipAddr = IpUtil.getIpAddr(request);
-        Map<String, String> userAgentMap = ipUtil.parseOsAndBrowser();
+        Map<String, String> userAgentMap = userAgentUtil.parseOsAndBrowser(request);
         String os = userAgentMap.get("os");
         String browser = userAgentMap.get("browser");
         // 生成唯一用户标识

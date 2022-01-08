@@ -12,7 +12,8 @@
                    :toolsID="item.tabMsg"
                    :customDialogue='item.customDialogue'
                    :backgroundColor="item.backgroundColor"
-                   ref='tool'/>
+                   ref='tool'
+      />
     </div>
   </div>
 </template>

@@ -1,15 +1,21 @@
 package com.star.core.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.star.common.tool.IpUtil;
+import com.star.common.tool.UserAgentUtil;
+import com.star.core.dto.ArticleDTO;
 import com.star.core.dto.PageData;
 import com.star.core.dto.VisitLogDTO;
 import com.star.core.entity.Resource;
 import com.star.core.entity.UserInfo;
 import com.star.core.entity.VisitLog;
+import com.star.core.mapper.ArticleMapper;
 import com.star.core.mapper.VisitLogMapper;
 import com.star.core.service.VisitLogService;
 import com.star.core.util.BeanCopyUtil;
@@ -33,7 +39,10 @@ import java.util.Objects;
 public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> implements VisitLogService {
 
     @javax.annotation.Resource
-    private IpUtil ipUtil;
+    private ArticleMapper articleMapper;
+
+    @javax.annotation.Resource
+    private UserAgentUtil userAgentUtil;
 
     @javax.annotation.Resource
     private ObjectMapper objectMapper;
@@ -56,12 +65,22 @@ public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> i
         String ip = IpUtil.getIpAddr(request);
         log.setIpAddr(ip);
         log.setIpSource(IpUtil.getIpSource(ip));
-        Map<String, String> userAgentMap = ipUtil.parseOsAndBrowser();
-        log.setOs(userAgentMap.get("os"));
-        log.setBrowser(userAgentMap.get("browser"));
+        Map<String, String> map = userAgentUtil.parseOsAndBrowser(request);
+        log.setOs(map.get("os"));
+        log.setBrowser(map.get("browser"));
         log.setContent(resource.getResourceName());
-        log.setVisitUrl(request.getRequestURI());
-        log.setRequestParam(objectMapper.writeValueAsString(request.getParameterMap()));
+
+        String url = request.getRequestURI();
+        String param = objectMapper.writeValueAsString(request.getParameterMap());
+        log.setVisitUrl(url);
+        log.setRequestParam(param);
+        if (url.contains("search")) {
+            Map parseMap = JSONArray.parseObject(param, Map.class);
+            StringBuilder builder = new StringBuilder();
+            builder.append("Keywords: " + parseMap.get("keywords"));
+            log.setVisitDesc(builder.toString());
+        }
+
         log.setRequestMethod(Objects.requireNonNull(request).getMethod());
         log.setResponseData(String.valueOf(response.getStatus()));
         log.setCreateTime(LocalDateTime.now());

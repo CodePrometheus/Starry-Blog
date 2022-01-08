@@ -1,0 +1,99 @@
+# docker network create --driver bridge --subnet 172.69.0.0/25 --gateway 172.69.0.1 blog
+version: "3.9"
+services:
+  mysql:
+    image: mysql/mysql-server
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/config:/etc/mysql/conf.d
+      - ./mysql/log:/var/log/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      defalut:
+        ipv4_address: 172.69.0.21
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      defalut:
+        ipv4_address: 172.69.0.22
+
+  canal:
+    image: canal/canal-server
+    container_name: canal
+    volumes:
+      - ./canal/conf:/admin/canal-server/conf/
+      - ./canal/logs:/admin/canal-server/logs/
+    environment:
+      - canal.instance.master.address=172.69.0.21:3306
+      - canal.instance.dbUsername=root
+      - canal.instance.dbPassword=root
+      - rabbitmq.host=172.69.0.22
+      - canal.mq.topic=canal_search_key
+      - canal.instance.filter.regex=mysql\\.slave_.*
+    ports:
+      - "11111:11111"
+    networks:
+      defalut:
+        ipv4_address: 172.69.0.23
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/data:/data
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    networks:
+      defalut:
+        ipv4_address: 172.69.0.24
+
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    container_name: elasticsearch
+    volumes:
+      - ./es/data:/usr/share/elasticsearch/data:rw
+      - ./es/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es/logs:/user/share/elasticsearch/logs:rw
+      - ./es/plugins/ik:/use/share/elasticsearch/plugins/ik
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      defalut:
+        ipv4_address: 172.69.0.25
+
+  solr:
+    image: solr:latest
+    container_name: solr
+    volumes:
+      - ./solr:/opt/solrdata
+    ports:
+      - "8983:8983"
+    networks:
+      defalut:
+        ipv4_address: 172.69.0.26
+
+  lucene:
+    image: cpelka/cassandra-lucene:latest
+    container_name: lucene
+    networks:
+      defalut:
+        ipv4_address: 172.69.0.27
+
+networks:
+  defalut:
+    external:
+      name: blog

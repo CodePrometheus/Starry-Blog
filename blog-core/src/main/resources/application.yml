@@ -4,6 +4,11 @@ server:
 
 # 配置mysql数据库
 spring:
+  main:
+    allow-circular-references: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -99,4 +104,4 @@ CREATE_REPOS_MESSAGE:
 CREATE_REPOS_URL:
 
 search:
-  mode: lucene
+  mode: solr

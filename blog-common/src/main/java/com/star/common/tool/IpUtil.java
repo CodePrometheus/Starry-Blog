@@ -1,30 +1,22 @@
 package com.star.common.tool;
 
-import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import com.star.common.constant.StarryConst;
-import nl.basjes.parse.useragent.UserAgent;
-import nl.basjes.parse.useragent.UserAgentAnalyzer;
+import org.apache.commons.lang3.StringUtils;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
+import org.lionsoul.ip2region.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Description: 用户工具类
@@ -35,36 +27,10 @@ import java.util.Map;
 @SuppressWarnings("all")
 public class IpUtil {
 
-    private UserAgentAnalyzer uaa;
-
-    private static boolean ipLocal = false;
-    private static File file = null;
-    private static DbConfig config;
-    private static final char SEPARATOR = '_';
-    private static final String UNKNOWN = "unknown";
-    public static final String SYS_TEM_DIR = System.getProperty("java.io.tmpdir") + File.separator;
-    private static final List<CallBack> CALL_BACKS = new ArrayList<>();
-    private static ApplicationContext applicationContext = null;
     private static final Logger log = LoggerFactory.getLogger(IpUtil.class);
 
-    static {
-        addCallBacks(() -> {
-            IpUtil.ipLocal = getProperties("ip.local-parsing", false, Boolean.class);
-            if (ipLocal) {
-                /*
-                 * 此文件为独享 ，不必关闭
-                 */
-                String path = "ip2region/ip2region.db";
-                String name = "ip2region.db";
-                try {
-                    config = new DbConfig();
-                    file = inputStreamToFile(new ClassPathResource(path).getInputStream(), name);
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        });
-    }
+    private static DbSearcher searcher;
+    private static Method method;
 
     /**
      * 在Nginx等代理之后获取用户真实IP地址
@@ -73,189 +39,79 @@ public class IpUtil {
      * @return
      */
     public static String getIpAddr(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+        String ip = request.getHeader("X-Real-IP");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("x-forwarded-for");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
-        }
-        String comma = ",";
-        String localhost = "127.0.0.1";
-        if (ip.contains(comma)) {
-            ip = ip.split(",")[0];
-        }
-        if (localhost.equals(ip)) {
-            // 获取本机真正的ip地址
-            try {
-                ip = InetAddress.getLocalHost().getHostAddress();
-            } catch (UnknownHostException e) {
-                log.error(e.getMessage(), e);
+            if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
+                // 根据网卡取本机配置的IP
+                InetAddress inet = null;
+                try {
+                    inet = InetAddress.getLocalHost();
+                } catch (UnknownHostException e) {
+                    log.error("getIpAddr exception:", e);
+                }
+                ip = inet.getHostAddress();
             }
         }
-        return ip;
+        return StringUtils.substringBefore(ip, ",");
     }
 
     /**
-     * 解析ip地址获取具体的位置
+     * 根据ip从 ip2region.db 中获取地理位置
      *
-     * @param ipAddress
+     * @param ip
      * @return
      */
     public static String getIpSource(String ip) {
-        if (ipLocal) {
-            return getLocalCityInfo(ip);
-        } else {
-            return getHttpCityInfo(ip);
+        if (ip == null || !Util.isIpAddress(ip)) {
+            log.error("Error: Invalid ip address");
+            return null;
         }
-    }
-
-    /**
-     * 根据ip获取详细地址
-     */
-    public static String getLocalCityInfo(String ip) {
         try {
-            DataBlock dataBlock = new DbSearcher(config, file.getPath())
-                    .binarySearch(ip);
-            String region = dataBlock.getRegion();
-            String address = region.replace("0|", "");
-            char symbol = '|';
-            if (address.charAt(address.length() - 1) == symbol) {
-                address = address.substring(0, address.length() - 1);
+            DataBlock dataBlock = (DataBlock) method.invoke(searcher, ip);
+            String ipInfo = dataBlock.getRegion();
+            if (!StringUtils.isEmpty(ipInfo)) {
+                ipInfo = ipInfo.replace("|0", "");
+                ipInfo = ipInfo.replace("0|", "");
             }
-            return address.equals(StarryConst.REGION) ? "内网IP" : address;
+            return ipInfo;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("getIpSource exception: ", e);
         }
-        return "";
+        return null;
     }
 
     /**
-     * 根据ip获取详细地址
+     * 在服务启动时加载 ip2region.db 到内存中
      */
-    public static String getHttpCityInfo(String ip) {
-        String api = String.format(StarryConst.Url.IP_URL, ip);
-        JSONObject object = JSONUtil.parseObj(HttpUtil.get(api));
-        return object.get("addr", String.class);
-    }
-
-    private static DbSearcher searcher;
-    private static Method method;
-
-
-    /**
-     * inputStream 转 File
-     */
-    static File inputStreamToFile(InputStream ins, String name) {
-        File file = new File(SYS_TEM_DIR + name);
-        if (file.exists()) {
-            return file;
-        }
-        OutputStream os = null;
+    @PostConstruct
+    private void initIp2regionResource() {
         try {
-            os = new FileOutputStream(file);
-            int bytesRead;
-            int len = 8192;
-            byte[] buffer = new byte[len];
-            while ((bytesRead = ins.read(buffer, 0, len)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
+            InputStream inputStream = new ClassPathResource("ip2region/ip2region.db").getInputStream();
+            // 将 ip2region.db 转为 ByteArray
+            byte[] dbBinStr = FileCopyUtils.copyToByteArray(inputStream);
+            DbConfig dbConfig = new DbConfig();
+            searcher = new DbSearcher(dbConfig, dbBinStr);
+            // 二进制方式初始化 DBSearcher，需要使用基于内存的查找算法 memorySearch
+            method = searcher.getClass().getMethod("memorySearch", String.class);
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            close(os);
-            close(ins);
+            log.error("initIp2regionResource exception:", e);
         }
-        return file;
-    }
-
-    public static void close(Closeable closeable) {
-        if (null != closeable) {
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                // 静默关闭
-            }
-        }
-    }
-
-    /**
-     * 针对 某些初始化方法，在SpringContextHolder 未初始化时 提交回调方法。
-     * 在SpringContextHolder 初始化后，进行回调使用
-     *
-     * @param callBack 回调函数
-     */
-    public synchronized static void addCallBacks(CallBack callBack) {
-        if (true) {
-            CALL_BACKS.add(callBack);
-        } else {
-            log.warn("CallBack：{} 已无法添加！立即执行", callBack.getCallBackName());
-            callBack.executor();
-        }
-    }
-
-    /**
-     * 获取SpringBoot 配置信息
-     *
-     * @param property     属性key
-     * @param defaultValue 默认值
-     * @param requiredType 返回类型
-     * @return /
-     */
-    public static <T> T getProperties(String property, T defaultValue, Class<T> requiredType) {
-        T result = defaultValue;
-        try {
-            result = getBean(Environment.class).getProperty(property, requiredType);
-        } catch (Exception ignored) {
-        }
-        return result;
-    }
-
-    /**
-     * 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型.
-     */
-    public static <T> T getBean(Class<T> requiredType) {
-        assertContextInjected();
-        return applicationContext.getBean(requiredType);
-    }
-
-    /**
-     * 检查ApplicationContext不为空.
-     */
-    private static void assertContextInjected() {
-        if (applicationContext == null) {
-            throw new IllegalStateException("applicaitonContext属性未注入, 请在applicationContext" +
-                    ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
-        }
-    }
-
-    /**
-     * 获取访问设备
-     *
-     * @param request 请求
-     * @return {@link UserAgent} 访问设备
-     */
-    public UserAgent getUserAgent(HttpServletRequest request) {
-        return uaa.parse(request.getHeader("User-Agent"));
-    }
-
-    /**
-     * 从User-Agent解析客户端操作系统和浏览器版本
-     *
-     * @param userAgent
-     * @return
-     */
-    public Map<String, String> parseOsAndBrowser() {
-        UserAgent agent = uaa.parse("User-Agent");
-        String os = agent.getValue("OperatingSystemNameVersionMajor");
-        String browser = agent.getValue("AgentNameVersion");
-        Map<String, String> map = new HashMap<>();
-        map.put("os", os);
-        map.put("browser", browser);
-        return map;
     }
 
 }
