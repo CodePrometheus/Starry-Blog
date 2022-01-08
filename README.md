@@ -6,14 +6,14 @@
 
 |       技术       |       说明        |    版本    |                                            官网                                            |
 |:--------------:|:---------------:|:--------:|:----------------------------------------------------------------------------------------:|
-|   SpringBoot   |      MVC框架      |  2.5.5   |     [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)     |
-| SpringSecurity |     认证和授权框架     |  2.5.5   | [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security) |
-|  MyBatis-Plus  |      ORM框架      | 3.4.3.4  |                   [https://mp.baomidou.com/](https://mp.baomidou.com/)                   |
+|   SpringBoot   |      MVC框架      |  2.6.2   |     [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)     |
+| SpringSecurity |     认证和授权框架     |  2.6.2   | [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security) |
+|  MyBatis-Plus  |      ORM框架      |  3.5.0   |                   [https://mp.baomidou.com/](https://mp.baomidou.com/)                   |
 |   Swagger-UI   |     文档生产工具      |  3.0.0   | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)  |
-|     Kibana     |    分析和可视化平台     |  7.12.0  |           [https://www.elastic.co/cn/kibana](https://www.elastic.co/cn/kibana)           |
-| Elasticsearch  |      搜索引擎       |  7.12.0  |  [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch)   |
-|     Beats      |    轻量型数据采集器     |  7.12.0  |           [https://www.elastic.co/cn/beats/](https://www.elastic.co/cn/beats/)           |
-|    Logstash    | 用于接收Beats的数据并处理 |  7.12.0  |         [https://www.elastic.co/cn/logstash](https://www.elastic.co/cn/logstash)         |
+|     Kibana     |    分析和可视化平台     |  7.10.1  |           [https://www.elastic.co/cn/kibana](https://www.elastic.co/cn/kibana)           |
+| Elasticsearch  |      搜索引擎       |  7.10.1  |  [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch)   |
+|     Beats      |    轻量型数据采集器     |  7.10.1  |           [https://www.elastic.co/cn/beats/](https://www.elastic.co/cn/beats/)           |
+|    Logstash    | 用于接收Beats的数据并处理 |  7.10.1  |         [https://www.elastic.co/cn/logstash](https://www.elastic.co/cn/logstash)         |
 |      Solr      |      搜索引擎       |  8.9.0   |                   [https://solr.apache.org/](https://solr.apache.org/)                   |
 |     Lucene     |      搜索引擎       |  8.9.0   |                 [https://lucene.apache.org/](https://lucene.apache.org/)                 |
 |    RabbitMQ    |      消息队列       |  3.9.7   |                 [ https://www.rabbitmq.com/](https://www.rabbitmq.com/)                  |
@@ -65,7 +65,7 @@
 
 - 策略模式搜索服务自由切换，Elasticsearch、Solr、Lucene、MySQL
 
-- 自定义注解，日志落库，流量控制
+- 自定义注解，流量控制
 
 - Canal通过RabbitMQ同步数据Solr，Lucene
 

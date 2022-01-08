@@ -25,7 +25,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
         <mp.version>3.5.0</mp.version>
-        <swagger.version>2.9.2</swagger.version>
+        <swagger.version>3.0.0</swagger.version>
         <druid.version>1.2.8</druid.version>
         <mysql.version>8.0.27</mysql.version>
         <fastjson.version>1.2.79</fastjson.version>
@@ -231,12 +231,7 @@
 
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
+            <artifactId>springfox-boot-starter</artifactId>
             <version>${swagger.version}</version>
         </dependency>
 
