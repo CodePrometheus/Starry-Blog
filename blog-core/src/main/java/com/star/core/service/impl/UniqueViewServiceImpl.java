@@ -33,7 +33,6 @@ public class UniqueViewServiceImpl extends ServiceImpl<UniqueViewMapper, UniqueV
 
     @Resource
     private RedisUtil redisUtil;
-
     @Resource
     private UniqueViewMapper uniqueViewMapper;
 

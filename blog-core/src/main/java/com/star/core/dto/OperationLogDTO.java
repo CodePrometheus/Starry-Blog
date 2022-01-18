@@ -34,11 +34,6 @@ public class OperationLogDTO {
     private String optUrl;
 
     /**
-     * 操作类型
-     */
-    private String optType;
-
-    /**
      * 操作方法
      */
     private String optMethod;

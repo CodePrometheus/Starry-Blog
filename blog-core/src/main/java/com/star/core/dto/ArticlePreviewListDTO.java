@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticlePreviewListDTO {
+
     /**
      * 条件对应的文章列表
      */

@@ -39,10 +39,8 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
     @Resource
     private BlogInfoService blogInfoService;
-
     @Resource
     private MessageMapper messageMapper;
-
     @Resource
     private HttpServletRequest request;
 

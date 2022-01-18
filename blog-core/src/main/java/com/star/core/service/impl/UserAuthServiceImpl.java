@@ -61,31 +61,22 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
 
     @Resource
     private BlogInfoService blogInfoService;
-
     @Resource
     private RabbitTemplate rabbitTemplate;
-
     @Resource
     private RedisUtil redisUtil;
-
     @Resource
     private RoleMapper roleMapper;
-
     @Resource
     private UserRoleMapper userRoleMapper;
-
     @Resource
     private JavaMailSender javaMailSender;
-
     @Resource
     private UserAuthMapper userAuthMapper;
-
     @Resource
     private UserInfoMapper userInfoMapper;
-
     @Resource
     private RestTemplate restTemplate;
-
     @Resource
     private HttpServletRequest request;
 

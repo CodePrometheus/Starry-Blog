@@ -23,10 +23,10 @@ import com.star.core.strategy.context.SearchStrategyContext;
 import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.PageUtils;
 import com.star.core.util.UserUtil;
-import com.star.core.vo.ArticleTopVO;
 import com.star.core.vo.ArticleVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.DeleteVO;
+import com.star.core.vo.TopVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,34 +62,24 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Resource
     private SearchStrategyContext searchStrategyContext;
-
     @Resource
     private TagService tagService;
-
     @Resource
     private RedisUtil redisUtil;
-
     @Resource
     private AmqpTemplate amqpTemplate;
-
     @Resource
     private ArticleMapper articleMapper;
-
     @Resource
     private CategoryMapper categoryMapper;
-
     @Resource
     private TagMapper tagMapper;
-
     @Resource
     private ArticleTagMapper articleTagMapper;
-
     @Resource
     private HttpSession session;
-
     @Resource
     private ArticleService articleService;
-
     @Resource
     private ArticleTagService articleTagService;
 
@@ -106,7 +96,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<ArchiveDTO> archiveList = BeanCopyUtil.copyList(articlePage.getRecords(), ArchiveDTO.class);
         return new PageData<>(archiveList, articlePage.getTotal());
     }
-
 
     @Override
     public PageData<ArticleBackDTO> listArticleBack(ConditionVO condition) {
@@ -337,7 +326,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
-    public void updateArticleTop(ArticleTopVO articleTopVO) {
+    public void updateArticleTop(TopVO articleTopVO) {
         // 修改文章置顶状态
         Article article = Article.builder()
                 .id(articleTopVO.getId())
@@ -369,7 +358,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         amqpTemplate.convertAndSend(RabbitConfig.ES_CHANGE,
                 RabbitConfig.ES_BIND_KEY, new ArticleMqMessage(articleIdList.get(0), ArticleMqMessage.REMOVE));
     }
-
 
     @Override
     public List<ArticleSearchDTO> listArticlesBySearch(ConditionVO condition) {

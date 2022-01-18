@@ -49,14 +49,19 @@ public class RedisConst {
     public static final String COMMENT_USER_LIKE = "comment_user_like";
 
     /**
+     * 用户点赞动态
+     */
+    public static final String MOMENT_USER_LIKE = "moment_user_like";
+
+    /**
+     * 动态点赞量
+     */
+    public static final String MOMENT_LIKE_COUNT = "moment_like_count";
+
+    /**
      * 关于我信息
      */
     public static final String ABOUT = "about";
-
-    /**
-     * 公告
-     */
-    public static final String NOTICE = "notice";
 
     /**
      * ip集合
@@ -92,6 +97,5 @@ public class RedisConst {
      * 访客地区
      */
     public static final String VISITOR_AREA = "visitor_area";
-
 
 }

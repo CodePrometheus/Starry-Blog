@@ -5,10 +5,10 @@ import com.star.common.constant.Result;
 import com.star.core.dto.*;
 import com.star.core.service.ArticleService;
 import com.star.core.util.ImageUtil;
-import com.star.core.vo.ArticleTopVO;
 import com.star.core.vo.ArticleVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.DeleteVO;
+import com.star.core.vo.TopVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +31,6 @@ public class ArticleController {
 
     @Resource
     private ImageUtil imageUtil;
-
     @Resource
     private ArticleService articleService;
 
@@ -68,7 +67,7 @@ public class ArticleController {
 
     @ApiOperation(value = "修改文章置顶状态")
     @PutMapping("/admin/articles/top")
-    private Result<?> updateArticleTop(@Valid @RequestBody ArticleTopVO articleTopVO) {
+    private Result<?> updateArticleTop(@Valid @RequestBody TopVO articleTopVO) {
         articleService.updateArticleTop(articleTopVO);
         return Result.success();
     }

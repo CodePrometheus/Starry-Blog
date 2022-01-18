@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * 图片上传工具类
  *
@@ -59,7 +58,7 @@ public class ImageUtil {
 
     /**
      * 新建文件URL
-     * 第一个 %s =>仓库所属空间地址(owner)
+     * 第一个 %s => 仓库所属空间地址(owner)
      * 第二个 %s => 仓库路径(repo)
      * 第三个 %s => 文件的路径(path)
      */
@@ -69,7 +68,8 @@ public class ImageUtil {
     /**
      * GitPage请求路径
      */
-    private String GITPAGE_REQUEST_URL = "https://gitee.com/" + OWNER + "/" + REPO_NAME + "/raw/master/";
+    @Value("${GITPAGE_REQUEST_URL}")
+    private String GITPAGE_REQUEST_URL;
 
     private static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
 

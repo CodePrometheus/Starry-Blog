@@ -21,6 +21,7 @@ export default new Vuex.Store({
     webSite: null,
     articleLikeSet: [],
     commentLikeSet: [],
+    momentLikeSet: [],
     blogInfo: {},
     isBlogRenderComplete: false
   },
@@ -33,6 +34,7 @@ export default new Vuex.Store({
       state.webSite = user.webSite;
       state.articleLikeSet = user.articleLikeSet ? user.articleLikeSet : [];
       state.commentLikeSet = user.commentLikeSet ? user.commentLikeSet : [];
+      state.momentLikeSet = user.momentLikeSet ? user.momentLikeSet : [];
       state.email = user.email;
       state.loginType = user.loginType;
     },
@@ -44,6 +46,7 @@ export default new Vuex.Store({
       state.webSite = null;
       state.articleLikeSet = [];
       state.commentLikeSet = [];
+      state.momentLikeSet = [];
       state.email = null;
       state.loginType = null;
     },
@@ -81,6 +84,14 @@ export default new Vuex.Store({
         commentLikeSet.splice(commentLikeSet.indexOf(commentId), 1);
       } else {
         commentLikeSet.push(commentId);
+      }
+    },
+    momentLike(state, momentId) {
+      let momentLikeSet = state.momentLikeSet;
+      if (momentLikeSet.indexOf(momentId) != -1) {
+        momentLikeSet.splice(momentLikeSet.indexOf(momentId), 1);
+      } else {
+        momentLikeSet.push(momentId);
       }
     },
     [SET_IS_BLOG_RENDER_COMPLETE](state, {ok}) {

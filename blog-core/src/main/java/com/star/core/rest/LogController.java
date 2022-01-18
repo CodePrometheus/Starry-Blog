@@ -4,7 +4,6 @@ import com.star.common.constant.Result;
 import com.star.core.dto.OperationLogDTO;
 import com.star.core.dto.PageData;
 import com.star.core.dto.VisitLogDTO;
-import com.star.core.entity.VisitLog;
 import com.star.core.service.OperationLogService;
 import com.star.core.service.VisitLogService;
 import com.star.core.vo.ConditionVO;
@@ -27,7 +26,6 @@ public class LogController {
 
     @Resource
     private VisitLogService visitLogService;
-
     @Resource
     private OperationLogService operationLogService;
 

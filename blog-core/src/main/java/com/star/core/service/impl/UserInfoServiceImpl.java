@@ -46,16 +46,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Resource
     private ImageUtil imageUtil;
-
     @Resource
     private SessionRegistry sessionRegistry;
-
     @Resource
     private RedisUtil redisUtil;
-
     @Resource
     private UserRoleService userRoleService;
-
     @Resource
     private UserInfoMapper userInfoMapper;
 

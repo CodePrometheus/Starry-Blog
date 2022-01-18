@@ -24,4 +24,9 @@ public class PathConst {
      */
     public static final String PAGE = "page/";
 
+    /**
+     * 动态图片路径
+     */
+    public static final String MOMENT = "moment/";
+
 }

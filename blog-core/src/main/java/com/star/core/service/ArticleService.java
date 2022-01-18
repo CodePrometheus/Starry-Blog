@@ -3,10 +3,10 @@ package com.star.core.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.star.core.dto.*;
 import com.star.core.entity.Article;
-import com.star.core.vo.ArticleTopVO;
 import com.star.core.vo.ArticleVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.DeleteVO;
+import com.star.core.vo.TopVO;
 
 import java.util.List;
 
@@ -86,9 +86,9 @@ public interface ArticleService extends IService<Article> {
     /**
      * 修改文章置顶
      *
-     * @param articleTopVO
+     * @param topVO
      */
-    void updateArticleTop(ArticleTopVO articleTopVO);
+    void updateArticleTop(TopVO topVO);
 
     /**
      * 删除或恢复文章

@@ -45,34 +45,24 @@ public class BlogInfoServiceImpl implements BlogInfoService {
 
     @Resource
     private UserAgentUtil userAgentUtil;
-
     @Resource
     private HttpServletRequest request;
-
     @Resource
     private WebsiteConfigMapper websiteConfigMapper;
-
     @Resource
     private PageService pageService;
-
     @Resource
     private RedisUtil redisUtil;
-
     @Resource
     private UserInfoMapper userInfoMapper;
-
     @Resource
     private ArticleMapper articleMapper;
-
     @Resource
     private CategoryMapper categoryMapper;
-
     @Resource
     private TagMapper tagMapper;
-
     @Resource
     private MessageMapper messageMapper;
-
     @Resource
     private UniqueViewService uniqueViewService;
 

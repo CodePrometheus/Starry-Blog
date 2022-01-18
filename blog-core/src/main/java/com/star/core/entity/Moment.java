@@ -9,17 +9,15 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 文章实体
- *
  * @Author: zzStar
- * @Date: 12-16-2020 20:10
+ * @Date: 2022/1/12 11:12 PM
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("tb_article")
-public class Article {
+@TableName("tb_moment")
+public class Moment {
 
     /**
      * id
@@ -28,39 +26,15 @@ public class Article {
     private Integer id;
 
     /**
-     * 作者
-     */
-    private Integer userId;
-
-    /**
-     * 文章分类
-     */
-    private Integer categoryId;
-
-    /**
-     * 文章缩略图
-     */
-    private String articleCover;
-
-    /**
-     * 标题
-     */
-    private String articleTitle;
-
-    /**
      * 内容
      */
-    private String articleContent;
+    private String momentContent;
 
     /**
-     * 文章类型
+     * 点赞数
      */
-    private Integer type;
-
-    /**
-     * 原文链接
-     */
-    private String originalUrl;
+    @TableField("`like`")
+    private Integer like;
 
     /**
      * 是否置顶

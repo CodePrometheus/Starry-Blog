@@ -53,7 +53,7 @@ public class MenuController {
     }
 
     @ApiOperation(value = "删除菜单")
-    @PostMapping("/menus/{menuId}")
+    @DeleteMapping("/menus/{menuId}")
     public Result<?> deleteMenu(@PathVariable("menuId") Integer menuId) {
         menuService.deleteMenu(menuId);
         return Result.success();

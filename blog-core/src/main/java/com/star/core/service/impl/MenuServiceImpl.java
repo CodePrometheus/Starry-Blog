@@ -36,7 +36,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Resource
     private RoleMenuMapper roleMenuMapper;
-
     @Resource
     private MenuMapper menuMapper;
 

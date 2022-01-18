@@ -18,8 +18,6 @@ import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +35,6 @@ public class OperationLogServiceImpl extends ServiceImpl<OperationLogMapper, Ope
 
     @javax.annotation.Resource
     private ObjectMapper objectMapper;
-
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;
 

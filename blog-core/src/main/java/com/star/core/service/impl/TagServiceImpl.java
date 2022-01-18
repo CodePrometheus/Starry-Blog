@@ -32,7 +32,6 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Resource
     private TagMapper tagMapper;
-
     @Resource
     private ArticleTagMapper articleTagMapper;
 

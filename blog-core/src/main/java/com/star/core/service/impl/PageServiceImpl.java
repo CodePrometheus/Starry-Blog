@@ -26,7 +26,6 @@ public class PageServiceImpl extends ServiceImpl<PageMapper, Page> implements Pa
 
     @Resource
     private RedisUtil redisUtil;
-
     @Resource
     private PageMapper pageMapper;
 

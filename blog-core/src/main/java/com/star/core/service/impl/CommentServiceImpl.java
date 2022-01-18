@@ -52,19 +52,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Resource
     private ArticleMapper articleMapper;
-
     @Resource
     private BlogInfoService blogInfoService;
-
     @Resource
     private RedisUtil redisUtil;
-
     @Resource
     private RabbitTemplate rabbitTemplate;
-
     @Resource
     private UserInfoMapper userInfoMapper;
-
     @Resource
     private CommentMapper commentMapper;
 

@@ -48,6 +48,13 @@ const routes = [
     },
   },
   {
+    path: '/moments',
+    component: reslove => require(['../views/moment/Moment'], reslove),
+    meta: {
+      title: '动态',
+    }
+  },
+  {
     path: '/about',
     component: reslove => require(['../views/about/About'], reslove),
     meta: {

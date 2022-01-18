@@ -17,8 +17,8 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "文章置顶")
-public class ArticleTopVO {
+@ApiModel(description = "修改置顶")
+public class TopVO {
 
     /**
      * id

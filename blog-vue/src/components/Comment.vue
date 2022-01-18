@@ -118,7 +118,7 @@
                   :class="isLike(reply.id) + ' iconfont icondianzan'"
                   @click="like(reply)"
                 />
-                <span v-show="reply.likeCount > 0"> {{ reply.likeCount }}</span>
+                <span v-show="reply.likeCount > 0">{{ reply.likeCount }}</span>
                 <!-- 回复 -->
                 <span class="reply-btn" @click="replyComment(index, reply)">
                   回复

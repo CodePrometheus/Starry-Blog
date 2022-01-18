@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.star.core.mapper.MomentMapper">
+
+    <resultMap id="momentBackResultMap" type="com.star.core.dto.MomentDTO">
+        <id column="id" property="id"/>
+        <result column="moment_content" property="momentContent"/>
+        <result column="like" property="like"/>
+        <result column="is_top" property="isTop"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="listMomentBack" resultMap="momentBackResultMap">
+        SELECT
+        m.id,
+        m.moment_content,
+        m.like,
+        m.is_top,
+        m.is_delete,
+        m.status,
+        m.create_time,
+        m.update_time
+        FROM
+        tb_moment m
+        <where>
+            is_delete = #{condition.isDelete}
+            <if test="condition.status != null">
+                and status = #{condition.status}
+            </if>
+            <if test="condition.keywords != null">
+                and moment_content like concat('%', #{condition.keywords}, '%')
+            </if>
+        </where>
+        ORDER BY m.is_top DESC, m.id DESC
+        LIMIT #{current},#{size}
+    </select>
+
+</mapper>

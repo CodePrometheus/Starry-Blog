@@ -20,13 +20,12 @@ import java.util.List;
  * @Date: 08-15-2021 20:45
  */
 @RestController
-@RequestMapping("admin")
+@RequestMapping("/admin")
 @Api(tags = "页面模块")
 public class PageController {
 
     @Resource
     private ImageUtil imageUtil;
-
     @Resource
     private PageService pageService;
 

@@ -50,9 +50,11 @@ public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> i
     @Override
     public PageData<VisitLogDTO> listVisitLogs(ConditionVO condition) {
         Page<VisitLog> page = new Page<>(PageUtils.getLimitCurrent(), PageUtils.getSize());
-        Page<VisitLog> visitLog = this.page(page, new LambdaQueryWrapper<VisitLog>().like(StringUtils.isNotBlank(condition.getKeywords()),
-                VisitLog::getRequestMethod, condition.getKeywords()).or().like(StringUtils.isNotBlank(condition.getKeywords()), VisitLog::getVisitDesc,
-                condition.getKeywords()).orderByDesc(VisitLog::getCreateTime));
+        Page<VisitLog> visitLog = this.page(page, new LambdaQueryWrapper<VisitLog>()
+                .like(StringUtils.isNotBlank(condition.getKeywords()), VisitLog::getRequestMethod, condition.getKeywords())
+                .or().like(StringUtils.isNotBlank(condition.getKeywords()), VisitLog::getVisitDesc, condition.getKeywords())
+                .or().like(StringUtils.isNotBlank(condition.getKeywords()), VisitLog::getContent, condition.getKeywords())
+                .orderByDesc(VisitLog::getCreateTime));
         List<VisitLogDTO> visitLogList = BeanCopyUtil.copyList(visitLog.getRecords(), VisitLogDTO.class);
         return new PageData<>(visitLogList, visitLog.getTotal());
     }

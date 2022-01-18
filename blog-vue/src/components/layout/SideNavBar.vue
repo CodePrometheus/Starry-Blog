@@ -73,6 +73,11 @@
         </router-link>
       </div>
       <div class="menus-item">
+        <router-link to="/moments">
+          <i class="iconfont iconbiaoqian"/> 动态
+        </router-link>
+      </div>
+      <div class="menus-item">
         <router-link to="/about">
           <i class="iconfont iconzhifeiji" /> 关于
         </router-link>

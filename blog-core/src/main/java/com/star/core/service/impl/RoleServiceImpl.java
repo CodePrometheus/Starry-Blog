@@ -42,19 +42,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Resource
     private UserRoleMapper userRoleMapper;
-
     @Resource
     private RoleMenuService roleMenuService;
-
     @Resource
     private FilterInvocationSecurityMetadataSourceImpl metadataSource;
-
     @Resource
     private RoleResourceService roleResourceService;
-
     @Resource
     private RoleMapper roleMapper;
-
 
     @Override
     @Transactional(rollbackFor = SecurityException.class)
