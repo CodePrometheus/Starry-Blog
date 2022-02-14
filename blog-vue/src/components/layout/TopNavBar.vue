@@ -1,93 +1,93 @@
 <template>
-  <v-app-bar app :class="navClass" hide-on-scroll flat height="60">
+  <v-app-bar app :class='navClass' hide-on-scroll flat height='60'>
     <!-- 手机端导航栏 -->
-    <div class="d-md-none nav-mobile-container">
-      <div style="font-size:18px;font-weight:bold">
-        <router-link to="/">
+    <div class='d-md-none nav-mobile-container'>
+      <div style='font-size:18px;font-weight:bold'>
+        <router-link to='/'>
           {{ blogInfo.websiteConfig.websiteAuthor }}
         </router-link>
       </div>
-      <div style="margin-left:auto">
-        <a @click="openSearch"><i class="iconfont iconsousuo"/></a>
-        <a @click="openDrawer" style="margin-left:10px;font-size:20px">
-          <i class="iconfont iconhanbao"/>
+      <div style='margin-left:auto'>
+        <a @click='openSearch'><i class='iconfont iconsousuo' /></a>
+        <a @click='openDrawer' style='margin-left:10px;font-size:20px'>
+          <i class='iconfont iconhanbao' />
         </a>
       </div>
     </div>
     <!-- 电脑导航栏 -->
-    <div class="d-md-block d-none nav-container">
-      <div class="float-left blog-title">
-        <router-link to="/">
+    <div class='d-md-block d-none nav-container'>
+      <div class='float-left blog-title'>
+        <router-link to='/'>
           {{ blogInfo.websiteConfig.websiteAuthor }}
         </router-link>
       </div>
-      <div class="float-right nav-title">
-        <div class="menus-btn">
-          <a @click="openSearch"><i class="iconfont iconsousuo"/> 搜索</a>
+      <div class='float-right nav-title'>
+        <div class='menus-btn'>
+          <a @click='openSearch'><i class='iconfont iconsousuo' /> 搜索</a>
         </div>
-        <div class="menus-item">
-          <router-link to="/">
-            <i class="iconfont iconzhuye"/> 首页
+        <div class='menus-item'>
+          <router-link to='/'>
+            <i class='iconfont iconzhuye' /> 首页
           </router-link>
         </div>
-        <div class="menus-item">
-          <router-link to="/archives">
-            <i class="iconfont iconguidang"/> 归档
+        <div class='menus-item'>
+          <router-link to='/archives'>
+            <i class='iconfont iconguidang' /> 归档
           </router-link>
         </div>
-        <div class="menus-item">
-          <router-link to="/categories">
-            <i class="iconfont iconfenlei"/> 分类
+        <div class='menus-item'>
+          <router-link to='/categories'>
+            <i class='iconfont iconfenlei' /> 分类
           </router-link>
         </div>
-        <div class="menus-item">
-          <router-link to="/tags">
-            <i class="iconfont iconbiaoqian"/> 标签
+        <div class='menus-item'>
+          <router-link to='/tags'>
+            <i class='iconfont iconbiaoqian' /> 标签
           </router-link>
         </div>
-        <div class="menus-item">
-          <router-link to="/moments">
-            <i class="iconfont iconbiaoqian"/> 动态
+        <div class='menus-item'>
+          <router-link to='/moments'>
+            <i class='iconfont iconbiaoqian' /> 动态
           </router-link>
         </div>
-        <div class="menus-item">
-          <a href="https://codeprometheus.github.io/Starry-Notes/#/" target="_blank">
-            <i class="iconfont icon-biji"/> 笔记</a>
+        <div class='menus-item'>
+          <a href='https://codeprometheus.github.io/Starry-Notes/#/' target='_blank'>
+            <i class='iconfont icon-biji' /> 笔记</a>
         </div>
-        <div class="menus-item">
-          <router-link to="/links">
-            <i class="iconfont iconlianjie"/> 友链
+        <div class='menus-item'>
+          <router-link to='/links'>
+            <i class='iconfont iconlianjie' /> 友链
           </router-link>
         </div>
-        <div class="menus-item">
-          <router-link to="/about">
-            <i class="iconfont icon-xin"/> 关于
+        <div class='menus-item'>
+          <router-link to='/about'>
+            <i class='iconfont icon-xin' /> 关于
           </router-link>
         </div>
-        <div class="menus-item">
-          <router-link to="/message">
-            <i class="iconfont iconpinglunzu"/> 留言
+        <div class='menus-item'>
+          <router-link to='/message'>
+            <i class='iconfont iconpinglunzu' /> 留言
           </router-link>
         </div>
-        <div class="user-btn">
-          <a v-if="!this.$store.state.avatar" @click="openLogin">
-            <i class="iconfont icondenglu"/> 登录
+        <div class='user-btn'>
+          <a v-if='!this.$store.state.avatar' @click='openLogin'>
+            <i class='iconfont icondenglu' /> 登录
           </a>
           <template v-else>
             <img
-                class="user-avatar"
-                :src="this.$store.state.avatar"
-                height="30"
-                width="30"
+              class='user-avatar'
+              :src='this.$store.state.avatar'
+              height='30'
+              width='30'
             />
-            <ul class="user-submenu">
+            <ul class='user-submenu'>
               <li>
-                <router-link to="/user">
-                  <i class="iconfont icongerenzhongxin"/> 个人中心
+                <router-link to='/user'>
+                  <i class='iconfont icongerenzhongxin' /> 个人中心
                 </router-link>
               </li>
               <li>
-                <a @click="logout"><i class="iconfont icontuichu"/> 退出 </a>
+                <a @click='logout'><i class='iconfont icontuichu' /> 退出 </a>
               </li>
             </ul>
           </template>
@@ -100,60 +100,60 @@
 <script>
 export default {
   mounted() {
-    window.addEventListener("scroll", this.scroll);
+    window.addEventListener('scroll', this.scroll)
   },
-  data: function () {
+  data: function() {
     return {
-      navClass: ""
-    };
+      navClass: ''
+    }
   },
   methods: {
     scroll() {
-      const that = this;
+      const that = this
       let scrollTop =
-          window.pageYOffset ||
-          document.documentElement.scrollTop ||
-          document.body.scrollTop;
-      that.scrollTop = scrollTop;
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop
+      that.scrollTop = scrollTop
       if (that.scrollTop > 60) {
-        that.navClass = "nav-fixed";
+        that.navClass = 'nav-fixed'
       } else {
-        that.navClass = "nav";
+        that.navClass = 'nav'
       }
     },
     openSearch() {
-      this.$store.state.searchFlag = true;
+      this.$store.state.searchFlag = true
     },
     openDrawer() {
-      this.$store.state.drawer = true;
+      this.$store.state.drawer = true
     },
     openLogin() {
-      this.$store.state.loginFlag = true;
+      this.$store.state.loginFlag = true
     },
     logout() {
       //如果在个人中心则跳回上一页
-      if (this.$route.path == "/user") {
-        this.$router.go(-1);
+      if (this.$route.path === '/user') {
+        this.$router.go(-1)
       }
-      this.axios.get("/api/logout").then(({data}) => {
+      this.axios.get('/api/logout').then(({ data }) => {
         if (data.flag) {
-          this.$store.commit("logout");
-          this.$toast({type: "success", message: "注销成功"});
+          this.$store.commit('logout')
+          this.$toast({ type: 'success', message: '注销成功' })
         } else {
-          this.$toast({type: "error", message: data.message});
+          this.$toast({ type: 'error', message: data.message })
         }
-      });
+      })
     }
   },
   computed: {
     avatar() {
-      return this.$store.state.avatar;
+      return this.$store.state.avatar
     },
     blogInfo() {
-      return this.$store.state.blogInfo;
+      return this.$store.state.blogInfo
     }
   }
-};
+}
 </script>
 
 <style scoped>

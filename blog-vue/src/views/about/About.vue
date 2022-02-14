@@ -1,139 +1,139 @@
 <template>
   <div>
     <!-- banner -->
-    <div class="banner" :style="cover">
-      <h1 class="banner-title">关于我</h1>
+    <div class='banner' :style='cover'>
+      <h1 class='banner-title'>关于我</h1>
     </div>
     <!-- 关于我内容 -->
-    <v-card class="blog-container">
+    <v-card class='blog-container'>
       <!-- 博主头像 -->
-      <div class="my-wrapper">
-        <v-avatar size="110">
-          <img class="author-avatar" :src="avatar" />
+      <div class='my-wrapper'>
+        <v-avatar size='110'>
+          <img class='author-avatar' :src='avatar' />
         </v-avatar>
       </div>
       <!-- 介绍 -->
       <div
-        ref="about"
-        class="about-content markdown-body"
-        v-html="aboutContent"
+        ref='about'
+        class='about-content markdown-body'
+        v-html='aboutContent'
       />
     </v-card>
   </div>
 </template>
 
 <script>
-import Clipboard from "clipboard";
+import Clipboard from 'clipboard'
 
 export default {
   created() {
-    this.getAboutContent();
+    this.getAboutContent()
   },
   destroyed() {
-    this.clipboard.destroyed();
+    this.clipboard.destroyed()
   },
   data: function() {
     return {
-      aboutContent: "",
+      aboutContent: '',
       clipboard: null,
       imgList: []
-    };
+    }
   },
   methods: {
     getAboutContent() {
-      const that = this;
-      this.axios.get("/api/about").then(({ data }) => {
-        this.markdownToHtml(data);
+      const that = this
+      this.axios.get('/api/about').then(({ data }) => {
+        this.markdownToHtml(data)
         this.$nextTick(() => {
           // 添加代码复制功能
-          this.clipboard = new Clipboard(".copy-btn");
-          this.clipboard.on("success", () => {
-            this.$toast({ type: "success", message: "复制成功" });
-          });
+          this.clipboard = new Clipboard('.copy-btn')
+          this.clipboard.on('success', () => {
+            this.$toast({ type: 'success', message: '复制成功' })
+          })
           // 添加图片预览功能
-          const imgList = this.$refs.about.getElementsByTagName("img");
+          const imgList = this.$refs.about.getElementsByTagName('img')
           for (let i = 0; i < imgList.length; i++) {
-            this.imgList.push(imgList[i].src);
-            imgList[i].addEventListener("click", function(e) {
-              that.previewImg(e.target.currentSrc);
-            });
+            this.imgList.push(imgList[i].src)
+            imgList[i].addEventListener('click', function(e) {
+              that.previewImg(e.target.currentSrc)
+            })
           }
-        });
-      });
+        })
+      })
     },
     markdownToHtml(data) {
-      const MarkdownIt = require("markdown-it");
-      const hljs = require("highlight.js");
+      const MarkdownIt = require('markdown-it')
+      const hljs = require('highlight.js')
       const md = new MarkdownIt({
         html: true,
         linkify: true,
         typographer: true,
         highlight: function(str, lang) {
           // 当前时间加随机数生成唯一的id标识
-          var d = new Date().getTime();
+          let d = new Date().getTime()
           if (
             window.performance &&
-            typeof window.performance.now === "function"
+            typeof window.performance.now === 'function'
           ) {
-            d += performance.now();
+            d += performance.now()
           }
-          const codeIndex = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+          const codeIndex = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
             /[xy]/g,
             function(c) {
-              var r = (d + Math.random() * 16) % 16 | 0;
-              d = Math.floor(d / 16);
-              return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+              let r = (d + Math.random() * 16) % 16 | 0
+              d = Math.floor(d / 16)
+              return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16)
             }
-          );
+          )
           // 复制功能主要使用的是 clipboard.js
-          let html = `<button class="copy-btn iconfont iconfuzhi" type="button" data-clipboard-action="copy" data-clipboard-target="#copy${codeIndex}"></button>`;
-          const linesLength = str.split(/\n/).length - 1;
+          let html = `<button class='copy-btn iconfont iconfuzhi' type='button' data-clipboard-action='copy' data-clipboard-target='#copy${codeIndex}'></button>`
+          const linesLength = str.split(/\n/).length - 1
           // 生成行号
-          let linesNum = '<span aria-hidden="true" class="line-numbers-rows">';
+          let linesNum = '<span aria-hidden="true" class="line-numbers-rows">'
           for (let index = 0; index < linesLength; index++) {
-            linesNum = linesNum + "<span></span>";
+            linesNum = linesNum + '<span></span>'
           }
-          linesNum += "</span>";
+          linesNum += '</span>'
           if (lang && hljs.getLanguage(lang)) {
             // highlight.js 高亮代码
-            const preCode = hljs.highlight(lang, str, true).value;
-            html = html + preCode;
+            const preCode = hljs.highlight(lang, str, true).value
+            html = html + preCode
             if (linesLength) {
-              html += '<b class="name">' + lang + "</b>";
+              html += '<b class="name">' + lang + '</b>'
             }
             // 将代码包裹在 textarea 中，由于防止textarea渲染出现问题，这里将 "<" 用 "<" 代替，不影响复制功能
-            return `<pre class="hljs"><code>${html}</code>${linesNum}</pre><textarea style="position: absolute;top: -9999px;left: -9999px;z-index: -9999;" id="copy${codeIndex}">${str.replace(
+            return `<pre class='hljs'><code>${html}</code>${linesNum}</pre><textarea style='position: absolute;top: -9999px;left: -9999px;z-index: -9999;' id='copy${codeIndex}'>${str.replace(
               /<\/textarea>/g,
-              "</textarea>"
-            )}</textarea>`;
+              '</textarea>'
+            )}</textarea>`
           }
         }
-      });
+      })
       // 将markdown替换为html标签
-      this.aboutContent = md.render(data.data);
+      this.aboutContent = md.render(data.data)
     },
     previewImg(img) {
       this.$imagePreview({
         images: this.imgList,
         index: this.imgList.indexOf(img)
-      });
+      })
     }
   },
   computed: {
     avatar() {
-      return this.$store.state.blogInfo.websiteConfig.websiteAvatar;
+      return this.$store.state.blogInfo.websiteConfig.websiteAvatar
     },
     cover() {
-      let cover = "";
+      let cover = ''
       this.$store.state.blogInfo.pageList.forEach(v => {
-        if (v.pageLabel == "about") {
-          cover = v.pageCover;
+        if (v.pageLabel === 'about') {
+          cover = v.pageCover
         }
-      });
-      return "background: url(" + cover + ") center center / cover no-repeat";
+      })
+      return 'background: url(' + cover + ') center center / cover no-repeat'
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -156,7 +156,7 @@ export default {
 }
 </style>
 
-<style lang="scss">
+<style lang='scss'>
 pre.hljs {
   padding: 12px 2px 12px 40px !important;
   border-radius: 5px !important;

@@ -1,40 +1,40 @@
 <template>
   <div>
     <!-- 标签或分类名 -->
-    <div class="banner" :style="cover">
-      <h1 class="banner-title animated fadeInDown">{{ title }} - {{ name }}</h1>
+    <div class='banner' :style='cover'>
+      <h1 class='banner-title animated fadeInDown'>{{ title }} - {{ name }}</h1>
     </div>
-    <div class="article-list-wrapper">
+    <div class='article-list-wrapper'>
       <v-row>
-        <v-col md="4" cols="12" v-for="item of articleList" :key="item.id">
+        <v-col md='4' cols='12' v-for='item of articleList' :key='item.id'>
           <!-- 文章 -->
-          <v-card class="animated zoomIn article-item-card">
-            <div class="article-item-cover">
+          <v-card class='animated zoomIn article-item-card'>
+            <div class='article-item-cover'>
               <router-link :to="'/articles/' + item.id">
                 <!-- 缩略图 -->
                 <v-img
-                  class="on-hover"
-                  width="100%"
-                  height="100%"
-                  :src="item.articleCover"
+                  class='on-hover'
+                  width='100%'
+                  height='100%'
+                  :src='item.articleCover'
                 />
               </router-link>
             </div>
-            <div class="article-item-info">
+            <div class='article-item-info'>
               <!-- 文章标题 -->
-              <div style="margin-top: 0.375rem">
+              <div style='margin-top: 0.375rem'>
                 <router-link :to="'/articles/' + item.id">
                   {{ item.articleTitle }}
                 </router-link>
               </div>
-              <div style="margin-top:0.375rem">
+              <div style='margin-top:0.375rem'>
                 <!-- 发表时间 -->
-                <v-icon size="20">mdi-clock-outline</v-icon>
+                <v-icon size='20'>mdi-clock-outline</v-icon>
                 {{ item.createTime | date }}
                 <!-- 文章分类 -->
                 <router-link
                   :to="'/categories/' + item.categoryId"
-                  class="float-right"
+                  class='float-right'
                 >
                   <v-icon>mdi-bookmark</v-icon>
                   {{ item.categoryName }}
@@ -44,12 +44,12 @@
             <!-- 分割线 -->
             <v-divider />
             <!-- 文章标签 -->
-            <div class="tag-wrapper">
+            <div class='tag-wrapper'>
               <router-link
                 :to="'/tags/' + tag.id"
-                class="tag-btn"
-                v-for="tag of item.tagList"
-                :key="tag.id"
+                class='tag-btn'
+                v-for='tag of item.tagList'
+                :key='tag.id'
               >
                 {{ tag.tagName }}
               </router-link>
@@ -58,9 +58,9 @@
         </v-col>
       </v-row>
       <!-- 无限加载 -->
-      <infinite-loading @infinite="infiniteHandler">
-        <div slot="no-results" />
-        <div slot="no-more" />
+      <infinite-loading @infinite='infiniteHandler'>
+        <div slot='no-results' />
+        <div slot='no-more' />
       </infinite-loading>
     </div>
   </div>
@@ -69,25 +69,25 @@
 <script>
 export default {
   created() {
-    const path = this.$route.path;
-    if (path.indexOf("/categories") != -1) {
-      this.title = "分类";
+    const path = this.$route.path
+    if (path.indexOf('/categories') != -1) {
+      this.title = '分类'
     } else {
-      this.title = "标签";
+      this.title = '标签'
     }
   },
   data: function() {
     return {
       current: 1,
       articleList: [],
-      name: "",
-      title: ""
-    };
+      name: '',
+      title: ''
+    }
   },
   methods: {
     infiniteHandler($state) {
       this.axios
-        .get("/api/articles/condition", {
+        .get('/api/articles/condition', {
           params: {
             categoryId: this.$route.params.categoryId,
             tagId: this.$route.params.tagId,
@@ -95,32 +95,32 @@ export default {
           }
         })
         .then(({ data }) => {
-          console.log(data.data);
+          console.log(data.data)
           if (data.data.articlePreviewList.length) {
-            this.current++;
-            this.name = data.data.name;
+            this.current++
+            this.name = data.data.name
             // 修改标题
-            document.titile = this.title + " - " + this.name;
-            this.articleList.push(...data.data.articlePreviewList);
-            $state.loaded();
+            document.titile = this.title + ' - ' + this.name
+            this.articleList.push(...data.data.articlePreviewList)
+            $state.loaded()
           } else {
-            $state.complete();
+            $state.complete()
           }
-        });
+        })
     }
   },
   computed: {
     cover() {
-      let cover = "";
+      let cover = ''
       this.$store.state.blogInfo.pageList.forEach(v => {
-        if (v.pageLabel == "articleList") {
-          cover = v.pageCover;
+        if (v.pageLabel === 'articleList') {
+          cover = v.pageCover
         }
-      });
-      return "background: url(" + cover + ") center center / cover no-repeat";
+      })
+      return 'background: url(' + cover + ') center center / cover no-repeat'
     }
   }
-};
+}
 </script>
 
 <style scoped>

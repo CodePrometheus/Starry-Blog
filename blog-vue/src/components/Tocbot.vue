@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- 目录 -->
-    <v-card class="box-card right-container m-toc">
-      <div class="right-title">
-        <i class="iconfont iconhanbao" style="font-size:16.8px"/>
-        <span style="margin-left:10px">目录</span>
+    <v-card class='box-card right-container m-toc'>
+      <div class='right-title'>
+        <i class='iconfont iconhanbao' style='font-size:16.8px' />
+        <span style='margin-left:10px'>目录</span>
       </div>
-      <div class="item">
-        <div class="js-toc"></div>
+      <div class='item'>
+        <div class='js-toc'></div>
       </div>
     </v-card>
   </div>
@@ -30,7 +30,7 @@ export default {
         // 要显示的id的目录
         headingSelector: 'h1, h2, h3',
         positionFixedSelector: '.m-toc',
-        onClick: function (e) {
+        onClick: function(e) {
           e.preventDefault()
         },
         scrollSmooth: true,
@@ -40,13 +40,13 @@ export default {
         scrollSmoothOffset: -55,
         // Headings offset between the headings and the top of the document (this is meant for minor adjustments).
         // Can also be used to account for scroll height discrepancies from the use of css scroll-padding-top
-        headingsOffset: -18,
+        headingsOffset: -18
       })
-    },
+    }
   },
 
   computed: {
-    ...mapState(['isBlogRenderComplete']),
+    ...mapState(['isBlogRenderComplete'])
   },
 
   mounted() {
@@ -63,8 +63,8 @@ export default {
       if (this.isBlogRenderComplete) {
         this.initTocbot()
       }
-    },
-  },
+    }
+  }
 
 }
 </script>

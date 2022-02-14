@@ -6,14 +6,14 @@ import Vue from 'vue'
  * 简写：<el-button v-debounce="[reset]">刷新</el-button>
  */
 Vue.directive('debounce', {
-    inserted: function (el, binding) {
-        let [fn, event = "click", time = 300] = binding.value
-        let timer
-        el.addEventListener(event, () => {
-            timer && clearTimeout(timer)
-            timer = setTimeout(() => fn(), time)
-        })
-    }
+  inserted: function (el, binding) {
+    let [fn, event = 'click', time = 300] = binding.value
+    let timer
+    el.addEventListener(event, () => {
+      timer && clearTimeout(timer)
+      timer = setTimeout(() => fn(), time)
+    })
+  },
 })
 
 /**
@@ -22,15 +22,15 @@ Vue.directive('debounce', {
  * 传递参数：<el-button v-throttle="[()=>reset(param),`click`,300]">刷新</el-button>
  */
 Vue.directive('throttle', {
-    inserted: function (el, binding) {
-        let [fn, event = "click", time = 300] = binding.value
-        let now, preTime
-        el.addEventListener(event, () => {
-            now = new Date()
-            if (!preTime || now - preTime > time) {
-                preTime = now
-                fn()
-            }
-        })
-    }
+  inserted: function (el, binding) {
+    let [fn, event = 'click', time = 300] = binding.value
+    let now, preTime
+    el.addEventListener(event, () => {
+      now = new Date()
+      if (!preTime || now - preTime > time) {
+        preTime = now
+        fn()
+      }
+    })
+  },
 })

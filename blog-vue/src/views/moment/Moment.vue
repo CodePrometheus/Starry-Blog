@@ -1,50 +1,50 @@
 <template>
   <div>
-    <div class="banner" :style="cover">
-      <h1 class="banner-title">动态</h1>
+    <div class='banner' :style='cover'>
+      <h1 class='banner-title'>动态</h1>
     </div>
-    <div class="moment-container">
+    <div class='moment-container'>
       <v-card
-        class="animated zoomIn moment-card"
-        style="border-radius: 12px 8px 8px 12px"
-        v-for="v of momentList"
-        :key="v.id"
+        class='animated zoomIn moment-card'
+        style='border-radius: 12px 8px 8px 12px'
+        v-for='v of momentList'
+        :key='v.id'
       >
-        <v-avatar size="120">
-          <img class="author-avatar"
-               :src="$store.state.blogInfo.websiteConfig.websiteAvatar" />
+        <v-avatar size='120'>
+          <img class='author-avatar'
+               :src='$store.state.blogInfo.websiteConfig.websiteAvatar' />
         </v-avatar>
-        <div class="moment-wrapper">
-          <div class="author">
+        <div class='moment-wrapper'>
+          <div class='author'>
             {{ $store.state.blogInfo.websiteConfig.websiteAuthor }}
           </div>
-          <div class="moment-info">
-            <span style="color:#ff7242" v-if="v.isTop == 1">
-              <i class="iconfont iconzhiding"/> 置顶
-              <span class="separator">|</span>
+          <div class='moment-info'>
+            <span style='color:#ff7242' v-if='v.isTop === 1'>
+              <i class='iconfont iconzhiding' /> 置顶
+              <span class='separator'>|</span>
             </span>
-            <v-icon size="14">mdi-calendar-month-outline</v-icon>
+            <v-icon size='14'>mdi-calendar-month-outline</v-icon>
             {{ v.createTime | date }}
           </div>
-          <div class="moment-content">
+          <div class='moment-content'>
             {{ v.momentContent }}
           </div>
-          <div class="like">
+          <div class='like'>
             <span
               :class="isLike(v.id) + ' iconfont icondianzan'"
-              @click="like(v)"
+              @click='like(v)'
             />
-            <span v-show="v.likeCount > 0">{{ v.likeCount }}</span>
+            <span v-show='v.likeCount > 0'>{{ v.likeCount }}</span>
           </div>
         </div>
       </v-card>
     </div>
     <!-- 分页按钮 -->
     <v-pagination
-      color="#00C4B6"
-      v-model="current"
-      :length="Math.ceil(count / 10)"
-      total-visible="7"
+      color='#00C4B6'
+      v-model='current'
+      :length='Math.ceil(count / 10)'
+      total-visible='7'
     />
   </div>
 </template>
@@ -52,7 +52,7 @@
 <script>
 export default {
   created() {
-    this.listMoments();
+    this.listMoments()
   },
   data() {
     return {
@@ -63,37 +63,37 @@ export default {
   },
   methods: {
     listMoments() {
-      this.axios.get("/api/moments", {
+      this.axios.get('/api/moments', {
         params: {
           current: this.current
         }
-      }).then(({data}) => {
-        this.momentList = data.data.recordList;
-        this.count = data.data.count;
+      }).then(({ data }) => {
+        this.momentList = data.data.recordList
+        this.count = data.data.count
       })
     },
     like(moment) {
       if (!this.$store.state.userId) {
-        this.$store.state.loginFlag = true;
-        return false;
+        this.$store.state.loginFlag = true
+        return false
       }
-      console.log(moment.id);
-      this.axios.post("/api/moments/" + moment.id + "/like")
-      .then(({ data }) => {
-        if (data.flag) {
-          if (this.$store.state.momentLikeSet.indexOf(moment.id) != -1) {
-            this.$set(moment, "likeCount", moment.likeCount - 1)
-          } else {
-            this.$set(moment, "likeCount", moment.likeCount + 1)
+      console.log(moment.id)
+      this.axios.post('/api/moments/' + moment.id + '/like')
+        .then(({ data }) => {
+          if (data.flag) {
+            if (this.$store.state.momentLikeSet.indexOf(moment.id) != -1) {
+              this.$set(moment, 'likeCount', moment.likeCount - 1)
+            } else {
+              this.$set(moment, 'likeCount', moment.likeCount + 1)
+            }
+            this.$store.commit('momentLike', moment.id)
           }
-          this.$store.commit("momentLike", moment.id);
-        }
-      })
+        })
     }
   },
   computed: {
     cover() {
-      let cover = '';
+      let cover = ''
       this.$store.state.blogInfo.pageList.forEach(v => {
         if (v.pageLabel === 'moment') {
           cover = v.pageCover
@@ -103,9 +103,9 @@ export default {
     },
     isLike() {
       return function(momentId) {
-        let momentLikeSet = this.$store.state.momentLikeSet;
-        return momentLikeSet.indexOf(momentId) != -1 ? "like-active" : "like";
-      };
+        let momentLikeSet = this.$store.state.momentLikeSet
+        return momentLikeSet.indexOf(momentId) != -1 ? 'like-active' : 'like'
+      }
     }
   }
 }

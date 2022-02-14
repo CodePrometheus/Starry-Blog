@@ -19,13 +19,10 @@ import 'highlight.js/styles/atom-one-dark.css'
 import VueImageSwipe from 'vue-image-swipe'
 import 'vue-image-swipe/dist/vue-image-swipe.css'
 import Toast from './components/toast/index'
-import APlayer from '@moefe/vue-aplayer'
 import live2d from 'live2d-vue'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import hls from 'videojs-contrib-hls'
-import 'view-design/dist/styles/iview.css'
-
+import AvatarCropper from 'vue-avatar-cropper'
 
 Vue.prototype.config = config
 Vue.config.productionTip = false
@@ -36,9 +33,8 @@ Vue.use(InfiniteLoading)
 Vue.use(VueAxios, axios)
 Vue.use(VueImageSwipe)
 Vue.use(Toast)
-Vue.use(APlayer, { productionTip: false })
 Vue.use(live2d)
-Vue.use(hls)
+Vue.use(AvatarCropper)
 
 Vue.filter('date', function (value) {
   return moment(value).format('YYYY-MM-DD HH:mm')
@@ -81,12 +77,12 @@ axios.interceptors.response.use(
   },
   function (error) {
     return Promise.reject(error)
-  },
+  }
 )
 
 new Vue({
   router,
   store,
   vuetify,
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app')

@@ -1,37 +1,37 @@
 <template>
   <!-- 搜索框 -->
-  <v-dialog v-model="searchFlag" max-width="600" :fullscreen="isMobile">
-    <v-card class="search-wrapper" style="border-radius:4px">
-      <div class="mb-3">
-        <span class="search-title">搜索</span>
+  <v-dialog v-model='searchFlag' max-width='600' :fullscreen='isMobile'>
+    <v-card class='search-wrapper' style='border-radius:4px'>
+      <div class='mb-3'>
+        <span class='search-title'>搜索</span>
         <!-- 关闭按钮 -->
-        <v-icon class="float-right" @click="searchFlag = false">
+        <v-icon class='float-right' @click='searchFlag = false'>
           mdi-close
         </v-icon>
       </div>
       <!-- 输入框 -->
-      <div class="search-input-wrapper">
+      <div class='search-input-wrapper'>
         <v-icon>mdi-magnify</v-icon>
-        <input v-model="keywords" placeholder="输入文章标题或内容" />
+        <input v-model='keywords' placeholder='输入文章标题或内容' />
       </div>
       <!-- 搜索结果 -->
-      <div class="search-result-wrapper">
-        <hr class="divider" />
+      <div class='search-result-wrapper'>
+        <hr class='divider' />
         <ul>
-          <li class="search-result" v-for="item of articleList" :key="item.id">
+          <li class='search-result' v-for='item of articleList' :key='item.id'>
             <!-- 文章标题 -->
-            <a @click="goTo(item.id)" v-html="item.articleTitle" />
+            <a @click='goTo(item.id)' v-html='item.articleTitle' />
             <!-- 文章内容 -->
             <p
-              class="search-result-content text-justify"
-              v-html="item.articleContent"
+              class='search-result-content text-justify'
+              v-html='item.articleContent'
             />
           </li>
         </ul>
         <!-- 搜索结果不存在提示 -->
         <div
-          v-show="flag && articleList.length == 0"
-          style="font-size:0.875rem"
+          v-show='flag && articleList.length === 0'
+          style='font-size:0.875rem'
         >
           找不到您查询的内容：{{ keywords }}
         </div>
@@ -44,48 +44,48 @@
 export default {
   data: function() {
     return {
-      keywords: "",
+      keywords: '',
       articleList: [],
       flag: false
-    };
+    }
   },
   methods: {
     goTo(articleId) {
       this.$store.state.searchFlag = false
-      this.$router.push({ path: "/articles/" + articleId })
+      this.$router.push({ path: '/articles/' + articleId })
       this.keywords = ''
     }
   },
   computed: {
     searchFlag: {
       set(value) {
-        this.$store.state.searchFlag = value;
+        this.$store.state.searchFlag = value
       },
       get() {
-        return this.$store.state.searchFlag;
+        return this.$store.state.searchFlag
       }
     },
     isMobile() {
-      const clientWidth = document.documentElement.clientWidth;
+      const clientWidth = document.documentElement.clientWidth
       if (clientWidth > 960) {
-        return false;
+        return false
       }
-      return true;
+      return true
     }
   },
   watch: {
     keywords(value) {
-      this.flag = value.trim() != "" ? true : false;
+      this.flag = value.trim() != '' ? true : false
       this.axios
-        .get("/api/articles/search", {
+        .get('/api/articles/search', {
           params: { current: 1, keywords: value }
         })
         .then(({ data }) => {
-          this.articleList = data.data;
-        });
+          this.articleList = data.data
+        })
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -94,11 +94,13 @@ export default {
   height: 100%;
   background: #fff !important;
 }
+
 .search-title {
   color: #49b1f5;
   font-size: 1.25rem;
   line-height: 1;
 }
+
 .search-input-wrapper {
   display: flex;
   padding: 5px;
@@ -107,11 +109,13 @@ export default {
   border: 2px solid #8e8cd8;
   border-radius: 2rem;
 }
+
 .search-input-wrapper input {
   width: 100%;
   margin-left: 5px;
   outline: none;
 }
+
 @media (min-width: 960px) {
   .search-result-wrapper {
     padding-right: 5px;
@@ -119,18 +123,21 @@ export default {
     overflow: auto;
   }
 }
+
 @media (max-width: 959px) {
   .search-result-wrapper {
     height: calc(100vh - 110px);
     overflow: auto;
   }
 }
+
 .search-result a {
   color: #555;
   font-weight: bold;
   border-bottom: 1px solid #999;
   text-decoration: none;
 }
+
 .search-result-content {
   color: #555;
   cursor: pointer;
@@ -143,6 +150,7 @@ export default {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
+
 .divider {
   margin: 20px 0;
   border: 2px dashed #d2ebfd;

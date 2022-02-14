@@ -1,79 +1,79 @@
 <template>
   <div>
-    <div class="chat-container animated bounceInUp"
-         v-show="isShow"
-         @click="closeAll"
-         @contextmenu.prevent.stop="closeAll">
+    <div class='chat-container animated bounceInUp'
+         v-show='isShow'
+         @click='closeAll'
+         @contextmenu.prevent.stop='closeAll'>
 
       <!-- 标题 -->
-      <div class="header">
-        <img src="https://gitee.com/codeprometheus/MyPicBed/raw/master/img/star.png"
-             width="32" height="32"/>
-        <div style="margin-left:12px">
+      <div class='header'>
+        <img src='https://gitee.com/codeprometheus/MyPicBed/raw/master/img/star.png'
+             width='32' height='32' />
+        <div style='margin-left:12px'>
           <div style="font-family: 'Fira Code'">Starry Tree Hole</div>
-          <div style="font-size:12px">{{ count }}人在线</div>
+          <div style='font-size:12px'>{{ count }}人在线</div>
         </div>
-        <v-icon class="close" @click="isShow = false">
+        <v-icon class='close' @click='isShow = false'>
           mdi-close
         </v-icon>
       </div>
 
       <!-- 树洞显示框 -->
-      <div class="message" id="message">
+      <div class='message' id='message'>
         <!-- 录音 -->
-        <div v-show="voiceActive"
-             class="voice"
-             @mousemove.prevent.stop="translationMove($event)"
-             @mouseup.prevent.stop="translationEnd($event)">
-          <v-icon ref="voiceClose" class="close-voice">mdi-close</v-icon>
+        <div v-show='voiceActive'
+             class='voice'
+             @mousemove.prevent.stop='translationMove($event)'
+             @mouseup.prevent.stop='translationEnd($event)'>
+          <v-icon ref='voiceClose' class='close-voice'>mdi-close</v-icon>
         </div>
 
         <!-- content -->
-        <div :class="isMyMessage(item)"
-             v-for="(item,index) of chatRecordList"
-             :key="index">
+        <div :class='isMyMessage(item)'
+             v-for='(item,index) of chatRecordList'
+             :key='index'>
           <!-- 头像 -->
-          <img :src="item.avatar" :class="isLeft(item)"/>
+          <img :src='item.avatar' :class='isLeft(item)' />
           <div>
             <!-- nickname -->
-            <div class="nickname" v-if="!isSelf(item)">
+            <div class='nickname' v-if='!isSelf(item)'>
               {{ item.nickname }}
-              <span style="margin-left:12px">{{ item.createTime | hour }}</span>
+              <span style='margin-left:12px'>{{ item.createTime | hour }}</span>
             </div>
 
             <!-- 内容 -->
-            <div ref="content"
-                 @contextmenu.prevent.stop="showBack(item, index, $event)"
-                 :class="isMyContent(item)">
+            <div ref='content'
+                 @contextmenu.prevent.stop='showBack(item, index, $event)'
+                 :class='isMyContent(item)'>
               <!-- 文字消息 -->
-              <div v-if="item.type == 3" v-html="item.content"/>
+              <div v-if='item.type === 3' v-html='item.content' />
 
               <!-- 语音消息 -->
-              <div v-if="item.type == 5" @click.prevent.stop="playVoice(item)">
-                <audio @ended="endVoice(item)"
-                       @canplay="getVoiceTime(item)"
-                       ref="voices"
-                       :src="item.content"
-                       style="display:none"/>
+              <div v-if='item.type === 5' @click.prevent.stop='playVoice(item)'>
+                <audio @ended='endVoice(item)'
+                       @canplay='getVoiceTime(item)'
+                       ref='voices'
+                       :src='item.content'
+                       style='display:none' />
                 <!-- 播放 -->
                 <v-icon :color="isSelf(item) ? '#fff' : '#000'"
-                        ref="plays"
-                        style="display:inline-flex;cursor: pointer;"
+                        ref='plays'
+                        style='display:inline-flex;cursor: pointer;'
                 >
                   mdi-arrow-right-drop-circle
                 </v-icon>
                 <!-- 暂停 -->
                 <v-icon :color="isSelf(item) ? '#fff' : '#000'"
-                        ref="pauses"
-                        style="display:none;cursor: pointer;"
+                        ref='pauses'
+                        style='display:none;cursor: pointer;'
                 >
                   mdi-pause-circle
                 </v-icon>
                 <!-- 显示音频时长 -->
-                <span ref="voiceTimes"/>
+                <span ref='voiceTimes' />
               </div>
 
-              <div class="back-menu" ref="backBtn" @click="back(item, index)">
+              <div class='back-menu' ref='backBtn' @click='back(item, index)'>
                 撤回
               </div>
             </div>
@@ -82,68 +82,68 @@
       </div>
 
       <!-- 树洞输入框 -->
-      <div class="footer">
+      <div class='footer'>
         <!-- 表情框 -->
-        <div class="emoji-box" v-show="isEmoji">
-          <Emoji :choose-emoji="true" @addEmoji="addEmoji"/>
+        <div class='emoji-box' v-show='isEmoji'>
+          <Emoji :choose-emoji='true' @addEmoji='addEmoji' />
         </div>
-        <div class="emoji-border" v-show="isEmoji"/>
+        <div class='emoji-border' v-show='isEmoji' />
 
         <!-- 切换输入方式 -->
         <v-icon
-          v-show="!isVoice"
-          @click="isVoice = !isVoice"
-          style="margin-right: 8px"
+          v-show='!isVoice'
+          @click='isVoice = !isVoice'
+          style='margin-right: 8px'
         >
           mdi-microphone
         </v-icon>
         <v-icon
-          v-show="isVoice"
-          @click="isVoice = !isVoice"
-          style="margin-right: 8px"
+          v-show='isVoice'
+          @click='isVoice = !isVoice'
+          style='margin-right: 8px'
         >
           mdi-keyboard
         </v-icon>
 
         <!-- 文字输入 -->
         <textarea
-          v-show="!isVoice"
-          ref="chatInput"
-          v-model="content"
-          @keydown.enter="saveMessage($event)"
-          placeholder="想吐槽些什么呢~~~"/>
+          v-show='!isVoice'
+          ref='chatInput'
+          v-model='content'
+          @keydown.enter='saveMessage($event)'
+          placeholder='想吐槽些什么呢~~~' />
 
         <!-- 语音输入 -->
         <button
-          class="voice-btn"
-          v-show="isVoice"
-          @mousedown.prevent.stop="translationStart"
-          @mouseup.prevent.stop="translationEnd($event)"
-          @touchstart.prevent.stop="translationStart"
-          @touchend.prevent.stop="translationEnd($event)"
-          @touchmove.prevent.stop="translationMove($event)"
+          class='voice-btn'
+          v-show='isVoice'
+          @mousedown.prevent.stop='translationStart'
+          @mouseup.prevent.stop='translationEnd($event)'
+          @touchstart.prevent.stop='translationStart'
+          @touchend.prevent.stop='translationEnd($event)'
+          @touchmove.prevent.stop='translationMove($event)'
         >
           按住说话
         </button>
 
         <!-- 表情 -->
         <i
-          class="iconfont iconbiaoqing emoji"
+          class='iconfont iconbiaoqing emoji'
           :style="isEmoji ? 'color:#FFC83D' : ''"
-          @click.prevent.stop="openEmoji"
+          @click.prevent.stop='openEmoji'
         />
         <!-- 发送按钮 -->
-        <i :class="isInput" @click="saveMessage" style="font-size: 1.5rem"/>
+        <i :class='isInput' @click='saveMessage' style='font-size: 1.5rem' />
       </div>
     </div>
 
     <!-- 未读数量 -->
-    <div class="chat-btn" @click="open">
-      <span class="unread" v-if="unreadCount > 0">{{ unreadCount }}</span>
+    <div class='chat-btn' @click='open'>
+      <span class='unread' v-if='unreadCount > 0'>{{ unreadCount }}</span>
       <img
-        width="100%"
-        height="100%"
-        src="https://gitee.com/codeprometheus/MyPicBed/raw/master/img/star.png"
+        width='100%'
+        height='100%'
+        src='https://gitee.com/codeprometheus/MyPicBed/raw/master/img/star.png'
       />
     </div>
   </div>
@@ -157,7 +157,7 @@ import Recorderx, { ENCODE_TYPE } from 'recorderx'
 export default {
   name: 'ChatRoom',
   components: {
-    Emoji,
+    Emoji
   },
   updated() {
     let ele = document.getElementById('message')
@@ -169,7 +169,7 @@ export default {
     clearInterval(this.heartBeat)
   },
 
-  data: function () {
+  data: function() {
     return {
       isEmoji: false,
       webSocket: null,
@@ -187,9 +187,9 @@ export default {
       isVoice: false,
       WebsocketMessage: {
         type: null,
-        data: null,
+        data: null
       },
-      heartBeat: null,
+      heartBeat: null
     }
   },
 
@@ -198,13 +198,13 @@ export default {
     // 输入文字内容
     saveMessage(e) {
       e.preventDefault()
-      if (this.content.trim() == '') {
+      if (this.content.trim() === '') {
         this.$toast({ type: 'error', message: '内容不能为空' })
         return false
       }
       // emoji处理
       let reg = /\[.+?\]/g
-      this.content = this.content.replace(reg, function (str) {
+      this.content = this.content.replace(reg, function(str) {
         return (
           '<img style=\'vertical-align: middle\' src= \'' +
           EmojiList[str] +
@@ -219,7 +219,7 @@ export default {
         userId: this.userId,
         ipAddr: this.ipAddr,
         ipSource: this.ipSource,
-        createTime: new Date(),
+        createTime: new Date()
       }
       this.WebsocketMessage.type = 3
       this.WebsocketMessage.data = socketMsg
@@ -236,7 +236,7 @@ export default {
 
     // 树洞的打开和关闭
     open() {
-      if (this.webSocket == null) {
+      if (this.webSocket === null) {
         this.connect()
       }
       this.unreadCount = 0
@@ -249,25 +249,25 @@ export default {
       console.log('建立连接')
       this.webSocket = new WebSocket(this.blog.websiteConfig.websocketUrl)
       // 连接发生错误回调
-      this.webSocket.onerror = function (event) {
+      this.webSocket.onerror = function(event) {
         console.log(event)
         alert('连接失败')
       }
       // 连接成功回调
-      this.webSocket.onopen = function (event) {
+      this.webSocket.onopen = function(event) {
         console.log(event)
         // 成功则发送心跳消息
-        that.heartBeat = setInterval(function () {
+        that.heartBeat = setInterval(function() {
           let beatMessage = {
             type: 6,
-            data: 'ping',
+            data: 'ping'
           }
           that.webSocket.send(JSON.stringify(beatMessage))
         }, 30 * 1000)
       }
 
       // 接收消息回调
-      this.webSocket.onmessage = function (event) {
+      this.webSocket.onmessage = function(event) {
         const data = JSON.parse(event.data)
         switch (data.type) {
           case 1:
@@ -276,7 +276,7 @@ export default {
           case 2:
             that.chatRecordList = data.data.chatRecordList
             that.chatRecordList.forEach(item => {
-              if (item.type == 5) {
+              if (item.type === 5) {
                 that.voiceActive.push(item.id)
               }
             })
@@ -296,7 +296,7 @@ export default {
               that.voiceList.splice(that.voiceList.indexOf(data.data.id), 1)
             }
             for (let i = 0; i < that.chatRecordList.length; i++) {
-              if (that.chatRecordList[i].id == data.data.id) {
+              if (that.chatRecordList[i].id === data.data.id) {
                 that.chatRecordList.splice(i, 1)
                 i--
               }
@@ -313,7 +313,7 @@ export default {
         }
       }
       // 关闭连接
-      this.webSocket.onclose = function () {
+      this.webSocket.onclose = function() {
       }
     },
 
@@ -358,11 +358,11 @@ export default {
       }
       // 获取录音
       let wav = this.rc.getRecord({
-        encodeTo: ENCODE_TYPE.WAV,
+        encodeTo: ENCODE_TYPE.WAV
       })
 
       let file = new File([wav], 'voice.wav', {
-        type: wav.type,
+        type: wav.type
       })
 
       // 通过append方法添加数据
@@ -384,8 +384,8 @@ export default {
         data: formData,
         methods: 'post',
         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+          'Content-Type': 'multipart/form-data'
+        }
       }
       this.axios(options)
     },
@@ -395,8 +395,8 @@ export default {
       this.$refs.backBtn.forEach(item => {
         item.style.display = 'none'
       })
-      if (item.ipAddr == this.ipAddr ||
-        (item.userId != null && item.userId == this.userId)) {
+      if (item.ipAddr === this.ipAddr ||
+        (item.userId != null && item.userId === this.userId)) {
         this.$refs.backBtn[index].style.left = e.offsetX + 'px'
         this.$refs.backBtn[index].style.bottom = e.offsetY + 'px'
         this.$refs.backBtn[index].style.display = 'block'
@@ -434,7 +434,7 @@ export default {
       time = Math.ceil(time)
       let str = '⬝⬝⬝'
       for (let i = 0; i < time; i++) {
-        if (i % 2 == 0) {
+        if (i % 2 === 0) {
           str += '⬝'
         }
       }
@@ -446,7 +446,7 @@ export default {
     back(item, index) {
       let socketMsg = {
         id: item.id,
-        isVoice: item.type == 5,
+        isVoice: item.type === 5
       }
       this.WebsocketMessage.type = 4
       this.WebsocketMessage.data = socketMsg
@@ -459,7 +459,7 @@ export default {
       this.isEmoji = false
       this.$refs.chatInput.focus()
       this.content += key
-    },
+    }
   },
 
   computed: {
@@ -482,21 +482,21 @@ export default {
     },
 
     isMyMessage() {
-      return function (item) {
+      return function(item) {
         return this.isSelf(item) ? 'my-message' : 'user-message'
       }
     },
     isSelf() {
-      return function (item) {
+      return function(item) {
         return (
-          item.ipAddr == this.ipAddr ||
-          (item.userId != null && item.userId == this.userId)
+          item.ipAddr === this.ipAddr ||
+          (item.userId != null && item.userId === this.userId)
         )
       }
     },
 
     isLeft() {
-      return function (item) {
+      return function(item) {
         return this.isSelf(item)
           ? 'user-avatar right-avatar'
           : 'user-avatar left-avatar'
@@ -504,20 +504,20 @@ export default {
     },
 
     isMyContent() {
-      return function (item) {
+      return function(item) {
         return this.isSelf(item) ? 'my-content' : 'user-content'
       }
     },
     blogInfo() {
-      return this.$store.state.blogInfo;
+      return this.$store.state.blogInfo
     },
 
     isInput() {
       return this.content.trim() != ''
         ? 'iconfont iconzhifeiji submit-btn'
         : 'iconfont iconzhifeiji'
-    },
-  },
+    }
+  }
 }
 </script>
 

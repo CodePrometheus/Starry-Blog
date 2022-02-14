@@ -1,20 +1,20 @@
 <template>
   <div>
     <!-- banner -->
-    <div class="banner" :style="cover">
-      <h1 class="banner-title">归档</h1>
+    <div class='banner' :style='cover'>
+      <h1 class='banner-title'>归档</h1>
     </div>
     <!-- 归档列表 -->
-    <v-card class="blog-container">
+    <v-card class='blog-container'>
       <timeline>
         <timeline-title> 目前共计{{ count }}篇文章，努力吧</timeline-title>
-        <timeline-item v-for="item of archiveList" :key="item.id">
+        <timeline-item v-for='item of archiveList' :key='item.id'>
           <!-- 日期 -->
-          <span class="time">{{ item.createTime | date }}</span>
+          <span class='time'>{{ item.createTime | date }}</span>
           <!-- 文章标题 -->
           <router-link
             :to="'/articles/' + item.id"
-            style="color:#666;text-decoration: none"
+            style='color:#666;text-decoration: none'
           >
             {{ item.articleTitle }}
           </router-link>
@@ -22,10 +22,10 @@
       </timeline>
       <!-- 分页按钮 -->
       <v-pagination
-        color="#00C4B6"
-        v-model="current"
-        :length="Math.ceil(count / 10)"
-        total-visible="7"
+        color='#00C4B6'
+        v-model='current'
+        :length='Math.ceil(count / 10)'
+        total-visible='7'
       />
     </v-card>
   </div>
@@ -41,45 +41,45 @@ export default {
   components: {
     Timeline,
     TimelineItem,
-    TimelineTitle,
+    TimelineTitle
   },
-  data: function () {
+  data: function() {
     return {
       current: 1,
       count: 0,
-      archiveList: [],
+      archiveList: []
     }
   },
   methods: {
     listArchives() {
       this.axios.get('/api/articles/archives', {
-        params: { current: this.current },
+        params: { current: this.current }
       }).then(({ data }) => {
         this.archiveList = data.data.recordList
         this.count = data.data.count
       })
-    },
+    }
   },
   watch: {
     current(value) {
       this.axios.get('/api/articles/archives', {
-        params: { current: value },
+        params: { current: value }
       }).then(({ data }) => {
         this.archiveList = data.data.recordList
         this.count = data.data.count
       })
-    },
+    }
   },
   computed: {
     cover() {
       let cover = ''
       this.$store.state.blogInfo.pageList.forEach(v => {
-        if (v.pageLabel == 'archive') {
+        if (v.pageLabel === 'archive') {
           cover = v.pageCover
         }
       })
       return 'background: url(' + cover + ') center center / cover no-repeat'
-    },
+    }
   }
 }
 </script>

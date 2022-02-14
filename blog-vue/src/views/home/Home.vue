@@ -1,170 +1,170 @@
 <template>
   <div>
     <!-- banner -->
-    <div class="home-banner" :style="cover">
-      <div class="banner-container">
+    <div class='home-banner' :style='cover'>
+      <div class='banner-container'>
         <!-- 联系方式 -->
-        <h1 class="blog-title animated zoomIn">
+        <h1 class='blog-title animated zoomIn'>
           {{ blogInfo.websiteConfig.websiteName }}
         </h1>
         <!-- 一言 -->
-        <div class="blog-intro">
-          {{ obj.output }} <span class="typed-cursor">|</span>
+        <div class='blog-intro'>
+          {{ obj.output }} <span class='typed-cursor'>|</span>
         </div>
       </div>
       <!-- 向下滚动 -->
-      <div class="scroll-down" @click="scrollDown">
-        <v-icon color="#fff" class="scroll-down-effects">
+      <div class='scroll-down' @click='scrollDown'>
+        <v-icon color='#fff' class='scroll-down-effects'>
           mdi-chevron-down
         </v-icon>
       </div>
     </div>
     <!-- 主页文章 -->
-    <v-row class="home-container">
-      <v-col md="9" cols="12">
+    <v-row class='home-container'>
+      <v-col md='9' cols='12'>
         <v-card
-          class="animated zoomIn article-card"
-          style="border-radius: 12px 8px 8px 12px"
-          v-for="(item, index) of articleList"
-          :key="item.id"
+          class='animated zoomIn article-card'
+          style='border-radius: 12px 8px 8px 12px'
+          v-for='(item, index) of articleList'
+          :key='item.id'
         >
           <!-- 文章封面图 -->
-          <div :class="isRight(index)">
+          <div :class='isRight(index)'>
             <router-link :to="'/articles/' + item.id">
               <v-img
-                class="on-hover"
-                width="100%"
-                height="100%"
-                :src="item.articleCover"
+                class='on-hover'
+                width='100%'
+                height='100%'
+                :src='item.articleCover'
               />
             </router-link>
           </div>
           <!-- 文章信息 -->
-          <div class="article-wrapper">
-            <div style="line-height:1.4">
+          <div class='article-wrapper'>
+            <div style='line-height:1.4'>
               <router-link :to="'/articles/' + item.id">
                 {{ item.articleTitle }}
               </router-link>
             </div>
-            <div class="article-info">
+            <div class='article-info'>
               <!-- 是否置顶 -->
-              <span v-if="item.isTop == 1">
-                <span style="color:#ff7242">
-                  <i class="iconfont iconzhiding"/> 置顶
+              <span v-if='item.isTop === 1'>
+                <span style='color:#ff7242'>
+                  <i class='iconfont iconzhiding' /> 置顶
                 </span>
-                <span class="separator">|</span>
+                <span class='separator'>|</span>
               </span>
               <!-- 发表时间 -->
-              <v-icon size="14">mdi-calendar-month-outline</v-icon>
+              <v-icon size='14'>mdi-calendar-month-outline</v-icon>
               {{ item.createTime | date }}
-              <span class="separator">|</span>
+              <span class='separator'>|</span>
               <!-- 文章分类 -->
               <router-link :to="'/categories/' + item.categoryId">
-                <v-icon size="14">mdi-inbox-full</v-icon>
+                <v-icon size='14'>mdi-inbox-full</v-icon>
                 {{ item.categoryName }}
               </router-link>
-              <span class="separator">|</span>
+              <span class='separator'>|</span>
               <!-- 文章标签 -->
               <router-link
-                style="display:inline-block"
+                style='display:inline-block'
                 :to="'/tags/' + tag.id"
-                class="mr-1"
-                v-for="tag of item.tagList"
-                :key="tag.id"
+                class='mr-1'
+                v-for='tag of item.tagList'
+                :key='tag.id'
               >
-                <v-icon size="14">mdi-tag-multiple</v-icon>
+                <v-icon size='14'>mdi-tag-multiple</v-icon>
                 {{ tag.tagName }}
               </router-link>
             </div>
             <!-- 文章内容 -->
-            <div class="article-content">
+            <div class='article-content'>
               {{ item.articleContent }}
             </div>
           </div>
         </v-card>
         <!-- 无限加载 -->
-        <infinite-loading @infinite="infiniteHandler">
-          <div slot="no-more" />
+        <infinite-loading @infinite='infiniteHandler'>
+          <div slot='no-more' />
         </infinite-loading>
       </v-col>
       <!-- 博主信息 -->
-      <v-col md="3" cols="12" class="d-md-block d-none">
-        <div class="blog-wrapper">
-          <v-card class="animated zoomIn blog-card mt-5">
-            <div class="author-wrapper">
+      <v-col md='3' cols='12' class='d-md-block d-none'>
+        <div class='blog-wrapper'>
+          <v-card class='animated zoomIn blog-card mt-5'>
+            <div class='author-wrapper'>
               <!-- 博主头像 -->
-              <v-avatar size="110">
-                <img class="author-avatar"
-                     :src="blogInfo.websiteConfig.websiteAvatar"/>
+              <v-avatar size='110'>
+                <img class='author-avatar'
+                     :src='blogInfo.websiteConfig.websiteAvatar' />
               </v-avatar>
-              <div style="font-size: 1.375rem">{{ blogInfo.websiteConfig.websiteAuthor }}</div>
-              <div style="font-size: 0.875rem;">{{ blogInfo.websiteConfig.websiteIntro }}</div>
+              <div style='font-size: 1.375rem'>{{ blogInfo.websiteConfig.websiteAuthor }}</div>
+              <div style='font-size: 0.875rem;'>{{ blogInfo.websiteConfig.websiteIntro }}</div>
             </div>
             <!-- 博客信息 -->
-            <div class="blog-info-wrapper">
-              <div class="blog-info-data">
-                <router-link to="/archives">
-                  <div style="font-size: 0.875rem">文章</div>
-                  <div style="font-size: 1.25rem">
+            <div class='blog-info-wrapper'>
+              <div class='blog-info-data'>
+                <router-link to='/archives'>
+                  <div style='font-size: 0.875rem'>文章</div>
+                  <div style='font-size: 1.25rem'>
                     {{ blogInfo.articleCount }}
                   </div>
                 </router-link>
               </div>
-              <div class="blog-info-data">
-                <router-link to="/categories">
-                  <div style="font-size: 0.875rem">分类</div>
-                  <div style="font-size: 1.25rem">
+              <div class='blog-info-data'>
+                <router-link to='/categories'>
+                  <div style='font-size: 0.875rem'>分类</div>
+                  <div style='font-size: 1.25rem'>
                     {{ blogInfo.categoryCount }}
                   </div>
                 </router-link>
               </div>
-              <div class="blog-info-data">
-                <router-link to="/tags">
-                  <div style="font-size: 0.875rem">标签</div>
-                  <div style="font-size: 1.25rem">{{ blogInfo.tagCount }}</div>
+              <div class='blog-info-data'>
+                <router-link to='/tags'>
+                  <div style='font-size: 0.875rem'>标签</div>
+                  <div style='font-size: 1.25rem'>{{ blogInfo.tagCount }}</div>
                 </router-link>
               </div>
             </div>
             <!-- 收藏按钮 -->
-            <a class="collection-btn" @click="tip = true">
-              <v-icon color="#fff" size="18" class="mr-1">mdi-bookmark</v-icon>
+            <a class='collection-btn' @click='tip = true'>
+              <v-icon color='#fff' size='18' class='mr-1'>mdi-bookmark</v-icon>
               加入书签
             </a>
-            <div class="card-info-social">
+            <div class='card-info-social'>
               <a
                 v-if="isShowSocial('github')"
-                target="_blank"
-                href="blogInfo.websiteConfig.github"
-                class="mr-5 iconfont icongithub"
+                target='_blank'
+                href='blogInfo.websiteConfig.github'
+                class='mr-5 iconfont icongithub'
               />
               <a
                 v-if="isShowSocial('BiliBili')"
-                target="_blank"
-                href="https://space.bilibili.com/342251858"
-                class="mr-5 iconfont icon-bilibili-fill"
+                target='_blank'
+                href='https://space.bilibili.com/342251858'
+                class='mr-5 iconfont icon-bilibili-fill'
               />
             </div>
           </v-card>
           <!-- 网站信息 -->
-          <v-card class="blog-card animated zoomIn mt-5 big">
-            <div class="web-info-title iconfont icon-tongzhi">
+          <v-card class='blog-card animated zoomIn mt-5 big'>
+            <div class='web-info-title iconfont icon-tongzhi'>
               公告
             </div>
-            <div style="font-size:0.875rem">
+            <div style='font-size:0.875rem'>
               {{ blogInfo.websiteConfig.websiteNotice }}
             </div>
           </v-card>
           <!-- 网站信息 -->
-          <v-card class="blog-card animated zoomIn mt-5">
-            <div class="web-info-title iconfont icon-qushi">
+          <v-card class='blog-card animated zoomIn mt-5'>
+            <div class='web-info-title iconfont icon-qushi'>
               网站资讯
             </div>
-            <div class="web-info">
-              <div style="padding:4px 0 0">
-                运行时间:<span class="float-right">{{ time }}</span>
+            <div class='web-info'>
+              <div style='padding:4px 0 0'>
+                运行时间:<span class='float-right'>{{ time }}</span>
               </div>
-              <div style="padding:4px 0 0">
-                总访问量:<span class="float-right">
+              <div style='padding:4px 0 0'>
+                总访问量:<span class='float-right'>
                   {{ blogInfo.viewsCount }}
                 </span>
               </div>
@@ -174,7 +174,7 @@
       </v-col>
     </v-row>
     <!-- 提示消息 -->
-    <v-snackbar v-model="tip" top color="#49b1f5" :timeout="2000">
+    <v-snackbar v-model='tip' top color='#49b1f5' :timeout='2000'>
       按CTRL+D 键将本博客加入你的收藏夹吧 ;)
     </v-snackbar>
   </div>
@@ -188,7 +188,7 @@ export default {
     this.init()
     this.timer = setInterval(this.runTime, 1000)
   },
-  data: function () {
+  data: function() {
     return {
       tip: false,
       time: '',
@@ -200,7 +200,7 @@ export default {
         sleep: 0,
         type: 'rollback',
         backSpeed: 40,
-        sentencePause: true,
+        sentencePause: true
       },
       articleList: [],
       current: 1
@@ -225,7 +225,7 @@ export default {
     scrollDown() {
       window.scrollTo({
         behavior: 'smooth',
-        top: document.documentElement.clientHeight,
+        top: document.documentElement.clientHeight
       })
     },
     runTime() {
@@ -252,10 +252,7 @@ export default {
         if (data.data.length) {
           // 去除markdown标签
           data.data.forEach(item => {
-            item.articleContent = md.render(item.articleContent).
-              replace(/<\/?[^>]*>/g, '').
-              replace(/[|]*\n/, '').
-              replace(/&npsp;/gi, '')
+            item.articleContent = md.render(item.articleContent).replace(/<\/?[^>]*>/g, '').replace(/[|]*\n/, '').replace(/&npsp;/gi, '')
           })
           // data里所有的数据
           this.articleList.push(...data.data)
@@ -265,17 +262,17 @@ export default {
           $state.complete()
         }
       })
-    },
+    }
   },
   computed: {
     isShowSocial() {
-      return function (social) {
-        return this.blogInfo.websiteConfig.socialUrlList.indexOf(social) != -1;
+      return function(social) {
+        return this.blogInfo.websiteConfig.socialUrlList.indexOf(social) != -1
       }
     },
     isRight() {
-      return function (index) {
-        if (index % 2 == 0) {
+      return function(index) {
+        if (index % 2 === 0) {
           return 'article-cover left-radius'
         }
         return 'article-cover right-radius'
@@ -287,17 +284,17 @@ export default {
     cover() {
       let cover = ''
       this.$store.state.blogInfo.pageList.forEach(v => {
-        if (v.pageLabel == 'home') {
+        if (v.pageLabel === 'home') {
           cover = v.pageCover
         }
       })
       return 'background: url(' + cover + ') center center / cover no-repeat'
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="stylus">
+<style lang='stylus'>
 .typed-cursor
   opacity: 1
   animation: blink 0.7s infinite

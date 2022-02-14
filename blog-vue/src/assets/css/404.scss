@@ -16,16 +16,16 @@
 
 .container-star {
   background-image: linear-gradient(to bottom,
-      #292256 0%,
-      #8446cf 70%,
-      #a871d6 100%);
+          #292256 0%,
+          #8446cf 70%,
+          #a871d6 100%);
 }
 
 .container-star:after {
   background: radial-gradient(ellipse at center,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0) 40%,
-      rgba(15, 10, 38, 0.2) 100%);
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0) 40%,
+          rgba(15, 10, 38, 0.2) 100%);
   content: "";
   width: 100%;
   height: 100%;
@@ -52,9 +52,9 @@
 
 .star-1:before {
   background: radial-gradient(ellipse at center,
-      rgba(255, 255, 255, 0.5) 0%,
-      rgba(255, 255, 255, 0) 60%,
-      rgba(255, 255, 255, 0) 100%);
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0) 60%,
+          rgba(255, 255, 255, 0) 100%);
   position: absolute;
   border-radius: 50%;
   content: "";
@@ -926,7 +926,7 @@
   display: flex;
 }
 
-.title>* {
+.title > * {
   display: inline-block;
   font-size: 200px;
 }
@@ -977,7 +977,7 @@ button:focus {
   z-index: 2;
   background-color: #fff;
   box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff,
-    0 0 70px #fff, 0 0 80px #fff, 0 0 100px #ff1177;
+  0 0 70px #fff, 0 0 80px #fff, 0 0 100px #ff1177;
   animation: rotate 5s ease-in-out infinite;
 }
 

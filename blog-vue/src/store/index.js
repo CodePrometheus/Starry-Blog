@@ -1,8 +1,8 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import createPersistedState from "vuex-persistedstate";
+import Vue from 'vue'
+import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 export const SET_IS_BLOG_RENDER_COMPLETE = 'setIsBlogRenderComplete'
 
 export default new Vuex.Store({
@@ -13,7 +13,7 @@ export default new Vuex.Store({
     registerFlag: false,
     forgetFlag: false,
     drawer: false,
-    loginUrl: "",
+    loginUrl: '',
     userId: null,
     avatar: null,
     nickname: null,
@@ -23,96 +23,96 @@ export default new Vuex.Store({
     commentLikeSet: [],
     momentLikeSet: [],
     blogInfo: {},
-    isBlogRenderComplete: false
+    isBlogRenderComplete: false,
   },
   mutations: {
     login(state, user) {
-      state.userId = user.userInfoId;
-      state.avatar = user.avatar;
-      state.nickname = user.nickname;
-      state.intro = user.intro;
-      state.webSite = user.webSite;
-      state.articleLikeSet = user.articleLikeSet ? user.articleLikeSet : [];
-      state.commentLikeSet = user.commentLikeSet ? user.commentLikeSet : [];
-      state.momentLikeSet = user.momentLikeSet ? user.momentLikeSet : [];
-      state.email = user.email;
-      state.loginType = user.loginType;
+      state.userId = user.userInfoId
+      state.avatar = user.avatar
+      state.nickname = user.nickname
+      state.intro = user.intro
+      state.webSite = user.webSite
+      state.articleLikeSet = user.articleLikeSet ? user.articleLikeSet : []
+      state.commentLikeSet = user.commentLikeSet ? user.commentLikeSet : []
+      state.momentLikeSet = user.momentLikeSet ? user.momentLikeSet : []
+      state.email = user.email
+      state.loginType = user.loginType
     },
     logout(state) {
-      state.userId = null;
-      state.avatar = null;
-      state.nickname = null;
-      state.intro = null;
-      state.webSite = null;
-      state.articleLikeSet = [];
-      state.commentLikeSet = [];
-      state.momentLikeSet = [];
-      state.email = null;
-      state.loginType = null;
+      state.userId = null
+      state.avatar = null
+      state.nickname = null
+      state.intro = null
+      state.webSite = null
+      state.articleLikeSet = []
+      state.commentLikeSet = []
+      state.momentLikeSet = []
+      state.email = null
+      state.loginType = null
     },
     saveLoginUrl(state, url) {
-      state.loginUrl = url;
+      state.loginUrl = url
     },
     updateUserInfo(state, user) {
-      state.nickname = user.nickname;
-      state.intro = user.intro;
-      state.webSite = user.webSite;
+      state.nickname = user.nickname
+      state.intro = user.intro
+      state.webSite = user.webSite
     },
     updateAvatar(state, avatar) {
-      state.avatar = avatar;
+      state.avatar = avatar
     },
     checkBlogInfo(state, blogInfo) {
-      state.blogInfo = blogInfo;
+      state.blogInfo = blogInfo
     },
     closeModel(state) {
-      state.registerFlag = false;
-      state.loginFlag = false;
-      state.searchFlag = false;
-      state.emailFlag = false;
+      state.registerFlag = false
+      state.loginFlag = false
+      state.searchFlag = false
+      state.emailFlag = false
     },
     articleLike(state, articleId) {
-      let articleLikeSet = state.articleLikeSet;
+      let articleLikeSet = state.articleLikeSet
       if (articleLikeSet.indexOf(articleId) != -1) {
-        articleLikeSet.splice(articleLikeSet.indexOf(articleId), 1);
+        articleLikeSet.splice(articleLikeSet.indexOf(articleId), 1)
       } else {
-        articleLikeSet.push(articleId);
+        articleLikeSet.push(articleId)
       }
     },
     commentLike(state, commentId) {
-      let commentLikeSet = state.commentLikeSet;
+      let commentLikeSet = state.commentLikeSet
       if (commentLikeSet.indexOf(commentId) != -1) {
-        commentLikeSet.splice(commentLikeSet.indexOf(commentId), 1);
+        commentLikeSet.splice(commentLikeSet.indexOf(commentId), 1)
       } else {
-        commentLikeSet.push(commentId);
+        commentLikeSet.push(commentId)
       }
     },
     momentLike(state, momentId) {
-      let momentLikeSet = state.momentLikeSet;
+      let momentLikeSet = state.momentLikeSet
       if (momentLikeSet.indexOf(momentId) != -1) {
-        momentLikeSet.splice(momentLikeSet.indexOf(momentId), 1);
+        momentLikeSet.splice(momentLikeSet.indexOf(momentId), 1)
       } else {
-        momentLikeSet.push(momentId);
+        momentLikeSet.push(momentId)
       }
     },
-    [SET_IS_BLOG_RENDER_COMPLETE](state, {ok}) {
+    [SET_IS_BLOG_RENDER_COMPLETE](state, { ok }) {
       state.isBlogRenderComplete = ok
     },
     saveEmail(state, email) {
-      state.email = email;
+      state.email = email
     },
     savePageInfo(state, pageList) {
-      state.pageList = pageList;
-    }
+      state.pageList = pageList
+    },
   },
   actions: {
-    setIsBlogRenderComplete({commit}, ok) {
-      commit(SET_IS_BLOG_RENDER_COMPLETE, {ok})
-    }
+    setIsBlogRenderComplete({ commit }, ok) {
+      commit(SET_IS_BLOG_RENDER_COMPLETE, { ok })
+    },
   },
   modules: {},
   plugins: [
     createPersistedState({
-      storage: window.sessionStorage
-    })
-  ]
-});
+      storage: window.sessionStorage,
+    }),
+  ],
+})

@@ -1,12 +1,12 @@
 <template>
-  <v-footer app padless absolute v-if="!this.isMessage">
-    <div class="footer-wrap">
+  <v-footer app padless absolute v-if='!this.isMessage'>
+    <div class='footer-wrap'>
       <div>Copyright &copy; 2020-{{ new Date().getFullYear() }} By zzStar</div>
       <div>
-        <a target="_blank" href="https://github.com/CodePrometheus"
-           class="mr-9 iconfont icongithub"/>
-        <a target="_blank" href="https://space.bilibili.com/342251858"
-           class="iconfont icon-bilibili-fill"/>
+        <a target='_blank' href='https://github.com/CodePrometheus'
+           class='mr-9 iconfont icongithub' />
+        <a target='_blank' href='https://space.bilibili.com/342251858'
+           class='iconfont icon-bilibili-fill' />
       </div>
     </div>
   </v-footer>
@@ -16,7 +16,7 @@
 export default {
   computed: {
     isMessage() {
-      return this.$route.path == "/message"
+      return this.$route.path === '/message'
     }
   }
 }
