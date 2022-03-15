@@ -18,7 +18,7 @@ import java.util.List;
 public interface MomentService extends IService<Moment> {
 
     /**
-     * 根据id查看动态
+     * 前台根据id查看动态
      *
      * @param momentId 动态id
      * @return 动态
@@ -74,5 +74,21 @@ public interface MomentService extends IService<Moment> {
      * @return
      */
     PageData<MomentDTO> listMomentBack(ConditionVO conditionVO);
+
+    /**
+     * 后台根据id查看动态
+     *
+     * @param momentId
+     * @return MomentDTO
+     */
+    MomentDTO getBackMomentById(Integer momentId);
+
+
+    /**
+     * 获取首页动态列表
+     *
+     * @return {@link List<String>} 动态列表
+     */
+    List<String> listHomeMoments();
 
 }

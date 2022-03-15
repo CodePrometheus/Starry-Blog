@@ -1,11 +1,9 @@
 package com.star.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.star.core.dto.CommentBackDTO;
-import com.star.core.dto.CommentDTO;
-import com.star.core.dto.ReplyCountDTO;
-import com.star.core.dto.ReplyDTO;
+import com.star.core.dto.*;
 import com.star.core.entity.Comment;
+import com.star.core.vo.CommentVO;
 import com.star.core.vo.ConditionVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -21,15 +19,14 @@ import java.util.List;
 public interface CommentMapper extends BaseMapper<Comment> {
 
     /**
-     * 评论列表
      * 查看评论
      *
-     * @param articleId 文章id
      * @param current   当前页码
      * @param size      大小
+     * @param commentVO 评论信息
      * @return 评论集合
      */
-    List<CommentDTO> listComments(@Param("current") Long current, @Param("size") Long size, @Param("articleId") Integer articleId);
+    List<CommentDTO> listComments(@Param("current") Long current, @Param("size") Long size, @Param("commentVO") CommentVO commentVO);
 
     /**
      * 查看评论id集合下的回复
@@ -74,5 +71,13 @@ public interface CommentMapper extends BaseMapper<Comment> {
      * @return 评论集合
      */
     List<CommentBackDTO> listCommentBack(@Param("current") Long current, @Param("size") Long size, @Param("condition") ConditionVO condition);
+
+    /**
+     * 根据动态id获取评论量
+     *
+     * @param momentIdList 动态id列表
+     * @return {@link List<CommentCountDTO>}动态评论量
+     */
+    List<CommentCountDTO> listMomentCountByMomentIds(List<Integer> momentIdList);
 
 }

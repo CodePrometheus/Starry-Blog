@@ -43,6 +43,11 @@ public class Comment {
     private Integer articleId;
 
     /**
+     * 评论动态id
+     */
+    private Integer momentId;
+
+    /**
      * 评论内容
      */
     private String commentContent;
@@ -51,6 +56,11 @@ public class Comment {
      * 父评论id
      */
     private Integer parentId;
+
+    /**
+     * 评论类型 1.文章 2.友链 3.动态
+     */
+    private Integer type;
 
     /**
      * 是否审核

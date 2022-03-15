@@ -55,6 +55,13 @@ const routes = [
     },
   },
   {
+    path: '/moments/:momentId',
+    component: (reslove) => require(['../views/moment/MomentInfo'], reslove),
+    meta: {
+      title: '动态详情',
+    },
+  },
+  {
     path: '/about',
     component: (reslove) => require(['../views/about/About'], reslove),
     meta: {

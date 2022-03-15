@@ -9,7 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ArticleStatusEnum {
+public enum StatusEnum {
 
     /**
      * 公开

@@ -26,15 +26,24 @@ public class Moment {
     private Integer id;
 
     /**
+     * userId
+     */
+    private Integer userId;
+
+    /**
      * 内容
      */
     private String momentContent;
 
     /**
+     * 图片
+     */
+    private String images;
+
+    /**
      * 点赞数
      */
-    @TableField("`like`")
-    private Integer like;
+    private Integer likeCount;
 
     /**
      * 是否置顶
@@ -42,12 +51,12 @@ public class Moment {
     private Integer isTop;
 
     /**
-     * 状态码
+     * 是否删除
      */
     private Integer isDelete;
 
     /**
-     * 文章状态 1.公开 2.私密 3.草稿箱
+     * 状态 1.公开 2.私密 3.草稿箱
      */
     private Integer status;
 

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -74,6 +74,11 @@ public class UserLoginDTO {
     private Set<Integer> commentLikeSet;
 
     /**
+     * 点赞动态集合
+     */
+    private Set<Object> momentLikeSet;
+
+    /**
      * 用户登录ip
      */
     private String ipAddr;
@@ -86,6 +91,6 @@ public class UserLoginDTO {
     /**
      * 最近登录时间
      */
-    private Date lastLoginTime;
+    private LocalDate lastLoginTime;
 
 }

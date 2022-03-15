@@ -94,6 +94,11 @@ public class UserInfoDTO implements UserDetails {
     private Set<Object> articleLikeSet;
 
     /**
+     * 点赞动态集合
+     */
+    private Set<Object> momentLikeSet;
+
+    /**
      * 用户登录ip
      */
     private String ipAddr;

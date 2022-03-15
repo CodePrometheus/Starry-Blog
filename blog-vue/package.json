@@ -37,7 +37,7 @@
     "vue-avatar-cropper": "^1.0.6",
     "vue-axios": "^3.4.0",
     "vue-baberrage": "^3.2.4",
-    "vue-cute-timeline": "^1.2.10",
+    "vue-cute-timeline": "1.2.8",
     "vue-highlight.js": "^3.1.0",
     "vue-image-swipe": "^1.0.5",
     "vue-infinite-loading": "^2.4.5",
@@ -46,8 +46,7 @@
     "vue-social-share": "^0.0.3",
     "vuetify": "2.2.11",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.1.0",
-    "wowjs": "^1.1.3"
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@mdi/font": "^6.5.95",

@@ -2,7 +2,7 @@
   <div class='reply-input-wrapper' style='display: none' ref='reply'>
     <textarea
       class='comment-textarea'
-      :placeholder="'回复 @' + nickname + '：'"
+      :placeholder="'回复 @' + nickname + ': '"
       auto-grow
       dense
       v-model='commentContent'
@@ -15,7 +15,7 @@
         <i class='iconfont iconbiaoqing' />
       </span>
       <div style='margin-left:auto'>
-        <button @click='cancleReply' class='cancle-btn v-comment-btn'>
+        <button @click='cancelReply' class='cancle-btn v-comment-btn'>
           取消
         </button>
         <button @click='insertReply' class='upload-btn v-comment-btn'>
@@ -24,7 +24,7 @@
       </div>
     </div>
     <!-- 表情框 -->
-    <emoji @addEmoji='addEmoji' :chooseEmoji='chooseEmoji'></emoji>
+    <emoji @addEmoji='addEmoji' :chooseEmoji='chooseEmoji' />
   </div>
 </template>
 
@@ -36,18 +36,23 @@ export default {
   components: {
     Emoji
   },
-  data: function() {
+  props: {
+    type: {
+      type: Number
+    }
+  },
+  data() {
     return {
       index: 0,
       chooseEmoji: false,
       nickname: '',
-      replyId: null,
+      replyUserId: null,
       parentId: null,
       commentContent: ''
     }
   },
   methods: {
-    cancleReply() {
+    cancelReply() {
       this.$refs.reply.style.display = 'none'
     },
     insertReply() {
@@ -66,16 +71,26 @@ export default {
         return (
           '<img src= \'' +
           EmojiList[str] +
-          '\' width=\'22\'height=\'20\' style=\'padding: 0 1px\'/>'
+          "' width='24'height='24' style='margin: 0 1px;vertical-align: text-bottom'/>"
         )
       })
       const path = this.$route.path
       const arr = path.split('/')
       let comment = {
-        articleId: arr[2],
-        replyId: this.replyId,
+        type: this.type,
+        replyUserId: this.replyUserId,
         parentId: this.parentId,
         commentContent: this.commentContent
+      }
+      switch (this.type) {
+        case 1:
+          comment.articleId = arr[2];
+          break;
+        case 3:
+          comment.momentId = arr[2];
+          break;
+        default:
+          break;
       }
       this.commentContent = ''
       this.axios.post('/api/comments', comment).then(({ data }) => {

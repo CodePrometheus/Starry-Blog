@@ -56,8 +56,7 @@
             <!-- 评论量 -->
             <span>
               <i class='iconfont iconpinglunzu1' />评论数:
-              <template v-if='count'>{{ count }}</template>
-              <template v-else>0</template>
+              {{ commentCount }}
             </span>
           </div>
         </div>
@@ -211,8 +210,7 @@
 
           <!-- 评论 -->
           <comment
-            :commentList='commentList'
-            :count='count'
+            :type='commentType'
             @reloadComment='listComment'
           />
         </v-card>
@@ -269,7 +267,6 @@ export default {
   },
   created() {
     this.getArticle()
-    this.listComment()
   },
   destroyed() {
     this.clipboard.destroy()
@@ -312,12 +309,12 @@ export default {
         articleRecommendList: [],
         newestArticleList: []
       },
-      commentList: [],
-      count: 0,
       wordNum: '',
       readTime: '',
       articleHref: window.location.href,
-      clipboard: null
+      clipboard: null,
+      commentType: 1,
+      commentCount: 0
     }
   },
   methods: {
@@ -365,16 +362,8 @@ export default {
       })
     },
 
-    listComment() {
-      const path = this.$route.path
-      const arr = path.split('/')
-      const articleId = arr[arr.length - 1]
-      this.axios.get('/api/comments', {
-        params: { current: 1, articleId: articleId }
-      }).then(({ data }) => {
-        this.commentList = data.data.recordList
-        this.count = data.data.count
-      })
+    listComment(count) {
+      this.commentCount = count
     },
     like() {
       // 判断登录
@@ -386,7 +375,7 @@ export default {
       this.axios.post('/api/articles/' + this.article.id + '/like').then(({ data }) => {
         if (data.flag) {
           // 判断是否点赞
-          if (this.$store.state.articleLikeSet.indexOf(this.article.id) != -1) {
+          if (this.$store.state.articleLikeSet.indexOf(this.article.id) !== -1) {
             this.$set(this.article, 'likeCount', this.article.likeCount - 1)
           } else {
             this.$set(this.article, 'likeCount', this.article.likeCount + 1)
@@ -421,7 +410,7 @@ export default {
             }
           )
           // 复制功能主要使用的是 clipboard.js
-          let html = `<button class="copy-btn iconfont iconfuzhi" type="button" data-clipboard-action="copy" data-clipboard-target="#copy${codeIndex}"></button>`
+          let html = `<button class='copy-btn iconfont iconfuzhi' type='button' data-clipboard-action='copy' data-clipboard-target='#copy${codeIndex}'></button>`
           const linesLength = str.split(/\n/).length - 1
           // 生成行号
           let linesNum = '<span aria-hidden="true" class="line-numbers-rows">'
@@ -437,7 +426,7 @@ export default {
               html += '<b class="name">' + lang + '</b>'
             }
             // 将代码包裹在 textarea 中，由于防止textarea渲染出现问题，这里将 "<" 用 "<" 代替，不影响复制功能
-            return `<pre class="hljs"><code>${html}</code>${linesNum}</pre><textarea style="position: absolute;top: -9999px;left: -9999px;z-index: -9999;" id="copy${codeIndex}">${str.replace(
+            return `<pre class='hljs'><code>${html}</code>${linesNum}</pre><textarea style='position: absolute;top: -9999px;left: -9999px;z-index: -9999;' id='copy${codeIndex}'>${str.replace(
               /<\/textarea>/g,
               '</textarea>'
             )}</textarea>`

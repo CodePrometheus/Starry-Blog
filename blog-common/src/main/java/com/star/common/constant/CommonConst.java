@@ -59,11 +59,6 @@ public class CommonConst {
     public static String ARTICLE_SET = "articleSet";
 
     /**
-     * 用户ip
-     */
-    public static final String IP = "ip";
-
-    /**
      * 高亮标签
      */
     public static final String PRE_TAG = "<span style='color:#f47466'>";

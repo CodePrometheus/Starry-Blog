@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div class='comment-title'><i class='iconfont iconpinglunzu' />评论</div>
-    <!-- 评论框 -->
-    <div class='comment-input-wrapper'>
-      <div style='display:flex'>
-        <v-avatar size='40'>
+    <div class='comment-title'>
+      <i class='iconfont iconpinglunzu' />评论
+    </div>
+    <div class='comment-wrapper'>
+      <div style='display:flex;width:100%'>
+        <v-avatar size='36'>
           <img
             v-if='this.$store.state.avatar'
             :src='this.$store.state.avatar'
@@ -14,17 +15,16 @@
             :src='this.$store.state.blogInfo.websiteConfig.touristAvatar'
           />
         </v-avatar>
-        <div style='width:100%' class='ml-3'>
+        <div style='width: 100%;' class='ml-3'>
           <div class='comment-input'>
             <textarea
               class='comment-textarea'
               v-model='commentContent'
-              placeholder='评论千万条，友善第一条'
+              placeholder='留下点什么吧...'
               auto-grow
               dense
             />
           </div>
-          <!-- 操作按钮 -->
           <div class='emoji-container'>
             <span
               :class="chooseEmoji ? 'emoji-btn-active' : 'emoji-btn'"
@@ -40,58 +40,47 @@
               提交
             </button>
           </div>
-          <!-- 表情框 -->
           <emoji @addEmoji='addEmoji' :chooseEmoji='chooseEmoji' />
         </div>
       </div>
     </div>
-    <!-- 评论详情 -->
     <div v-if='count > 0 && reFresh'>
-      <!-- 评论数量 -->
-      <div class='count'>{{ count }} 评论</div>
-      <!-- 评论列表 -->
       <div
-        style='display:flex'
-        class='pt-5'
-        v-for='(item, index) of commentList'
-        :key='item.id'
+        class='comment-wrapper'
+        v-for='(v, idx) of commentList'
+        :key='v.idx'
       >
-        <!-- 头像 -->
         <v-avatar size='40' class='comment-avatar'>
-          <img :src='item.avatar' />
+          <img :src='v.avatar' />
         </v-avatar>
         <div class='comment-meta'>
-          <!-- 用户名 -->
           <div class='comment-user'>
-            <span v-if='!item.webSite'>{{ item.nickname }}</span>
-            <a v-else :href='item.webSite' target='_blank'>
-              {{ item.nickname }}
+            <span v-if='!v.webSite'>{{ v.nickname }}</span>
+            <a v-else :href='v.webSite' target='_blank'>
+              {{ v.nickname }}
             </a>
-            <span class='blogger-tag' v-if='item.userId === 1'>博主</span>
+            <v-icon size='20' color='#ffa51e' v-if='v.userId === 1' class='icon'>
+              mdi-check-decagram
+            </v-icon>
           </div>
-          <!-- 信息 -->
           <div class='comment-info'>
-            <!-- 楼层 -->
-            <span style='margin-right:10px'>{{ count - index }}楼</span>
-            <!-- 发表时间 -->
-            <span style='margin-right:10px'>{{ item.createTime | date }}</span>
-            <!-- 点赞 -->
+            <span style='margin-right: 10px'>{{ count - idx }}楼</span>
+            <span style='margin-right: 10px'>{{ v.createTime | date }}</span>
             <span
-              :class="isLike(item.id) + ' iconfont icondianzan'"
-              @click='like(item)'
+              :class="isLike(v.id) + ' iconfont icondianzan'"
+              @click='like(v)'
             />
-            <span v-show='item.likeCount > 0'> {{ item.likeCount }}</span>
-            <!-- 回复 -->
-            <span class='reply-btn' @click='replyComment(index, item)'>
+            <span v-show='v.likeCount > 0'>{{ v.likeCount }}</span>
+            <span class='reply-btn' @click='replyComment(idx, v)'>
               回复
             </span>
           </div>
           <!-- 评论内容 -->
-          <p v-html='item.commentContent' class='comment-content'></p>
+          <p v-html='v.commentContent' class='comment-content' />
           <!-- 回复人 -->
           <div
             style='display:flex'
-            v-for='reply of item.replyList'
+            v-for='reply of v.replyList'
             :key='reply.id'
           >
             <!-- 头像 -->
@@ -105,7 +94,9 @@
                 <a v-else :href='reply.webSite' target='_blank'>
                   {{ reply.nickname }}
                 </a>
-                <span class='blogger-tag' v-if='reply.userId === 1'>博主</span>
+                <v-icon size='20' color='#ffa51e' v-if='reply.userId === 1' class='icon'>
+                  mdi-check-decagram
+                </v-icon>
               </div>
               <!-- 信息 -->
               <div class='comment-info'>
@@ -120,14 +111,14 @@
                 />
                 <span v-show='reply.likeCount > 0'>{{ reply.likeCount }}</span>
                 <!-- 回复 -->
-                <span class='reply-btn' @click='replyComment(index, reply)'>
+                <span class='reply-btn' @click='replyComment(idx, reply)'>
                   回复
                 </span>
               </div>
               <!-- 回复内容 -->
               <p class='comment-content'>
                 <!-- 回复用户名 -->
-                <template v-if='reply.replyUserId !== item.userId'>
+                <template v-if='reply.replyUserId !== v.userId'>
                   <span v-if='!reply.replyWebSite' class='ml-1'>
                     @{{ reply.replyNickname }}
                   </span>
@@ -149,15 +140,15 @@
           <div
             class='mb-3'
             style='font-size:0.75rem;color:#6d757a'
-            v-show='item.replyCount > 3'
+            v-show='v.replyCount > 3'
             ref='check'
           >
             共
-            <b>{{ item.replyCount }}</b>
+            <b>{{ v.replyCount }}</b>
             条回复，
             <span
               style='color:#00a1d6;cursor:pointer'
-              @click='checkReplies(index, item)'
+              @click='checkReplies(idx, v)'
             >
               点击查看
             </span>
@@ -169,13 +160,13 @@
             ref='paging'
           >
             <span style='padding-right:10px'>
-              共{{ Math.ceil(item.replyCount / 5) }}页
+              共{{ Math.ceil(v.replyCount / 5) }}页
             </span>
             <paging
               ref='page'
-              :totalPage='Math.ceil(item.replyCount / 5)'
-              :index='index'
-              :commentId='item.id'
+              :totalPage='Math.ceil(v.replyCount / 5)'
+              :index='idx'
+              :commentId='v.id'
               @changeReplyCurrent='changeReplyCurrent'
             />
           </div>
@@ -183,7 +174,6 @@
           <Reply ref='reply' :type='type' @reloadReply='reloadReply' />
         </div>
       </div>
-      <!-- 加载按钮 -->
       <div class='load-wrapper'>
         <v-btn outlined v-if='count > commentList.length' @click='listComments'>
           加载更多...
@@ -216,32 +206,58 @@ export default {
       type: Number
     }
   },
-  data: function() {
+  data() {
     return {
-      reFresh: true,
-      commentContent: '',
+      commentContent: [],
       chooseEmoji: false,
-      current: 1,
-      commentList: [],
-      count: 0
+      count: 0,
+      reFresh: true,
+      commentList: []
+    }
+  },
+  computed: {
+    isLike() {
+      return function(commentId) {
+        let commentLikeSet = this.$store.state.commentLikeSet
+        return commentLikeSet.indexOf(commentId) !== -1 ? 'like-active' : 'like'
+      }
+    }
+  },
+  watch: {
+    commentList() {
+      this.reFresh = false
+      this.$nextTick(() => {
+        this.reFresh = true
+      })
     }
   },
   methods: {
-    replyComment(index, item) {
-      this.$refs.reply.forEach(item => {
-        item.$el.style.display = 'none'
-      })
-      // 传值给回复框
-      this.$refs.reply[index].commentContent = ''
-      this.$refs.reply[index].nickname = item.nickname
-      this.$refs.reply[index].replyUserId = item.userId
-      this.$refs.reply[index].parentId = this.commentList[index].id
-      this.$refs.reply[index].chooseEmoji = false
-      this.$refs.reply[index].index = index
-      this.$refs.reply[index].$el.style.display = 'block'
+    reloadReply(index) {
+      this.axios
+        .get('/api/comments/' + this.commentList[index].id + '/replies', {
+          params: {
+            current: this.$refs.page[index].current
+          }
+        })
+        .then(({ data }) => {
+          this.commentList[index].replyCount++
+          // 回复大于5条展示分页
+          if (this.commentList[index].replyCount > 5) {
+            this.$refs.paging[index].style.display = 'flex'
+          }
+          this.$refs.check[index].style.display = 'none'
+          this.$refs.reply[index].$el.style.display = 'none'
+          this.commentList[index].replyList = data.data
+        })
     },
-    addEmoji(key) {
-      this.commentContent += key
+    changeReplyCurrent(current, index, commentId) {
+      this.axios
+        .get('/api/comments/' + commentId + '/replies', {
+          params: { current: current, size: 5 }
+        })
+        .then(({ data }) => {
+          this.commentList[index].replyList = data.data
+        })
     },
     checkReplies(index, item) {
       this.axios
@@ -257,18 +273,39 @@ export default {
           }
         })
     },
-    changeReplyCurrent(current, index, commentId) {
-      // 查看下一页回复
-      this.axios
-        .get('/api/comments/' + commentId + '/replies', {
-          params: { current: current, size: 5 }
-        })
+    replyComment(index, item) {
+      this.$refs.reply.forEach(item => {
+        item.$el.style.display = 'none'
+      })
+      this.$refs.reply[index].commentContent = ''
+      this.$refs.reply[index].nickname = item.nickname
+      this.$refs.reply[index].replyUserId = item.userId
+      this.$refs.reply[index].parentId = this.commentList[index].id
+      this.$refs.reply[index].chooseEmoji = false
+      this.$refs.reply[index].index = index
+      this.$refs.reply[index].$el.style.display = 'block'
+    },
+    like(comment) {
+      // 判断登录
+      if (!this.$store.state.userId) {
+        this.$store.state.loginFlag = true
+        return false
+      }
+      // 发送请求
+      this.axios.post('/api/comments/' + comment.id + '/like')
         .then(({ data }) => {
-          this.commentList[index].replyList = data.data
+          if (data.flag) {
+            // 判断是否点赞
+            if (this.$store.state.commentLikeSet.indexOf(comment.id) !== -1) {
+              this.$set(comment, 'likeCount', comment.likeCount - 1)
+            } else {
+              this.$set(comment, 'likeCount', comment.likeCount + 1)
+            }
+            this.$store.commit('commentLike', comment.id)
+          }
         })
     },
     listComments() {
-      // 查看评论
       const path = this.$route.path
       const arr = path.split('/')
       let params = {
@@ -317,7 +354,7 @@ export default {
         return (
           '<img src= \'' +
           EmojiList[str] +
-          '\' width=\'24\'height=\'24\' style=\'margin: 0 1px;vertical-align: text-bottom\'/>'
+          '\' width=\'22\'height=\'20\' style=\'padding: 0 1px\'/>'
         )
       })
       // 发送请求
@@ -354,82 +391,21 @@ export default {
         }
       })
     },
-    like(comment) {
-      // 判断登录
-      if (!this.$store.state.userId) {
-        this.$store.state.loginFlag = true
-        return false
-      }
-      // 发送请求
-      this.axios.post('/api/comments/' + comment.id + '/like')
-        .then(({ data }) => {
-          if (data.flag) {
-            // 判断是否点赞
-            if (this.$store.state.commentLikeSet.indexOf(comment.id) !== -1) {
-              this.$set(comment, 'likeCount', comment.likeCount - 1)
-            } else {
-              this.$set(comment, 'likeCount', comment.likeCount + 1)
-            }
-            this.$store.commit('commentLike', comment.id)
-          }
-        })
-    },
-    reloadReply(index) {
-      this.axios
-        .get('/api/comments/' + this.commentList[index].id + '/replies', {
-          params: {
-            current: this.$refs.page[index].current
-          }
-        })
-        .then(({ data }) => {
-          this.commentList[index].replyCount++
-          // 回复大于5条展示分页
-          if (this.commentList[index].replyCount > 5) {
-            this.$refs.paging[index].style.display = 'flex'
-          }
-          this.$refs.check[index].style.display = 'none'
-          this.$refs.reply[index].$el.style.display = 'none'
-          this.commentList[index].replyList = data.data
-        })
-    }
-  },
-  computed: {
-    isLike() {
-      return function(commentId) {
-        let commentLikeSet = this.$store.state.commentLikeSet
-        return commentLikeSet.indexOf(commentId) !== -1 ? 'like-active' : 'like'
-      }
-    }
-  },
-  watch: {
-    commentList() {
-      this.reFresh = false
-      this.$nextTick(() => {
-        this.reFresh = true
-      })
+    addEmoji(key) {
+      this.content += key
     }
   }
 }
 </script>
 
 <style scoped>
-.blogger-tag {
-  background: #ffa51e;
-  font-size: 12px;
-  display: inline-block;
-  border-radius: 2px;
-  color: #fff;
-  padding: 0 5px;
-  margin-left: 6px;
-}
-
 .comment-title {
   display: flex;
   align-items: center;
   font-size: 1.25rem;
-  font-weight: bold;
+  margin-top: 25px;
   line-height: 40px;
-  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .comment-title i {
@@ -437,33 +413,30 @@ export default {
   margin-right: 5px;
 }
 
-.comment-input-wrapper {
-  border: 1px solid #90939950;
-  border-radius: 4px;
-  padding: 10px;
-  margin: 0 0 10px;
+.comment-wrapper {
+  display: flex;
+  margin-top: 20px;
+  box-shadow: 0 3px 8px 6px rgb(7 17 27 / 6%);
+  transition: all 0.3s ease 0s;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 16px 20px;
+  border-radius: 10px;
 }
 
-.count {
-  padding: 5px;
-  line-height: 1.75;
-  font-size: 1.25rem;
-  font-weight: bold;
+.comment-wrapper:hover {
+  box-shadow: 0 5px 10px 8px rgb(7 17 27 / 16%);
+  transform: translateY(-3px);
 }
 
 .comment-meta {
   margin-left: 0.8rem;
   width: 100%;
+  /** dashed虚线 */
   border-bottom: 1px dashed #f5f5f5;
 }
 
-.reply-meta {
-  margin-left: 0.8rem;
-  width: 100%;
-}
-
 .comment-user {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.75;
 }
 
@@ -471,6 +444,11 @@ export default {
   color: #1abc9c !important;
   font-weight: 500;
   transition: 0.3s all;
+}
+
+.reply-meta {
+  margin-left: 0.8rem;
+  width: 100%;
 }
 
 .comment-nickname {
@@ -485,18 +463,14 @@ export default {
   color: #b3b3b3;
 }
 
-.reply-btn {
-  cursor: pointer;
-  float: right;
-  color: #ef2f11;
-}
-
 .comment-content {
   font-size: 0.875rem;
   line-height: 1.75;
   padding-top: 0.625rem;
   white-space: pre-line;
+  /** 在长单词或 URL 地址内部进行换行 */
   word-wrap: break-word;
+  /** 允许在单词内换行 */
   word-break: break-all;
 }
 
@@ -523,6 +497,12 @@ export default {
   color: #eb5055;
 }
 
+.reply-btn {
+  cursor: pointer;
+  float: right;
+  color: #ef2f11;
+}
+
 .load-wrapper {
   margin-top: 10px;
   display: flex;
@@ -533,5 +513,9 @@ export default {
 .load-wrapper button {
   background-color: #49b1f5;
   color: #fff;
+}
+
+.comment-user .icon {
+  margin-left: 5px;
 }
 </style>

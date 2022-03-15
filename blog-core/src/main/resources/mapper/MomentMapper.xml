@@ -2,22 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.star.core.mapper.MomentMapper">
 
-    <resultMap id="momentBackResultMap" type="com.star.core.dto.MomentDTO">
-        <id column="id" property="id"/>
-        <result column="moment_content" property="momentContent"/>
-        <result column="like" property="like"/>
-        <result column="is_top" property="isTop"/>
-        <result column="is_delete" property="isDelete"/>
-        <result column="status" property="status"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
-
-    <select id="listMomentBack" resultMap="momentBackResultMap">
+    <select id="listMomentBack" resultType="com.star.core.dto.MomentDTO">
         SELECT
         m.id,
-        m.moment_content,
-        m.like,
+        nickname,
+        avatar,
+        moment_content,
+        images,
+        m.like_count,
         m.is_top,
         m.is_delete,
         m.status,
@@ -36,6 +28,48 @@
         </where>
         ORDER BY m.is_top DESC, m.id DESC
         LIMIT #{current},#{size}
+    </select>
+
+    <select id="getMomentById" resultType="com.star.core.dto.MomentDTO">
+        select m.id,
+               nickname,
+               moment_content,
+               images,
+               avatar,
+               m.create_time
+        from tb_moment m
+                 JOIN tb_user_info ui ON m.user_id = ui.id
+        WHERE m.id = #{momentId}
+          AND m.status = 1
+    </select>
+
+    <select id="getBackMomentById" resultType="com.star.core.dto.MomentDTO">
+        select m.id,
+               nickname,
+               avatar,
+               moment_content,
+               images,
+               m.is_top,
+               m.status,
+               m.create_time
+        from tb_moment m
+                 JOIN tb_user_info ui ON m.user_id = ui.id
+        WHERE m.id = #{momentId}
+    </select>
+
+    <select id="listMoments" resultType="com.star.core.dto.MomentDTO">
+        select m.id,
+               nickname,
+               avatar,
+               moment_content,
+               images,
+               m.is_top,
+               m.create_time
+        from tb_moment m
+                 JOIN tb_user_info ui ON ui.id = m.user_id
+        WHERE m.status = 1
+        ORDER BY m.is_top DESC, m.id DESC
+        LIMIT #{current}, #{size}
     </select>
 
 </mapper>

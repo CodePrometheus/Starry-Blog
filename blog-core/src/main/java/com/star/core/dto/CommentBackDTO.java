@@ -1,7 +1,6 @@
 package com.star.core.dto;
 
 
-import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +18,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("后台评论")
 public class CommentBackDTO {
 
     /**
@@ -51,6 +49,11 @@ public class CommentBackDTO {
      * 评论内容
      */
     private String commentContent;
+
+    /**
+     * 评论类型
+     */
+    private Integer type;
 
     /**
      * 是否审核

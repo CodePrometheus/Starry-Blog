@@ -208,7 +208,7 @@ export default {
         return (
           '<img style=\'vertical-align: middle\' src= \'' +
           EmojiList[str] +
-          '\' width=\'22\'height=\'20\' style=\'padding: 0 1px\'/>'
+          "' width='24'height='24' style='margin: 0 1px;vertical-align: text-bottom'/>"
         )
       })
       let socketMsg = {
@@ -513,7 +513,7 @@ export default {
     },
 
     isInput() {
-      return this.content.trim() != ''
+      return this.content.trim() !== ''
         ? 'iconfont iconzhifeiji submit-btn'
         : 'iconfont iconzhifeiji'
     }
@@ -673,6 +673,9 @@ export default {
   padding: 10px;
   border-radius: 5px 20px 20px 20px;
   width: fit-content;
+  white-space: pre-line;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .my-content {
@@ -681,6 +684,9 @@ export default {
   padding: 12px;
   background: #12b7f5;
   color: #fff;
+  white-space: pre-line;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .submit-btn {

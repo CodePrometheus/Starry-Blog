@@ -37,8 +37,8 @@ public class CommentController {
             @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class),
     })
     @GetMapping("/comments")
-    private Result<PageData<CommentDTO>> listComments(Integer articleId) {
-        return Result.success(commentService.listComments(articleId));
+    private Result<PageData<CommentDTO>> listComments(CommentVO commentVO) {
+        return Result.success(commentService.listComments(commentVO));
     }
 
     @ApiOperation(value = "添加评论或回复")
@@ -49,13 +49,10 @@ public class CommentController {
     }
 
     @ApiOperation(value = "查询评论下的回复")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "commentId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name = "current", value = "当前页码", required = true, dataType = "Long", dataTypeClass = Long.class)
-    })
-    @GetMapping("/comments/replies")
-    private Result<List<ReplyDTO>> listRepliesByCommentId(Integer commentId, Long current) {
-        return Result.success(commentService.listRepliesByCommentId(commentId, current));
+    @ApiImplicitParam(name = "commentId", value = "评论id", required = true, dataType = "Integer")
+    @GetMapping("/comments/{commentId}/replies")
+    private Result<List<ReplyDTO>> listRepliesByCommentId(@PathVariable("commentId") Integer commentId) {
+        return Result.success(commentService.listRepliesByCommentId(commentId));
     }
 
     @ApiOperation(value = "评论点赞")

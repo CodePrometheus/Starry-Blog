@@ -20,19 +20,18 @@ public interface CommentService extends IService<Comment> {
     /**
      * 查看评论
      *
-     * @param articleId 文章id
+     * @param commentVO 评论信息
      * @return CommentListDTO
      */
-    PageData<CommentDTO> listComments(Integer articleId);
+    PageData<CommentDTO> listComments(CommentVO commentVO);
 
     /**
      * 查看评论下的回复
      *
      * @param commentId 评论id
-     * @param current   当前页码
      * @return 回复列表
      */
-    List<ReplyDTO> listRepliesByCommentId(Integer commentId, Long current);
+    List<ReplyDTO> listRepliesByCommentId(Integer commentId);
 
     /**
      * 添加评论

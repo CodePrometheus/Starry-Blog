@@ -1651,11 +1651,6 @@ animate.css@^4.1.1:
   resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-4.1.1.tgz#614ec5a81131d7e4dc362a58143f7406abd68075"
   integrity sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==
 
-animate.css@latest:
-  version "4.1.1"
-  resolved "https://registry.npm.taobao.org/animate.css/download/animate.css-4.1.1.tgz#614ec5a81131d7e4dc362a58143f7406abd68075"
-  integrity sha1-YU7FqBEx1+TcNipYFD90BqvWgHU=
-
 ansi-colors@^3.0.0:
   version "3.2.4"
   resolved "https://registry.npm.taobao.org/ansi-colors/download/ansi-colors-3.2.4.tgz?cache=0&sync_timestamp=1593529711167&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fansi-colors%2Fdownload%2Fansi-colors-3.2.4.tgz#e3a3da4bfbae6c86a9c285625de124a234026fbf"
@@ -8427,10 +8422,10 @@ vue-cli-plugin-vuetify@^2.0.5:
     semver "^7.1.2"
     shelljs "^0.8.3"
 
-vue-cute-timeline@^1.2.10:
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/vue-cute-timeline/-/vue-cute-timeline-1.2.10.tgz#deded2f7fe2ccc979d6ef10b250a1e9b634b1dfd"
-  integrity sha512-kzzFkQUdE93+tYz7dGK9gUl2k8+9fd0//ISlg6qZqv97l9rK/xt+eCSXdqI7+leoSkSGgN2EqoMO91UKdY62Gw==
+vue-cute-timeline@1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/vue-cute-timeline/-/vue-cute-timeline-1.2.8.tgz#4b705704e23ee4bf72416306c8bf131b6288387e"
+  integrity sha512-gMNZv2d+vtCha/iZjn4BJGT9Muvdy/AGNm+eN5B54aD1/51BCS4hO31A6CFL1rQZB4OW6Hc7tW3drb8RN13+pg==
 
 vue-github-badge@^1.0.0:
   version "1.0.1"
@@ -8793,13 +8788,6 @@ worker-farm@^1.7.0:
   integrity sha1-JqlMU5G7ypJhUgAvabhKS/dy5ag=
   dependencies:
     errno "~0.1.7"
-
-wowjs@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.npm.taobao.org/wowjs/download/wowjs-1.1.3.tgz#440fc1bb4c7e896840ee47972296a2b59075acbd"
-  integrity sha1-RA/Bu0x+iWhA7keXIpaitZB1rL0=
-  dependencies:
-    animate.css latest
 
 wrap-ansi@^5.1.0:
   version "5.1.0"

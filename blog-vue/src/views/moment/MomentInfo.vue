@@ -4,119 +4,99 @@
       <h1 class='banner-title'>动态</h1>
     </div>
     <v-card class='blog-container'>
-      <div class='moment-item' v-for='v of momentList' :key='v.id'>
-        <router-link :to="'/moments/' + v.id">
-          <div class='moment-info'>
-            <v-avatar size='36' class='user-avatar'>
-              <img :src='v.avatar' />
-            </v-avatar>
-            <div class='moment-detail'>
-              <div class='nickname'>
-                {{ v.nickname }}
-                <v-icon class='user-sign' size='20' color='#ffa51e'>
-                  mdi-check-decagram
-                </v-icon>
-              </div>
-              <div class='time'>
-                {{ v.createTime | date }}
-                <span class='top' v-if='v.isTop === 1'>
-                  <i class='iconfont iconzhiding' /> 置顶
-                </span>
-              </div>
-              <div class='content' v-html='v.momentContent' />
-              <v-row class='images' v-if='v.imgList'>
-                <v-col
-                  :md='4'
-                  :cols='6'
-                  v-for='(v, idx) of v.imgList'
-                  :key='idx'
+      <div class='moment-item'>
+        <div class='moment-info'>
+          <v-avatar size='36' class='user-avatar'>
+            <img :src='momentInfo.avatar' />
+          </v-avatar>
+          <div class='moment-detail'>
+            <div class='nickname'>
+              {{ momentInfo.nickname }}
+              <v-icon class='user-sign' size='20' color='#ffa51e'>
+                mdi-check-decagram
+              </v-icon>
+            </div>
+            <div class='time'>
+              {{ momentInfo.createTime | date }}
+            </div>
+            <div class='content' v-html='momentInfo.momentContent' />
+            <v-row class='images' v-if='momentInfo.imgList'>
+              <v-col
+                :md='4'
+                :cols='6'
+                v-for='(v, idx) of momentInfo.imgList'
+                :key='idx'
+              >
+                <v-img
+                  class='image-item'
+                  :src='v'
+                  aspect-ratio='1'
+                  max-height='200'
+                  @click.prevent='previewImg(v)'
+                />
+              </v-col>
+            </v-row>
+            <div class='operation'>
+              <div class='operation-item'>
+                <v-icon
+                  size='16'
+                  :color='isLike(momentInfo.id)'
+                  class='like-btn'
+                  @click.prevent='like(momentInfo)'
                 >
-                  <v-img
-                    class='image-item'
-                    :src='v'
-                    aspect-ratio='1'
-                    max-height='200'
-                    @click.prevent='previewImg(v)'
-                  />
-                </v-col>
-              </v-row>
-              <div class='operation'>
-                <div class='operation-item'>
-                  <v-icon
-                    size='16'
-                    :color='isLike(v.id)'
-                    class='like-btn'
-                    @click.prevent='like(v)'
-                  >
-                    mdi-thumb-up
-                  </v-icon>
-                  <div class='operation-count'>
-                    {{ v.likeCount == null ? 0 : v.likeCount }}
-                  </div>
+                  mdi-thumb-up
+                </v-icon>
+                <div class='operation-count'>
+                  {{ momentInfo.likeCount == null ? 0 : momentInfo.likeCount }}
                 </div>
-                <div class='operation-item'>
-                  <v-icon size='16' color='#999'>mdi-chat</v-icon>
-                  <div class='operation-count'>
-                    {{ v.commentCount == null ? 0 : v.commentCount }}
-                  </div>
+              </div>
+              <div class='operation-item'>
+                <v-icon size='16' color='#999'>mdi-chat</v-icon>
+                <div class='operation-count'>
+                  {{ commentCount == null ? 0 : commentCount }}
                 </div>
               </div>
             </div>
           </div>
-        </router-link>
+        </div>
       </div>
+      <!-- 评论 -->
+      <moment-comment :type='commentType' @reloadComment='listComment' />
     </v-card>
-    <!-- 分页按钮 -->
-    <v-pagination
-      color='#00C4B6'
-      v-model='current'
-      :length='Math.ceil(count / 10)'
-      total-visible='7'
-    />
   </div>
 </template>
 
 <script>
+import MomentComment from '../../components/MomentComment'
+
 export default {
   created() {
-    this.listMoments()
+    this.getMomentById()
   },
+  components: { MomentComment },
   data() {
     return {
-      momentList: [],
-      current: 1,
-      size: 10,
-      count: 0,
-      imagesList: []
+      commentType: 3,
+      commentCount: 0,
+      momentInfo: {},
+      previewList: []
     }
   },
   methods: {
+    listComment(count) {
+      this.commentCount = count
+    },
+    getMomentById() {
+      this.axios.get('/api/moments/' + this.$route.params.momentId)
+        .then(({ data }) => {
+          this.momentInfo = data.data
+          this.previewList = this.momentInfo.imgList
+        })
+    },
     previewImg(img) {
       this.$imagePreview({
-        images: this.imagesList,
-        index: this.imagesList.indexOf(img)
-      })
-    },
-    listMoments() {
-      this.axios.get('/api/moments', {
-        params: {
-          current: this.current,
-          size: this.size
-        }
-      }).then(({ data }) => {
-        if (this.current === 1) {
-          this.momentList = data.data.recordList
-        } else {
-          this.momentList.push(...data.data.recordList)
-        }
-        this.momentList.forEach(v => {
-          if (v.imgList) {
-            this.imagesList.push(...v.imgList)
-          }
-        })
-        console.log("listMoments: ", this.momentList)
-        this.current++
-        this.count = data.data.count
+        images: this.previewList,
+        index: this.previewList.indexOf(img)
       })
     },
     like(moment) {
@@ -158,11 +138,6 @@ export default {
 </script>
 
 <style scoped>
-/** 设置第一个以外的元素样式 */
-.moment-item:not(:first-child) {
-  margin-top: 20px;
-}
-
 .moment-item {
   padding: 15px 20px;
   border-radius: 10px;
@@ -276,9 +251,5 @@ export default {
 
 .operation-count {
   margin-left: 4px;
-}
-
-.like-btn:hover {
-  color: #eb5055 !important;
 }
 </style>

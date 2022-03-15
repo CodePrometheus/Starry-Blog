@@ -22,6 +22,9 @@
     <!-- 主页文章 -->
     <v-row class='home-container'>
       <v-col md='9' cols='12'>
+        <v-card class='animated zoomIn' v-if='momentList.length > 0'>
+          <swiper :list='momentList' />
+        </v-card>
         <v-card
           class='animated zoomIn article-card'
           style='border-radius: 12px 8px 8px 12px'
@@ -181,17 +184,23 @@
 </template>
 
 <script>
+import Swiper from '../../components/Swiper'
 import EasyTyper from 'easy-typer-js'
 
 export default {
+  components: {
+    Swiper
+  },
   created() {
     this.init()
     this.timer = setInterval(this.runTime, 1000)
+    this.getHomeMoment()
   },
-  data: function() {
+  data() {
     return {
       tip: false,
       time: '',
+      momentList: [],
       obj: {
         output: '',
         isEnd: false,
@@ -207,6 +216,11 @@ export default {
     }
   },
   methods: {
+    getHomeMoment() {
+      this.axios.get('/api/home/moments').then(({ data }) => {
+        this.momentList = data.data
+      })
+    },
     // 初始化
     init() {
       document.title = this.blogInfo.websiteConfig.websiteName
@@ -267,7 +281,7 @@ export default {
   computed: {
     isShowSocial() {
       return function(social) {
-        return this.blogInfo.websiteConfig.socialUrlList.indexOf(social) != -1
+        return this.blogInfo.websiteConfig.socialUrlList.indexOf(social) !== -1
       }
     },
     isRight() {

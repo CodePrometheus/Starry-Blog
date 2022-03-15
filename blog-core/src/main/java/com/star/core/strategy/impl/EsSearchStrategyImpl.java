@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.*;
-import static com.star.common.enums.ArticleStatusEnum.PUBLIC;
+import static com.star.common.enums.StatusEnum.PUBLIC;
 
 /**
  * @Author: zzStar

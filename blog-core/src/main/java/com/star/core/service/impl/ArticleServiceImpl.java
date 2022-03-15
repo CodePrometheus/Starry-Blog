@@ -44,8 +44,8 @@ import java.util.stream.Collectors;
 import static com.star.common.constant.CommonConst.ARTICLE_SET;
 import static com.star.common.constant.CommonConst.FALSE;
 import static com.star.common.constant.RedisConst.*;
-import static com.star.common.enums.ArticleStatusEnum.DRAFT;
-import static com.star.common.enums.ArticleStatusEnum.PUBLIC;
+import static com.star.common.enums.StatusEnum.DRAFT;
+import static com.star.common.enums.StatusEnum.PUBLIC;
 
 /**
  * @Author: zzStar

@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import static com.star.common.constant.CommonConst.*;
 import static com.star.common.constant.RedisConst.COMMENT_LIKE_COUNT;
 import static com.star.common.constant.RedisConst.COMMENT_USER_LIKE;
+import static com.star.common.enums.CommentTypeEnum.*;
 
 /**
  * 评论业务
@@ -64,11 +65,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private CommentMapper commentMapper;
 
     @Override
-    public PageData<CommentDTO> listComments(Integer articleId) {
+    public PageData<CommentDTO> listComments(CommentVO commentVO) {
         // 查询文章评论量
         Long commentCount = commentMapper.selectCount(new LambdaQueryWrapper<Comment>()
-                .eq(Objects.isNull(articleId), Comment::getArticleId, articleId)
-                .isNull(Objects.isNull(articleId), Comment::getArticleId)
+                .eq(ARTICLE.getType().equals(commentVO.getType()), Comment::getArticleId, commentVO.getArticleId())
+                .eq(LINK.getType().equals(commentVO.getType()), Comment::getType, commentVO.getType())
+                .eq(MOMENT.getType().equals(commentVO.getType()), Comment::getMomentId, commentVO.getMomentId())
                 .isNull(Comment::getParentId)
                 .eq(Comment::getIsReview, TRUE));
         if (commentCount == 0) {
@@ -76,10 +78,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
 
         // 查询评论集合
-        List<CommentDTO> commentList = commentMapper.listComments(PageUtils.getLimitCurrent(), PageUtils.getSize(), articleId);
+        List<CommentDTO> commentList = commentMapper.listComments(PageUtils.getLimitCurrent(), PageUtils.getSize(), commentVO);
         if (CollectionUtils.isEmpty(commentList)) {
             return new PageData<>();
         }
+
         // 查询redis的评论点赞数据
         Map<String, Object> likeCountMap = redisUtil.hGetAll(COMMENT_LIKE_COUNT);
         // 提取评论id集合
@@ -111,7 +114,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public List<ReplyDTO> listRepliesByCommentId(Integer commentId, Long current) {
+    public List<ReplyDTO> listRepliesByCommentId(Integer commentId) {
         // 转换页码查询评论下的回复
         List<ReplyDTO> replyList = commentMapper.listRepliesByCommentId(PageUtils.getLimitCurrent(), PageUtils.getSize(), commentId);
         // 查询redis的评论点赞数据
@@ -131,6 +134,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 过滤html标签
         commentVO.setCommentContent(HTMLUtil.deleteCommentTag(commentVO.getCommentContent()));
         Comment comment = Comment.builder()
+                .type(commentVO.getType())
+                .momentId(commentVO.getMomentId())
                 .userId(UserUtil.getLoginUser().getUserInfoId())
                 .replyUserId(commentVO.getReplyUserId())
                 .articleId(commentVO.getArticleId())

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author: zzStar
@@ -23,9 +24,29 @@ public class MomentDTO {
     private Integer id;
 
     /**
+     * 昵称
+     */
+    private String nickname;
+
+    /**
+     * 头像
+     */
+    private String avatar;
+
+    /**
      * 内容
      */
     private String momentContent;
+
+    /**
+     * 图片
+     */
+    private String images;
+
+    /**
+     * 图片列表
+     */
+    private List<String> imgList;
 
     /**
      * 点赞数
@@ -33,17 +54,22 @@ public class MomentDTO {
     private Integer likeCount;
 
     /**
+     * 评论量
+     */
+    private Long commentCount;
+
+    /**
      * 是否置顶
      */
     private Integer isTop;
 
     /**
-     * 状态码
+     * 是否删除
      */
     private Integer isDelete;
 
     /**
-     * 文章状态 1.公开 2.私密
+     * 状态 1.公开 2.私密 3.草稿箱
      */
     private Integer status;
 

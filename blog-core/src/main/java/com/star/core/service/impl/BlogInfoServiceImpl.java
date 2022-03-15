@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 import static com.star.common.constant.CommonConst.*;
 import static com.star.common.constant.RedisConst.*;
-import static com.star.common.enums.ArticleStatusEnum.PUBLIC;
+import static com.star.common.enums.StatusEnum.PUBLIC;
 
 /**
  * 博客信息

@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.star.common.constant.RedisConst.ARTICLE_USER_LIKE;
-import static com.star.common.constant.RedisConst.COMMENT_USER_LIKE;
+import static com.star.common.constant.RedisConst.*;
 
 /**
  * @author zzStar
@@ -79,6 +78,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<String> roleList = roleMapper.listRolesByUserInfoId(userInfo.getId());
         Set<Object> articleLikeSet = redisUtil.sMembers(ARTICLE_USER_LIKE + userInfo.getId());
         Set<Object> commentLikeSet = redisUtil.sMembers(COMMENT_USER_LIKE + userInfo.getId());
+        Set<Object> momentLikeSet = redisUtil.sMembers(MOMENT_USER_LIKE + userInfo.getId());
 
         // 获取登录信息
         String ipAddr = IpUtil.getIpAddr(request);
@@ -99,6 +99,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .webSite(userInfo.getWebSite())
                 .articleLikeSet(articleLikeSet)
                 .commentLikeSet(commentLikeSet)
+                .momentLikeSet(momentLikeSet)
                 .ipAddr(ipAddr)
                 .ipSource(ipSource)
                 .isDisable(userInfo.getIsDisable())

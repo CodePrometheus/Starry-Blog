@@ -73,7 +73,6 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
         path.forEach((url, value) -> value.forEach((requestMethod, info) -> {
             String permissionName = info.get("summary").toString();
             List<String> tag = (List<String>) info.get("tags");
-
             Integer parentId = permissionMap.get(tag.get(0));
             Resource resource = Resource.builder()
                     .requestMethod(requestMethod.toLowerCase())

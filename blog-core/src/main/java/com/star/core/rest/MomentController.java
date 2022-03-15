@@ -11,6 +11,7 @@ import com.star.core.vo.DeleteVO;
 import com.star.core.vo.MomentVO;
 import com.star.core.vo.TopVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,12 +33,25 @@ public class MomentController {
     @Resource
     private MomentService momentService;
 
+    @ApiOperation(value = "查看首页动态")
+    @GetMapping("/home/moments")
+    public Result<List<String>> listHomeMoments() {
+        return Result.success(momentService.listHomeMoments());
+    }
+
     @ApiOperation(value = "查询动态")
     @GetMapping("/moments")
     public Result<PageData<MomentDTO>> listMoments() {
         return Result.success(momentService.listMoments());
     }
 
+    @ApiOperation(value = "根据id查看动态")
+    @ApiImplicitParam(name = "momentId", value = "动态id", required = true, dataType = "Integer")
+    @GetMapping("/moments/{momentId}")
+    public Result<MomentDTO> getMomentById(@PathVariable("momentId") Integer momentId) {
+        return Result.success(momentService.getMomentById(momentId));
+    }
+    
     @ApiOperation(value = "查看后台动态")
     @GetMapping("/admin/moments")
     private Result<PageData<MomentDTO>> listMomentBack(ConditionVO conditionVO) {
@@ -80,8 +94,8 @@ public class MomentController {
 
     @ApiOperation(value = "根据Id查看动态")
     @GetMapping("/admin/moments/{momentId}")
-    public Result<MomentDTO> getMomentById(@PathVariable("momentId") Integer momentId) {
-        return Result.success(momentService.getMomentById(momentId));
+    public Result<MomentDTO> getBackMomentById(@PathVariable("momentId") Integer momentId) {
+        return Result.success(momentService.getBackMomentById(momentId));
     }
 
     @ApiOperation(value = "点赞动态")
