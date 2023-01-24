@@ -57,7 +57,7 @@
         WHERE m.id = #{momentId}
     </select>
 
-    <select id="listMoments" resultType="com.star.core.dto.MomentDTO">
+    <select id="listHomeMoments" resultType="com.star.core.dto.MomentDTO">
         select m.id,
                nickname,
                avatar,

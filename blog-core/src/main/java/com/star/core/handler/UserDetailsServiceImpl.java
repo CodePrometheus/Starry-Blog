@@ -2,21 +2,21 @@ package com.star.core.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.IpUtil;
-import com.star.common.tool.RedisUtil;
+import com.star.common.tool.IpUtils;
+import com.star.common.tool.RedisUtils;
 import com.star.core.dto.UserInfoDTO;
 import com.star.core.entity.UserAuth;
 import com.star.core.entity.UserInfo;
 import com.star.core.mapper.RoleMapper;
 import com.star.core.mapper.UserAuthMapper;
 import com.star.core.mapper.UserInfoMapper;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -33,7 +33,7 @@ import static com.star.common.constant.RedisConst.*;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
 
     @Resource
     private HttpServletRequest request;
@@ -76,13 +76,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 查询账号对应的信息
         UserInfo userInfo = userInfoMapper.selectById(user.getUserInfoId());
         List<String> roleList = roleMapper.listRolesByUserInfoId(userInfo.getId());
-        Set<Object> articleLikeSet = redisUtil.sMembers(ARTICLE_USER_LIKE + userInfo.getId());
-        Set<Object> commentLikeSet = redisUtil.sMembers(COMMENT_USER_LIKE + userInfo.getId());
-        Set<Object> momentLikeSet = redisUtil.sMembers(MOMENT_USER_LIKE + userInfo.getId());
+        Set<Object> articleLikeSet = redisUtils.sMembers(ARTICLE_USER_LIKE + userInfo.getId());
+        Set<Object> commentLikeSet = redisUtils.sMembers(COMMENT_USER_LIKE + userInfo.getId());
+        Set<Object> momentLikeSet = redisUtils.sMembers(MOMENT_USER_LIKE + userInfo.getId());
 
         // 获取登录信息
-        String ipAddr = IpUtil.getIpAddr(request);
-        String ipSource = IpUtil.getIpSource(ipAddr);
+        String ipAddr = IpUtils.getIpAddr(request);
+        String ipSource = IpUtils.getIpSource(ipAddr);
 
         // 封装权限集合
         return UserInfoDTO.builder()

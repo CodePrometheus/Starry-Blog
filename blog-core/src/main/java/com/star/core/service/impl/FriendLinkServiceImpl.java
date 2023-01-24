@@ -13,11 +13,11 @@ import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.FriendLinkVO;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**

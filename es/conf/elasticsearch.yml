@@ -1,0 +1,17 @@
+# chown -R 1000:1000 es/data/
+# chown -R 777 es/data/
+# vim /etc/sysctl.conf | vm.max_map_count=262144
+# /sbin/sysctl -p
+
+# bin/elasticsearch-certutil ca
+# bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12
+
+cluster.name: "docker-cluster"
+discovery.type: single-node
+network.host: 0.0.0.0
+
+ingest.geoip.downloader.enabled: false
+
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+

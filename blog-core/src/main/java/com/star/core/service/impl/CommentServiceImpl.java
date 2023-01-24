@@ -1,11 +1,11 @@
 package com.star.core.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.RedisUtil;
+import com.star.common.tool.RedisUtils;
 import com.star.core.config.RabbitConfig;
 import com.star.core.dto.*;
 import com.star.core.entity.Comment;
@@ -21,7 +21,8 @@ import com.star.core.vo.CommentVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.ReviewVO;
 import com.star.core.vo.WebsiteConfigVO;
-import org.apache.commons.collections.CollectionUtils;
+import jakarta.annotation.Resource;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -29,7 +30,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -56,7 +56,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Resource
     private BlogInfoService blogInfoService;
     @Resource
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
     @Resource
     private RabbitTemplate rabbitTemplate;
     @Resource
@@ -84,7 +84,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
 
         // 查询redis的评论点赞数据
-        Map<String, Object> likeCountMap = redisUtil.hGetAll(COMMENT_LIKE_COUNT);
+        Map<String, Object> likeCountMap = redisUtils.hGetAll(COMMENT_LIKE_COUNT);
         // 提取评论id集合
         List<Integer> commentIdList = commentList.stream().map(CommentDTO::getId)
                 .collect(Collectors.toList());
@@ -118,7 +118,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 转换页码查询评论下的回复
         List<ReplyDTO> replyList = commentMapper.listRepliesByCommentId(PageUtils.getLimitCurrent(), PageUtils.getSize(), commentId);
         // 查询redis的评论点赞数据
-        Map<String, Object> likeCountMap = redisUtil.hGetAll(COMMENT_LIKE_COUNT);
+        Map<String, Object> likeCountMap = redisUtils.hGetAll(COMMENT_LIKE_COUNT);
         // 封装点赞数据
         replyList.forEach(v ->
                 v.setLikeCount((Integer) likeCountMap.get(v.getId().toString())));
@@ -207,12 +207,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Transactional(rollbackFor = StarryException.class)
     public void saveCommentLike(Integer commentId) {
         String commentLikeKey = COMMENT_USER_LIKE + UserUtil.getUserInfoId();
-        if (redisUtil.sIsMember(commentLikeKey, commentId)) {
-            redisUtil.sRemove(commentLikeKey, commentId);
-            redisUtil.hDecr(COMMENT_LIKE_COUNT, commentId.toString(), 1L);
+        if (redisUtils.sIsMember(commentLikeKey, commentId)) {
+            redisUtils.sRemove(commentLikeKey, commentId);
+            redisUtils.hDecr(COMMENT_LIKE_COUNT, commentId.toString(), 1L);
         } else {
-            redisUtil.sAdd(commentLikeKey, commentId);
-            redisUtil.hIncr(COMMENT_LIKE_COUNT, commentId.toString(), 1L);
+            redisUtils.sAdd(commentLikeKey, commentId);
+            redisUtils.hIncr(COMMENT_LIKE_COUNT, commentId.toString(), 1L);
         }
     }
 

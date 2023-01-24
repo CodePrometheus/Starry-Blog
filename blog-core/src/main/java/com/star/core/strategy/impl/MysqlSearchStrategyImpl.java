@@ -5,10 +5,10 @@ import com.star.core.dto.ArticleSearchDTO;
 import com.star.core.entity.Article;
 import com.star.core.mapper.ArticleMapper;
 import com.star.core.strategy.SearchStrategy;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

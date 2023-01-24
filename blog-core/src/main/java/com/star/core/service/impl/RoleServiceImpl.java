@@ -22,11 +22,11 @@ import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.RoleDisableVO;
 import com.star.core.vo.RoleVO;
-import org.apache.commons.collections.CollectionUtils;
+import jakarta.annotation.Resource;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

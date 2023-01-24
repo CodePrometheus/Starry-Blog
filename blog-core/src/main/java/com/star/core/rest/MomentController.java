@@ -13,11 +13,11 @@ import com.star.core.vo.TopVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -51,7 +51,7 @@ public class MomentController {
     public Result<MomentDTO> getMomentById(@PathVariable("momentId") Integer momentId) {
         return Result.success(momentService.getMomentById(momentId));
     }
-    
+
     @ApiOperation(value = "查看后台动态")
     @GetMapping("/admin/moments")
     private Result<PageData<MomentDTO>> listMomentBack(ConditionVO conditionVO) {

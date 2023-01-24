@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.star.common.annotation.Limit;
 import com.star.common.constant.LimitType;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.IpUtil;
+import com.star.common.tool.IpUtils;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -18,8 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -47,7 +47,7 @@ public class LimitAspect {
         LimitType limitType = annotation.limitType();
         String name = annotation.name();
         String key;
-        String ipAddr = IpUtil.getIpAddr(request);
+        String ipAddr = IpUtils.getIpAddr(request);
 
         int period = annotation.period();
         int limitCount = annotation.count();

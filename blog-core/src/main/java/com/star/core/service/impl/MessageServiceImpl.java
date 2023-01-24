@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.IpUtil;
+import com.star.common.tool.IpUtils;
 import com.star.core.dto.MessageBackDTO;
 import com.star.core.dto.MessageDTO;
 import com.star.core.dto.PageData;
@@ -18,11 +18,11 @@ import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.MessageVO;
 import com.star.core.vo.ReviewVO;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -48,8 +48,8 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     @Transactional(rollbackFor = StarryException.class)
     public void saveMessage(MessageVO messageVO) {
         Integer isMessageReview = blogInfoService.getWebsiteConfig().getIsMessageReview();
-        String ipAddr = IpUtil.getIpAddr(request);
-        String ipSource = IpUtil.getIpSource(ipAddr);
+        String ipAddr = IpUtils.getIpAddr(request);
+        String ipSource = IpUtils.getIpSource(ipAddr);
         Message message = BeanCopyUtil.copyObject(messageVO, Message.class);
         message.setIpAddress(ipAddr);
         message.setIpSource(ipSource);

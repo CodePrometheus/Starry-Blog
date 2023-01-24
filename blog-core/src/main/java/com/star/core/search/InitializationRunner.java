@@ -1,12 +1,11 @@
 package com.star.core.search;
 
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author: zzStar
@@ -19,19 +18,19 @@ public class InitializationRunner implements ApplicationRunner {
 
     @Resource
     private ElasticSearchUtil elasticSearchUtil;
-    @Resource
-    private SolrSearchUtil solrSearchUtil;
-    @Resource
-    private LuceneSearchUtil luceneSearchUtil;
+    // @Resource
+    // private SolrSearchUtil solrSearchUtil;
+    // @Resource
+    // private LuceneSearchUtil luceneSearchUtil;
 
     @Override
     public void run(ApplicationArguments args) {
         try {
             elasticSearchUtil.async();
             log.info("ES更新完毕");
-            solrSearchUtil.async();
-            log.info("Solr更新完毕");
-            luceneSearchUtil.async();
+            // solrSearchUtil.async();
+            // log.info("Solr更新完毕");
+            // luceneSearchUtil.async();
             log.info("Lucene更新完毕");
         } catch (Exception e) {
             log.error(e.getMessage());

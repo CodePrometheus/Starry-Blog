@@ -2,10 +2,9 @@ package com.star.core.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * 留言VO
@@ -44,4 +43,5 @@ public class MessageVO {
     @NotNull(message = "弹幕速度不能为空")
     @ApiModelProperty(name = "time", value = "弹幕速度", required = true, dataType = "Integer")
     private Integer time;
+
 }

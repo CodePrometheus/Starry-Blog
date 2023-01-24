@@ -8,7 +8,8 @@ import com.star.core.hook.LogPointer;
 import com.star.core.mapper.ResourceMapper;
 import com.star.core.mapper.RoleMapper;
 import com.star.core.util.BeanCopyUtil;
-import org.apache.commons.collections.CollectionUtils;
+import jakarta.annotation.PostConstruct;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,6 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
-import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,13 +33,13 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
 
     private static final String ADMIN = "admin";
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private ResourceMapper resourceMapper;
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private LogPointer logPointer;
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private RoleMapper roleMapper;
 
     /**
@@ -90,11 +90,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
         Resource resource;
         resource = resourceMapper.selectOne(new LambdaQueryWrapper<>(Resource.builder()
                 .url(url).requestMethod(method).build()));
-        if (fi.getRequest().getRequestURI().contains(ADMIN)) {
-            logPointer.doPoint(fi.getRequest(), fi.getResponse(), userInfo, resource, true);
-        } else {
-            logPointer.doPoint(fi.getRequest(), fi.getResponse(), userInfo, resource, false);
-        }
+        logPointer.doPoint(fi.getRequest(), fi.getResponse(), userInfo, resource, fi.getRequest().getRequestURI().contains(ADMIN));
 
         // 获取接口角色信息，若为匿名接口则放行，若无对应角色则禁止
         for (ResourceRoleDTO urlRoleDTO : resourceRoleList) {

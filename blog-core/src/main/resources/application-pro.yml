@@ -1,0 +1,91 @@
+default-ip: localhost
+
+spring:
+  config:
+    activate:
+      on-profile: pro
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+  # 配置mysql数据库
+  datasource:
+    type:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${localhost}:3306/starry-blog?serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: root
+
+  # es配置
+  elasticsearch:
+    host: ${localhost}
+    port: 9200
+
+  #mq配置
+  rabbitmq:
+    host: ${localhost}
+    port: 5672
+    username: guest
+    password: guest
+  # 邮箱配置
+  mail:
+    host: smtp.qq.com
+    username: 2413245708@qq.com
+    password:
+    default-encoding: UTF-8
+    port: 587
+    properties:
+      mail:
+      smtp:
+      auth: true
+      socketFactory:
+      class: javax.net.ssl.SSLSocketFactory
+  # 图片大小限制
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  # solr配置
+  solr:
+    core: starry-blog
+
+  # solr | redis
+  data:
+    solr:
+      host: http://${localhost}:8983/solr/starry-blog
+
+    redis:
+      host: ${localhost}
+      port: 6379
+      password:
+
+  lucene:
+    dir: ./lucene
+
+# 配置MybatisPlus
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    org.springframework.data.convert.CustomConversions: ERROR
+
+swagger:
+  enable: true
+  application-name: Starry-Blog | 你的美好，我都记得
+  application-version: 7.0
+  application-description: Starry-Blog | 你的美好，我都记得
+  try-host: http://${localhost}:${server.port}
+
+# Gitee图床配置
+ACCESS_TOKEN:
+OWNER:
+REPO_NAME:
+CREATE_REPOS_MESSAGE:
+CREATE_REPOS_URL:
+GITPAGE_REQUEST_URL:
+
+search:
+  mode: solr

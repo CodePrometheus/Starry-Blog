@@ -4,11 +4,10 @@ import com.star.core.entity.Resource;
 import com.star.core.entity.UserInfo;
 import com.star.core.service.OperationLogService;
 import com.star.core.service.VisitLogService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author: zzStar
@@ -18,10 +17,10 @@ public class DefaultLogPointerImpl implements LogPointer {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultLogPointerImpl.class);
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private VisitLogService visitLogService;
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private OperationLogService operationLogService;
 
     public DefaultLogPointerImpl(OperationLogService operationLogService) {

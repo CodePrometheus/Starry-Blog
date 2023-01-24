@@ -8,11 +8,11 @@ import com.star.core.vo.PageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -26,6 +26,7 @@ public class PageController {
 
     @Resource
     private ImageUtil imageUtil;
+
     @Resource
     private PageService pageService;
 

@@ -1,12 +1,12 @@
 package com.star.core.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.RedisUtil;
+import com.star.common.tool.RedisUtils;
 import com.star.core.dto.CommentCountDTO;
 import com.star.core.dto.MomentDTO;
 import com.star.core.dto.PageData;
@@ -23,10 +23,10 @@ import com.star.core.vo.ConditionVO;
 import com.star.core.vo.DeleteVO;
 import com.star.core.vo.MomentVO;
 import com.star.core.vo.TopVO;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,9 +48,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
     @Resource
     private CommentMapper commentMapper;
     @Resource
-    private MomentService momentService;
-    @Resource
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
     @Resource
     private MomentMapper momentMapper;
 
@@ -100,7 +98,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         if (Objects.isNull(momentDTO)) {
             throw new StarryException("动态不存在");
         }
-        momentDTO.setLikeCount((Integer) redisUtil.hGet(MOMENT_LIKE_COUNT, momentId.toString()));
+        momentDTO.setLikeCount((Integer) redisUtils.hGet(MOMENT_LIKE_COUNT, momentId.toString()));
         if (Objects.nonNull(momentDTO.getImages())) {
             momentDTO.setImgList(JSON.parseObject(momentDTO.getImages(), List.class));
         }
@@ -113,7 +111,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
         if (count == 0) {
             return new PageData<>();
         }
-        List<MomentDTO> momentDTOS = momentMapper.listMoments(PageUtils.getLimitCurrent(), PageUtils.getSize());
+        List<MomentDTO> momentDTOS = momentMapper.listHomeMoments(PageUtils.getLimitCurrent(), PageUtils.getSize());
 
         // moment's comment
         List<Integer> momentIdList = momentDTOS.stream().map(MomentDTO::getId).collect(Collectors.toList());
@@ -123,7 +121,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
             return new PageData<>(momentDTOS, count);
         }
 
-        Map<String, Object> likeCountMap = redisUtil.hGetAll(MOMENT_LIKE_COUNT);
+        Map<String, Object> likeCountMap = redisUtils.hGetAll(MOMENT_LIKE_COUNT);
 
         List<Comment> commentList = commentMapper.selectList(
                 new LambdaQueryWrapper<Comment>().eq(Comment::getIsReview, TRUE)
@@ -132,7 +130,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
 
         momentDTOS.forEach(v -> {
             v.setLikeCount((Integer) likeCountMap.get(v.getId().toString()));
-            v.setCommentCount(childrenMap.get(v.getId()).stream().count());
+            v.setCommentCount(commentCountMap.get(v.getId()));
             if (Objects.nonNull(v.getImages())) {
                 v.setImgList(JSON.parseObject(v.getImages(), List.class));
             }
@@ -149,12 +147,12 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
     @Override
     public void saveMomentLike(Integer momentId) {
         String likeKey = MOMENT_USER_LIKE + UserUtil.getUserInfoId();
-        if (redisUtil.sIsMember(likeKey, momentId)) {
-            redisUtil.sRemove(likeKey, momentId);
-            redisUtil.hDecr(MOMENT_LIKE_COUNT, momentId.toString(), 1L);
+        if (redisUtils.sIsMember(likeKey, momentId)) {
+            redisUtils.sRemove(likeKey, momentId);
+            redisUtils.hDecr(MOMENT_LIKE_COUNT, momentId.toString(), 1L);
         } else {
-            redisUtil.sAdd(likeKey, momentId);
-            redisUtil.hIncr(MOMENT_LIKE_COUNT, momentId.toString(), 1L);
+            redisUtils.sAdd(likeKey, momentId);
+            redisUtils.hIncr(MOMENT_LIKE_COUNT, momentId.toString(), 1L);
         }
     }
 
@@ -163,7 +161,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
     public void saveOrUpdateMoment(MomentVO momentVO) {
         Moment moment = BeanCopyUtil.copyObject(momentVO, Moment.class);
         moment.setUserId(UserUtil.getUserInfoId());
-        momentService.saveOrUpdate(moment);
+        this.saveOrUpdate(moment);
     }
 
     @Override
@@ -181,7 +179,7 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
                         .isTop(FALSE)
                         .isDelete(deleteVO.getIsDelete()).build()
         ).collect(Collectors.toList());
-        momentService.updateBatchById(momentList);
+        this.updateBatchById(momentList);
     }
 
     @Override

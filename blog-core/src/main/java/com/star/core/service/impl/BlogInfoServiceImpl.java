@@ -1,11 +1,11 @@
 package com.star.core.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.IpUtil;
-import com.star.common.tool.RedisUtil;
+import com.star.common.tool.IpUtils;
+import com.star.common.tool.RedisUtils;
 import com.star.common.tool.UserAgentUtil;
 import com.star.core.dto.*;
 import com.star.core.entity.Article;
@@ -19,13 +19,13 @@ import com.star.core.util.BeanCopyUtil;
 import com.star.core.vo.BlogInfoVo;
 import com.star.core.vo.PageVO;
 import com.star.core.vo.WebsiteConfigVO;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,7 +52,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
     @Resource
     private PageService pageService;
     @Resource
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
     @Resource
     private UserInfoMapper userInfoMapper;
     @Resource
@@ -77,7 +77,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         // 查询标签数量
         Long tagCount = tagMapper.selectCount(null);
         // 查询访问量
-        Object count = redisUtil.get(BLOG_VIEWS_COUNT);
+        Object count = redisUtils.get(BLOG_VIEWS_COUNT);
         String viewCount = Optional.ofNullable(count).orElse(0).toString();
         // 查询网站配置
         WebsiteConfigVO websiteConfig = getWebsiteConfig();
@@ -96,7 +96,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
     @Override
     public BlogBackInfoDTO getBlogBackInfo() {
         // 查询访问量
-        Object count = redisUtil.get(BLOG_VIEWS_COUNT);
+        Object count = redisUtils.get(BLOG_VIEWS_COUNT);
         Integer viewsCount = Integer.parseInt(Optional.of(count).orElse(0).toString());
         // 查询留言量
         Long messageCount = messageMapper.selectCount(null);
@@ -116,7 +116,7 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         List<Tag> tags = tagMapper.selectList(null);
         List<TagDTO> tagList = BeanCopyUtil.copyList(tags, TagDTO.class);
         // 查询redis访问量前五的文章
-        Map<Object, Double> articleMap = redisUtil.zReverseRangeWithScore(ARTICLE_VIEWS_COUNT, 0L, 4L);
+        Map<Object, Double> articleMap = redisUtils.zReverseRangeWithScore(ARTICLE_VIEWS_COUNT, 0L, 4L);
         BlogBackInfoDTO backInfo = BlogBackInfoDTO.builder()
                 .viewsCount(viewsCount)
                 .messageCount(messageCount)
@@ -150,28 +150,28 @@ public class BlogInfoServiceImpl implements BlogInfoService {
 
     @Override
     public String getAbout() {
-        Object value = redisUtil.get(ABOUT);
+        Object value = redisUtils.get(ABOUT);
         return Objects.nonNull(value) ? value.toString() : "";
     }
 
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public void updateAbout(BlogInfoVo blogInfoVo) {
-        redisUtil.set(ABOUT, blogInfoVo.getAboutContent());
+        redisUtils.set(ABOUT, blogInfoVo.getAboutContent());
     }
 
     @Override
     public WebsiteConfigVO getWebsiteConfig() {
         WebsiteConfigVO websiteConfigVO;
         // 获取缓存数据
-        Object websiteConfig = redisUtil.get(WEBSITE_CONFIG);
+        Object websiteConfig = redisUtils.get(WEBSITE_CONFIG);
         if (Objects.nonNull(websiteConfig)) {
             websiteConfigVO = JSON.parseObject(websiteConfig.toString(), WebsiteConfigVO.class);
         } else {
             // 查数据库
             String config = websiteConfigMapper.selectById(1).getConfig();
             websiteConfigVO = JSON.parseObject(config, WebsiteConfigVO.class);
-            redisUtil.set(WEBSITE_CONFIG, config);
+            redisUtils.set(WEBSITE_CONFIG, config);
         }
         return websiteConfigVO;
     }
@@ -182,12 +182,12 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         WebsiteConfig config = WebsiteConfig.builder().id(1).config(JSON.toJSONString(websiteConfigVO)).build();
         websiteConfigMapper.updateById(config);
         // 删除缓存
-        redisUtil.del(WEBSITE_CONFIG);
+        redisUtils.del(WEBSITE_CONFIG);
     }
 
     @Override
     public void report() {
-        String ipAddr = IpUtil.getIpAddr(request);
+        String ipAddr = IpUtils.getIpAddr(request);
         Map<String, String> userAgentMap = userAgentUtil.parseOsAndBrowser(request);
         String os = userAgentMap.get("os");
         String browser = userAgentMap.get("browser");
@@ -195,19 +195,19 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         String uuid = ipAddr + browser + os;
         String md5 = DigestUtils.md5DigestAsHex(uuid.getBytes());
         // 判断是否访问
-        if (!redisUtil.sIsMember(UNIQUE_VISITOR, md5)) {
+        if (!redisUtils.sIsMember(UNIQUE_VISITOR, md5)) {
             // 统计游客地域分布
-            String ipSource = IpUtil.getIpSource(ipAddr);
+            String ipSource = IpUtils.getIpSource(ipAddr);
             if (StringUtils.isNotBlank(ipSource)) {
                 ipSource = ipSource.substring(0, 2)
                         .replaceAll(PROVINCE, "")
                         .replaceAll(CITY, "");
-                redisUtil.hIncr(VISITOR_AREA, ipSource, 1L);
+                redisUtils.hIncr(VISITOR_AREA, ipSource, 1L);
             } else {
-                redisUtil.hIncr(VISITOR_AREA, UNKNOWN, 1L);
+                redisUtils.hIncr(VISITOR_AREA, UNKNOWN, 1L);
             }
-            redisUtil.incr(BLOG_VIEWS_COUNT, 1L);
-            redisUtil.sAdd(UNIQUE_VISITOR, md5);
+            redisUtils.incr(BLOG_VIEWS_COUNT, 1L);
+            redisUtils.sAdd(UNIQUE_VISITOR, md5);
         }
     }
 

@@ -54,7 +54,7 @@ public class ImageUtil {
     /**
      * 文件前缀
      */
-    private String IMG_FILE_DEST_PATH = DateUtil.format(new Date(), "yyyy-MM-dd") + "/";
+    private final String IMG_FILE_DEST_PATH = DateUtil.format(new Date(), "yyyy-MM-dd") + "/";
 
     /**
      * 新建文件URL

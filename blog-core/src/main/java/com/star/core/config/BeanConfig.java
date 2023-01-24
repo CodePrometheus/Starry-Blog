@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Bean实例配置
+ * Bean 实例配置
  *
  * @Author: zzStar
  * @Date: 01-03-2022 22:43

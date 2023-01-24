@@ -2,10 +2,10 @@ package com.star.core.strategy.context;
 
 import com.star.core.dto.ArticleSearchDTO;
 import com.star.core.strategy.SearchStrategy;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 

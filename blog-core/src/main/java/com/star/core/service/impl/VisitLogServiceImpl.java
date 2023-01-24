@@ -1,12 +1,11 @@
 package com.star.core.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.star.common.tool.IpUtil;
+import com.star.common.tool.IpUtils;
 import com.star.common.tool.UserAgentUtil;
 import com.star.core.dto.PageData;
 import com.star.core.dto.VisitLogDTO;
@@ -21,11 +20,11 @@ import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.HTMLUtil;
 import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -38,13 +37,13 @@ import java.util.Objects;
 @Service
 public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> implements VisitLogService {
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private ArticleMapper articleMapper;
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private UserAgentUtil userAgentUtil;
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private ObjectMapper objectMapper;
 
     @Override
@@ -64,9 +63,9 @@ public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> i
         VisitLog log = new VisitLog();
         log.setUserId(user.getId());
         log.setNickname(user.getNickname());
-        String ip = IpUtil.getIpAddr(request);
+        String ip = IpUtils.getIpAddr(request);
         log.setIpAddr(ip);
-        log.setIpSource(IpUtil.getIpSource(ip));
+        log.setIpSource(IpUtils.getIpSource(ip));
         Map<String, String> map = userAgentUtil.parseOsAndBrowser(request);
         log.setOs(map.get("os"));
         log.setBrowser(map.get("browser"));
@@ -77,7 +76,7 @@ public class VisitLogServiceImpl extends ServiceImpl<VisitLogMapper, VisitLog> i
         log.setVisitUrl(url);
         log.setRequestParam(param);
         if (url.contains("search")) {
-            Map parseMap = JSONArray.parseObject(param, Map.class);
+            Map parseMap = JSON.parseObject(param, Map.class);
             log.setVisitDesc("Keywords: " + parseMap.get("keywords"));
         }
         if (url.equals("/comments")) {

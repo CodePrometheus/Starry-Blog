@@ -13,6 +13,8 @@
 
  Date: 20/03/2022 20:01:03
 */
+CREATE DATABASE IF NOT EXISTS `starry-blog`;
+USE `starry-blog`;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

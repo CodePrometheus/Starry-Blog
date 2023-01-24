@@ -3,6 +3,7 @@ package com.star.core.search;
 import com.star.core.dto.ArticleSearchDTO;
 import com.star.core.entity.Article;
 import com.star.core.mapper.ArticleMapper;
+import jakarta.annotation.Resource;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -17,9 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.List;
  * @Author: zzStar
  * @Date: 09-28-2021 15:15
  */
-@Component
+// @Component
 public class LuceneSearchUtil {
 
     private static final Logger log = LoggerFactory.getLogger(LuceneSearchUtil.class);

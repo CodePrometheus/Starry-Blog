@@ -16,10 +16,10 @@ import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.TagVO;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 

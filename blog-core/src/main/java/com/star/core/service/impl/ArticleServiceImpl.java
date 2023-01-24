@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.RedisUtil;
+import com.star.common.tool.RedisUtils;
 import com.star.core.config.RabbitConfig;
 import com.star.core.dto.*;
 import com.star.core.entity.Article;
@@ -27,7 +27,9 @@ import com.star.core.vo.ArticleVO;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.DeleteVO;
 import com.star.core.vo.TopVO;
-import org.apache.commons.collections.CollectionUtils;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -35,8 +37,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -65,7 +65,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Resource
     private TagService tagService;
     @Resource
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
     @Resource
     private AmqpTemplate amqpTemplate;
     @Resource
@@ -78,8 +78,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private ArticleTagMapper articleTagMapper;
     @Resource
     private HttpSession session;
-    @Resource
-    private ArticleService articleService;
     @Resource
     private ArticleTagService articleTagService;
 
@@ -107,8 +105,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 查询后台文章
         List<ArticleBackDTO> articleBackList = articleMapper.listArticlesBack(PageUtils.getLimitCurrent(), PageUtils.getSize(), condition);
         // 查询文章点赞量和浏览量
-        Map<String, Object> likeCountMap = redisUtil.hGetAll(ARTICLE_LIKE_COUNT);
-        Map<Object, Double> viewsCountMap = redisUtil.zAllScore(ARTICLE_VIEWS_COUNT);
+        Map<String, Object> likeCountMap = redisUtils.hGetAll(ARTICLE_LIKE_COUNT);
+        Map<Object, Double> viewsCountMap = redisUtils.zAllScore(ARTICLE_VIEWS_COUNT);
         // 封装点赞量和浏览量
         articleBackList.forEach(v -> {
             v.setLikeCount((Integer) likeCountMap.get(v.getId().toString()));
@@ -181,11 +179,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         article.setNextArticle(BeanCopyUtil.copyObject(nextArticle, ArticlePaginationDTO.class));
 
         // 封装点赞量和浏览量封装
-        Double viewCount = redisUtil.zScore(ARTICLE_VIEWS_COUNT, articleId);
+        Double viewCount = redisUtils.zScore(ARTICLE_VIEWS_COUNT, articleId);
         if (Objects.nonNull(viewCount)) {
             article.setViewsCount(viewCount.intValue());
         }
-        article.setLikeCount((Integer) redisUtil.hGet(ARTICLE_LIKE_COUNT, articleId.toString()));
+        article.setLikeCount((Integer) redisUtils.hGet(ARTICLE_LIKE_COUNT, articleId.toString()));
 
         return article;
     }
@@ -224,7 +222,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleSet.add(articleId);
             session.setAttribute(ARTICLE_SET, articleSet);
             // +1
-            redisUtil.zIncr(ARTICLE_VIEWS_COUNT, articleId, 1D);
+            redisUtils.zIncr(ARTICLE_VIEWS_COUNT, articleId, 1D);
         }
     }
 
@@ -232,13 +230,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Transactional(rollbackFor = StarryException.class)
     public void saveArticleLike(Integer articleId) {
         String likeKey = ARTICLE_USER_LIKE + UserUtil.getLoginUser().getUserInfoId();
-        if (redisUtil.sIsMember(likeKey, articleId)) {
+        if (redisUtils.sIsMember(likeKey, articleId)) {
             // 点过赞则删除文章id
-            redisUtil.sRemove(likeKey, articleId);
-            redisUtil.hDecr(ARTICLE_LIKE_COUNT, articleId.toString(), 1L);
+            redisUtils.sRemove(likeKey, articleId);
+            redisUtils.hDecr(ARTICLE_LIKE_COUNT, articleId.toString(), 1L);
         } else {
-            redisUtil.sAdd(likeKey, articleId);
-            redisUtil.hIncr(ARTICLE_LIKE_COUNT, articleId.toString(), 1L);
+            redisUtils.sAdd(likeKey, articleId);
+            redisUtils.hIncr(ARTICLE_LIKE_COUNT, articleId.toString(), 1L);
         }
     }
 
@@ -253,7 +251,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             article.setCategoryId(category.getId());
         }
         article.setUserId(UserUtil.getUserInfoId());
-        articleService.saveOrUpdate(article);
+        this.saveOrUpdate(article);
         // 保存文章标签
         saveArticleTag(articleVO, article.getId());
         // es
@@ -343,7 +341,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                         .id(id)
                         .isTop(FALSE)
                         .isDelete(deleteVO.getIsDelete()).build()).collect(Collectors.toList());
-        articleService.updateBatchById(articleList);
+        this.updateBatchById(articleList);
     }
 
     @Override

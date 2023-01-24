@@ -5,21 +5,18 @@
     <parent>
         <artifactId>starry-blog</artifactId>
         <groupId>com.star</groupId>
-        <version>1.5</version>
+        <version>7.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.star.core</groupId>
     <artifactId>blog-core</artifactId>
     <dependencies>
+
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.star</groupId>
+            <groupId>com.star.common</groupId>
             <artifactId>blog-common</artifactId>
-            <version>1.5</version>
+            <version>7.0</version>
         </dependency>
     </dependencies>
 
@@ -27,5 +24,4 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
 </project>

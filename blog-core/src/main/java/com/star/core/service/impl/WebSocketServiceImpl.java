@@ -1,25 +1,25 @@
 package com.star.core.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.common.tool.DateUtil;
-import com.star.common.tool.IpUtil;
+import com.star.common.tool.IpUtils;
 import com.star.core.dto.ChatRecordDTO;
 import com.star.core.dto.RecallMessageDTO;
 import com.star.core.dto.WebsocketMessageDTO;
 import com.star.core.entity.ChatRecord;
 import com.star.core.mapper.ChatRecordMapper;
 import com.star.core.util.HTMLUtil;
+import jakarta.websocket.*;
+import jakarta.websocket.server.HandshakeRequest;
+import jakarta.websocket.server.ServerEndpoint;
+import jakarta.websocket.server.ServerEndpointConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.*;
-import javax.websocket.server.HandshakeRequest;
-import javax.websocket.server.ServerEndpoint;
-import javax.websocket.server.ServerEndpointConfig;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +49,7 @@ public class WebSocketServiceImpl {
      * 用户session集合
      * 线程安全的无序的集合，可以将它理解成线程安全的HashSet
      */
-    private static CopyOnWriteArraySet<WebSocketServiceImpl> webSocketSet = new CopyOnWriteArraySet<>();
+    private static final CopyOnWriteArraySet<WebSocketServiceImpl> webSocketSet = new CopyOnWriteArraySet<>();
 
     @Autowired
     public void setRecordMapper(ChatRecordMapper recordMapper) {
@@ -94,9 +94,8 @@ public class WebSocketServiceImpl {
         return ChatRecordDTO.builder()
                 .chatRecordList(chatRecordList)
                 .ipAddr(ipaddr)
-                .ipSource(IpUtil.getIpSource(ipaddr)).build();
+                .ipSource(IpUtils.getIpSource(ipaddr)).build();
     }
-
 
     /**
      * 更新在线人数
@@ -111,7 +110,6 @@ public class WebSocketServiceImpl {
             }
         }
     }
-
 
     /**
      * 获取ip

@@ -1,8 +1,7 @@
-import com.star.common.tool.IpUtil;
+import com.star.common.tool.IpUtils;
 import org.junit.Test;
 
-import javax.annotation.Resource;
-import java.util.Map;
+import jakarta.annotation.Resource;
 
 /**
  * @Author: zzStar
@@ -12,7 +11,9 @@ public class IpTest {
 
     @Test
     public void ipTest() {
-        String ipSource = IpUtil.getIpSource("10.145.92.88");
+        IpUtils.initIp2regionResource();
+        String ipSource = IpUtils.getIpSource("20.247.36.169");
         System.out.println(ipSource);
     }
+
 }

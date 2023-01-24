@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.star.common.tool.IpUtil;
+import com.star.common.tool.IpUtils;
 import com.star.core.dto.OperationLogDTO;
 import com.star.core.dto.PageData;
 import com.star.core.entity.OperationLog;
@@ -16,11 +16,11 @@ import com.star.core.service.OperationLogService;
 import com.star.core.util.BeanCopyUtil;
 import com.star.core.util.PageUtils;
 import com.star.core.vo.ConditionVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -33,9 +33,9 @@ import java.util.Objects;
 @Service
 public class OperationLogServiceImpl extends ServiceImpl<OperationLogMapper, OperationLog> implements OperationLogService {
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private ObjectMapper objectMapper;
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private ResourceMapper resourceMapper;
 
     @Override
@@ -53,9 +53,9 @@ public class OperationLogServiceImpl extends ServiceImpl<OperationLogMapper, Ope
         OperationLog log = new OperationLog();
         log.setUserId(user.getId());
         log.setNickname(user.getNickname());
-        String ip = IpUtil.getIpAddr(request);
+        String ip = IpUtils.getIpAddr(request);
         log.setIpAddr(ip);
-        log.setIpSource(IpUtil.getIpSource(ip));
+        log.setIpSource(IpUtils.getIpSource(ip));
 
         if (Objects.nonNull(resource)) {
             String resourceName = resource.getResourceName();

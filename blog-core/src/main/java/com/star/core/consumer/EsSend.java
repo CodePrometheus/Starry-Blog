@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.star.core.config.RabbitConfig;
 import com.star.core.search.ArticleMqMessage;
 import com.star.core.search.ElasticSearchUtil;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -11,7 +12,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 
 /**

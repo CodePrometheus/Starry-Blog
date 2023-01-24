@@ -1,12 +1,12 @@
 package com.star.core.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.RedisUtil;
+import com.star.common.tool.RedisUtils;
 import com.star.core.config.RabbitConfig;
 import com.star.core.dto.EmailDTO;
 import com.star.core.dto.PageData;
@@ -26,6 +26,7 @@ import com.star.core.util.UserUtil;
 import com.star.core.vo.ConditionVO;
 import com.star.core.vo.PasswordVO;
 import com.star.core.vo.UserVO;
+import jakarta.annotation.Resource;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -35,8 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,7 +64,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
     @Resource
     private RabbitTemplate rabbitTemplate;
     @Resource
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
     @Resource
     private RoleMapper roleMapper;
     @Resource
@@ -99,7 +99,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
                 "*", new Message(JSON.toJSONBytes(email),
                         new MessageProperties()));
         // 将验证码存入redis，设置过期时间为5分钟
-        redisUtil.set(CODE_KEY + username, code, CODE_EXPIRE_TIME);
+        redisUtils.set(CODE_KEY + username, code, CODE_EXPIRE_TIME);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
      * @return 合法状态
      */
     private Boolean checkUser(UserVO user) {
-        if (!user.getCode().equals(redisUtil.get(CODE_KEY + user.getUsername()))) {
+        if (!user.getCode().equals(redisUtils.get(CODE_KEY + user.getUsername()))) {
             throw new StarryException("验证码错误！");
         }
         UserAuth userAuth = userAuthMapper.selectOne(new LambdaQueryWrapper<UserAuth>()
@@ -219,14 +219,14 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         switch (Objects.requireNonNull(getUserAreaType(condition.getType()))) {
             case USER:
                 // 查询注册用户区域分布
-                Object userArea = redisUtil.get(USER_AREA);
+                Object userArea = redisUtils.get(USER_AREA);
                 if (Objects.nonNull(userArea)) {
                     userAreaList = JSON.parseObject(userArea.toString(), List.class);
                 }
                 return userAreaList;
             case VISITOR:
                 // 查询游客区域分布
-                Map<String, Object> visitorArea = redisUtil.hGetAll(VISITOR_AREA);
+                Map<String, Object> visitorArea = redisUtils.hGetAll(VISITOR_AREA);
                 if (Objects.nonNull(visitorArea)) {
                     userAreaList = visitorArea.entrySet().stream()
                             .map(v -> UserAreaDTO.builder()

@@ -6,13 +6,13 @@ import com.star.core.entity.Article;
 import com.star.core.mapper.ArticleMapper;
 import com.star.core.mapper.ElasticsearchMapper;
 import com.star.core.util.BeanCopyUtil;
+import jakarta.annotation.Resource;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

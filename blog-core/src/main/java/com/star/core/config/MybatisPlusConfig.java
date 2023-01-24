@@ -40,4 +40,5 @@ public class MybatisPlusConfig implements MetaObjectHandler {
         this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class,
                 LocalDateTime.now(ZoneId.of("Asia/Shanghai")));
     }
+
 }

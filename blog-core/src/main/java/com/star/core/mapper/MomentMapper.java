@@ -49,6 +49,6 @@ public interface MomentMapper extends BaseMapper<Moment> {
      * @param size    大小
      * @return 动态集合
      */
-    List<MomentDTO> listMoments(@Param("current") Long current, @Param("size") Long size);
+    List<MomentDTO> listHomeMoments(@Param("current") Long current, @Param("size") Long size);
 
 }

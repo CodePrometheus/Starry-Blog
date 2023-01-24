@@ -1,20 +1,21 @@
 package com.star.core.strategy.impl;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Highlight;
+import co.elastic.clients.elasticsearch.core.search.HighlightField;
 import com.star.core.dto.ArticleSearchDTO;
 import com.star.core.strategy.SearchStrategy;
-import org.apache.commons.collections.CollectionUtils;
+import jakarta.annotation.Resource;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,72 +31,83 @@ import static com.star.common.enums.StatusEnum.PUBLIC;
 public class EsSearchStrategyImpl implements SearchStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(EsSearchStrategyImpl.class);
+    public static final String ARTICLE_TITLE = "articleTitle";
+    public static final String ARTICLE_CONTENT = "articleContent";
+    public static final int CONTENT_SIZE = 200;
+    public static final String IS_DELETE = "isDelete";
+    public static final String STATUS = "status";
 
     @Resource
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+    private ElasticsearchClient elasticsearchClient;
 
     @Override
     public List<ArticleSearchDTO> searchArticle(String keywords) {
-        if (StringUtils.isBlank(keywords)) {
-            return new ArrayList<>();
+        List<ArticleSearchDTO> res = new ArrayList<>();
+        try {
+            if (StringUtils.isBlank(keywords)) {
+                return res;
+            }
+            return searchArticle(buildQuery(keywords));
+        } catch (IOException e) {
+            logger.error("EsSearchStrategyImpl.searchArticle: ", e);
+            return res;
         }
-        return searchArticle(buildQuery(keywords));
     }
 
     /**
-     * 搜索文章构造
+     * 搜索文章
      *
      * @param keywords 关键字
-     * @return es条件构造器
+     * @return /
      */
-    private NativeSearchQueryBuilder buildQuery(String keywords) {
-        // 条件构造器
-        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        // 根据关键词搜索文章标题或内容
-        boolQueryBuilder.must(QueryBuilders.boolQuery().should(QueryBuilders.matchQuery("articleTitle", keywords))
-                        .should(QueryBuilders.matchQuery("articleContent", keywords)))
-                .must(QueryBuilders.termQuery("isDelete", FALSE))
-                .must(QueryBuilders.termQuery("status", PUBLIC.getStatus()));
+    private SearchResponse<ArticleSearchDTO> buildQuery(String keywords) throws IOException {
+        // match 模糊匹配 进行分词,然后按分词匹配查找
+        // term 精确查询 搜索前不会再对搜索词进行分词拆解
+        co.elastic.clients.elasticsearch._types.query_dsl.Query titleQuery =
+                MatchQuery.of(m -> m.field(ARTICLE_TITLE).query(keywords))._toQuery();
+        co.elastic.clients.elasticsearch._types.query_dsl.Query contentQuery =
+                MatchQuery.of(m -> m.field(ARTICLE_CONTENT).query(keywords))._toQuery();
+        co.elastic.clients.elasticsearch._types.query_dsl.Query deleteQuery =
+                TermQuery.of(t -> t.field(IS_DELETE).value(FALSE))._toQuery();
+        co.elastic.clients.elasticsearch._types.query_dsl.Query statusQuery =
+                TermQuery.of(t -> t.field(STATUS).value(PUBLIC.getStatus()))._toQuery();
 
-        // 查询
-        nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
-        return nativeSearchQueryBuilder;
+        // 存放高亮的字段，默认与文档字段一致
+        HighlightField hf = new HighlightField.Builder().build();
+        Highlight titleAndContent = new Highlight.Builder().
+                preTags(PRE_TAG).postTags(SPAN).
+                fields(ARTICLE_TITLE, hf).
+                fields(ARTICLE_CONTENT, hf)
+                .fragmentSize(CONTENT_SIZE).build();
+
+        return elasticsearchClient.search(s -> s.index("starry-blog").query(
+                q -> q.bool(
+                        b -> b.should(titleQuery, contentQuery)
+                                .must(deleteQuery, statusQuery)
+                )
+        ).highlight(titleAndContent), ArticleSearchDTO.class);
     }
 
     /**
-     * 文章搜索结果高亮
+     * 搜索结果
      *
-     * @param nativeSearchQueryBuilder es条件构造器
+     * @param response /
      * @return 搜索结果
      */
-    private List<ArticleSearchDTO> searchArticle(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
-        // 添加文章标题高亮
-        HighlightBuilder.Field titleField = new HighlightBuilder.Field("articleTitle");
-        titleField.preTags(PRE_TAG);
-        titleField.postTags(SPAN);
-        // 添加文章内容高亮
-        HighlightBuilder.Field contentField = new HighlightBuilder.Field("articleContent");
-        contentField.preTags(PRE_TAG);
-        contentField.postTags(SPAN);
-        contentField.fragmentSize(200);
-        nativeSearchQueryBuilder.withHighlightFields(titleField, contentField);
-
+    private List<ArticleSearchDTO> searchArticle(SearchResponse<ArticleSearchDTO> response) {
         try {
-            // 搜索
-            SearchHits<ArticleSearchDTO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), ArticleSearchDTO.class);
-            return search.getSearchHits().stream().map(hit -> {
-                ArticleSearchDTO article = hit.getContent();
+            return response.hits().hits().stream().map(hit -> {
+                ArticleSearchDTO article = hit.source();
                 // 获取文章标题高亮数据
-                List<String> titleHighList = hit.getHighlightFields().get("articleTitle");
+                List<String> titleHighList = hit.highlight().get(ARTICLE_TITLE);
                 if (CollectionUtils.isNotEmpty(titleHighList)) {
                     // 替换标题数据
                     article.setArticleTitle(titleHighList.get(0));
                 }
                 // 获取文章内容高亮数据
-                List<String> contentHighList = hit.getHighlightFields().get("articleContent");
+                List<String> contentHighList = hit.highlight().get(ARTICLE_CONTENT);
                 if (CollectionUtils.isNotEmpty(contentHighList)) {
-                    // 替换内容数据
+                    // 替换标题数据
                     article.setArticleContent(contentHighList.get(0));
                 }
                 return article;

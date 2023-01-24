@@ -1,11 +1,11 @@
 package com.star.core.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.PathConst;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.RedisUtil;
+import com.star.common.tool.RedisUtils;
 import com.star.core.dto.PageData;
 import com.star.core.dto.UserInfoDTO;
 import com.star.core.dto.UserOnlineDTO;
@@ -17,6 +17,7 @@ import com.star.core.service.UserRoleService;
 import com.star.core.util.ImageUtil;
 import com.star.core.util.UserUtil;
 import com.star.core.vo.*;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -49,7 +49,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Resource
     private SessionRegistry sessionRegistry;
     @Resource
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
     @Resource
     private UserRoleService userRoleService;
     @Resource
@@ -111,7 +111,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Override
     @Transactional(rollbackFor = StarryException.class)
     public void saveUserEmail(EmailVO emailVO) {
-        if (!emailVO.getCode().equals(redisUtil.get(CODE_KEY + emailVO.getEmail()).toString())) {
+        if (!emailVO.getCode().equals(redisUtils.get(CODE_KEY + emailVO.getEmail()).toString())) {
             throw new StarryException("验证码错误");
         }
         UserInfo userInfo = UserInfo.builder()

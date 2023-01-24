@@ -7,9 +7,8 @@ import com.star.core.entity.Resource;
 import com.star.core.entity.UserInfo;
 import com.star.core.entity.VisitLog;
 import com.star.core.vo.ConditionVO;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @Author: zzStar
