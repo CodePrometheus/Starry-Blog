@@ -1,13 +1,13 @@
 # Starry-Blog
 
-前后端分离的博客项目
+Spring Boot 3.x + Gin + Vue.js 个人博客项目
 
 ### Server
 
 |       技术        |       说明        |    版本    |                                            官网                                            |
 |:---------------:|:---------------:|:--------:|:----------------------------------------------------------------------------------------:|
-|   Spring Boot   |      MVC框架      |  2.6.2   |     [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)     |
-| Spring Security |     认证和授权框架     |  2.6.2   | [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security) |
+|   Spring Boot   |      MVC框架      |  3.0.2   |     [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)     |
+| Spring Security |     认证和授权框架     |  3.0.2   | [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security) |
 |      MySQL      |       数据库       |  8.0.28  |                     [https://www.mysql.com/](https://www.mysql.com/)                     |
 |  MyBatis-Plus   |      ORM框架      |  3.5.0   |                   [https://mp.baomidou.com/](https://mp.baomidou.com/)                   |
 |   Swagger-UI    |     文档生产工具      |  3.0.0   | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)  |
@@ -60,14 +60,18 @@
 
 ### Feature
 
-- Redis存储点赞、浏览量，score排序
+- Redis string，list，hash，set，zset
 
-- RabbitMQ异步更新Elasticsearch、发生评论通知邮件，死信队列自动审核机制
+- MQ 异步更新 Elasticsearch，Solr，Lucene，发送评论通知邮件，评论延迟队列自动审核机制
 
-- 策略模式搜索服务自由切换，Elasticsearch、Solr、Lucene、MySQL
+- docker-compose up 一键启动所有中间件
 
-- 自定义注解，流量控制
+- 自定义注解，令牌桶流量控制
 
-- Canal通过RabbitMQ同步数据Solr，Lucene
+- Canal 通过 MQ 保证数据最终一致性
 
-- Docker Compose，日志埋点
+- ELK，日志埋点
+
+- 策略模式搜索服务自由切换，Elasticsearch，Solr，Lucene，MySQL
+
+- WebSocket 在线聊天室
