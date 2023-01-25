@@ -35,7 +35,7 @@
         添加友链
       </div>
       <blockquote>
-        <div>名称：zzStar的个人博客</div>
+        <div>名称：Starry 的个人博客</div>
         <div>简介：When you see the truth about people, then you know, you can endure loneliness.</div>
         <div>头像：你的链接</div>
       </blockquote>

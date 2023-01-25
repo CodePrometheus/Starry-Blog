@@ -46,6 +46,11 @@
           </router-link>
         </div>
         <div class='menus-item'>
+          <router-link to='/news'>
+            <i class='iconfont iconbiaoqian' /> 热搜
+          </router-link>
+        </div>
+        <div class='menus-item'>
           <router-link to='/moments'>
             <i class='iconfont iconbiaoqian' /> 动态
           </router-link>

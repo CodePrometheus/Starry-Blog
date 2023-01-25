@@ -64,17 +64,22 @@
         </router-link>
       </div>
       <div class='menus-item'>
+        <router-link to='/news'>
+          <i class='iconfont iconbiaoqian' /> 热搜
+        </router-link>
+      </div>
+      <div class='menus-item'>
+        <router-link to='/moments'>
+          <i class='iconfont iconbiaoqian' /> 动态
+        </router-link>
+      </div>
+      <div class='menus-item'>
         <a href='https://codeprometheus.github.io/Starry-Notes/#/' target='_blank'>
           <i class='iconfont icon-biji' /> 笔记</a>
       </div>
       <div class='menus-item'>
         <router-link to='/links'>
           <i class='iconfont iconlianjie' /> 友链
-        </router-link>
-      </div>
-      <div class='menus-item'>
-        <router-link to='/moments'>
-          <i class='iconfont iconbiaoqian' /> 动态
         </router-link>
       </div>
       <div class='menus-item'>

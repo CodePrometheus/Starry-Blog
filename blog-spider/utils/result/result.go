@@ -5,15 +5,17 @@ import "fmt"
 type RetCode int
 
 const (
-	SUCCESS      RetCode = 200
-	NotFoundCode RetCode = 404
-	FAIL         RetCode = 500
+	SUCCESS       RetCode = 200
+	NotFoundCode  RetCode = 404
+	FAIL          RetCode = 500
+	ParamCheckErr RetCode = 501
 )
 
 var CodeMsg = map[RetCode]string{
-	SUCCESS:      "成功",
-	NotFoundCode: "资源未找到",
-	FAIL:         "失败",
+	SUCCESS:       "成功",
+	NotFoundCode:  "资源未找到",
+	FAIL:          "失败",
+	ParamCheckErr: "参数校验失败",
 }
 
 type Response struct {

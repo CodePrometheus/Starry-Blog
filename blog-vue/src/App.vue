@@ -63,7 +63,7 @@ export default {
   },
   beforeCreate() {
     console.log(
-      '%c Starry-Blog | 你的美好，我都记得 %c v'.concat('3.0', ' %c'),
+      '%c Starry-Blog | 你的美好，我都记得 %c v'.concat('7.0', ' %c'),
       'background: #35495e;' +
       ' padding: 1px;' +
       ' border-radius: 3px 0 0 3px;' +

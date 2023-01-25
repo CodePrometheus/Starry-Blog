@@ -1,7 +1,7 @@
 <template>
   <v-footer app padless absolute v-if='!this.isMessage'>
     <div class='footer-wrap'>
-      <div>Copyright &copy; 2020-{{ new Date().getFullYear() }} By zzStar</div>
+      <div>Copyright &copy; 2020-{{ new Date().getFullYear() }} By Starry</div>
       <div>
         <a target='_blank' href='https://github.com/CodePrometheus'
            class='mr-9 iconfont icongithub' />

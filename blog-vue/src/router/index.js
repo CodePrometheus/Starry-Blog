@@ -8,7 +8,7 @@ const routes = [
     path: '/',
     component: (reslove) => require(['../views/home/Home'], reslove),
     meta: {
-      title: "zzStar's Blog",
+      title: "Starry's Blog",
     },
   },
   {
@@ -45,6 +45,13 @@ const routes = [
     component: (reslove) => require(['../views/link/Link'], reslove),
     meta: {
       title: '友链列表',
+    },
+  },
+  {
+    path: '/news',
+    component: (reslove) => require(['../views/news/News'], reslove),
+    meta: {
+      title: '热搜',
     },
   },
   {

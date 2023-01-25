@@ -4,7 +4,7 @@
       <live2d v-if='isLive2d' :modelPath='modelPath' ref='l2dMange'></live2d>
     </div>
     <div class='tools-panel'>
-      <live2dTools v-for='(item,index) in toolsData'
+      <live2dTools v-for='(item, index) in toolsData'
                    :key='index'
                    :position='item.position'
                    @click='toolsClick(item)'
@@ -13,7 +13,9 @@
                    :customDialogue='item.customDialogue'
                    :backgroundColor='item.backgroundColor'
                    ref='tool'
-      />
+      >
+        <span class="tab-msg">{{ item.tabMsg }}</span>
+      </live2dTools>
     </div>
   </div>
 </template>
@@ -25,7 +27,7 @@ import custom from '../assets/js/custom'
 export default {
   name: 'Live2D',
   data: () => ({
-    isLive2d: true,
+    isLive2d: false,
     modelPath: '',
     modelPaths: '',
     customDialogue: custom,
@@ -121,20 +123,27 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
-.live2d-panel
-  position fixed
-  left: 0
-  bottom: 0
-  z-index 999
+.live2d-panel {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 999;
+}
 
-.tools-panel
-  position fixed
-  left 0
-  bottom 7em
-  max-width 100px
-  z-index 999
+.tools-panel {
+  position: fixed;
+  left: 0;
+  bottom: 7em;
+  max-width: 100px;
+  z-index: 999;
+}
 
-#app
-  height 100px
-  z-index 999
+.tab-msg {
+  font-size: 14px;
+}
+
+#app {
+  height: 100px;
+  z-index: 999;
+}
 </style>

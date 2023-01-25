@@ -114,7 +114,6 @@ export default {
             this.imagesList.push(...v.imgList)
           }
         })
-        console.log("listMoments: ", this.momentList)
         this.current++
         this.count = data.data.count
       })

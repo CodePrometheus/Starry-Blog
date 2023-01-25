@@ -1,7 +1,7 @@
 package router
 
 import (
-	"blog-spider/api/weibo"
+	"blog-spider/api"
 	"blog-spider/middleware/cors"
 	"blog-spider/utils/result"
 	"github.com/gin-gonic/gin"
@@ -17,9 +17,9 @@ func InitRouter(config *toml.Tree) *gin.Engine {
 		c.JSON(http.StatusNotFound, result.NotFoundCode.AjaxResult(nil))
 	})
 
-	spider := r.Group("/")
+	spider := r.Group("/api")
 	{
-		spider.GET("/weibo", weibo.HandleWeiboHot)
+		spider.GET("/spider", api.HandleSpider)
 	}
 	return r
 }
