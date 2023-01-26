@@ -1,7 +1,6 @@
 package com.star.core.config;
 
 import com.star.core.handler.CustomAccessDecisionManager;
-import com.star.core.handler.FilterInvocationSecurityMetadataSourceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

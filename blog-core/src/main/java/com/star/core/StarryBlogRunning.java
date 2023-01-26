@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -15,8 +16,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @EnableScheduling
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.star.*"})
-@MapperScan("com.star.core.mapper")
+@MapperScan({"com.star.admin", "com.star.common", "com.star.core", "com.star.inf"})
+@ComponentScan(basePackages = {"com.star.admin", "com.star.common", "com.star.core", "com.star.inf"})
+@EnableElasticsearchRepositories(basePackages = "com.star.inf.mapper")
 public class StarryBlogRunning {
 
     public static void main(String[] args) {

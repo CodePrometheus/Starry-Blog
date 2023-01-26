@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.star.core.mapper.CategoryMapper">
+<mapper namespace="com.star.inf.mapper.CategoryMapper">
 
 
-    <select id="listCategory" resultType="com.star.core.dto.CategoryDTO">
+    <select id="listCategory" resultType="com.star.inf.dto.CategoryDTO">
         SELECT
             c.id,
             c.category_name,
@@ -15,7 +15,7 @@
             c.id
     </select>
 
-    <select id="listCategoryBack" resultType="com.star.core.dto.CategoryBackDTO">
+    <select id="listCategoryBack" resultType="com.star.inf.dto.CategoryBackDTO">
         SELECT
         c.id,
         c.category_name,

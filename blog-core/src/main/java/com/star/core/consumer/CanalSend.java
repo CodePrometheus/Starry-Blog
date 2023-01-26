@@ -2,9 +2,9 @@ package com.star.core.consumer;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.rabbitmq.client.Channel;
-import com.star.core.config.RabbitConfig;
-import com.star.core.dto.ArticleSearchDTO;
-import com.star.core.dto.CanalDTO;
+import com.star.common.constant.RabbitmqConst;
+import com.star.inf.dto.ArticleSearchDTO;
+import com.star.inf.dto.CanalDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -22,15 +22,15 @@ import java.util.Map;
  * @Date: 12-10-2021 15:18
  */
 @Component
-@RabbitListener(queues = RabbitConfig.CANAL_SEARCH_QUEUE)
+@RabbitListener(queues = RabbitmqConst.CANAL_SEARCH_QUEUE)
 public class CanalSend {
 
     private static final Logger logger = LoggerFactory.getLogger(CanalSend.class);
     private static final String TABLE_NAME = "tb_article";
 
-    // @Resource
+    // @BlogResource
     // private SolrSearchUtil solrSearchUtil;
-    // @Resource
+    // @BlogResource
     // private LuceneSearchUtil luceneSearchUtil;
 
     @RabbitHandler

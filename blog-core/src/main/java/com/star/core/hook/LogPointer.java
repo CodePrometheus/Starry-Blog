@@ -1,7 +1,7 @@
 package com.star.core.hook;
 
-import com.star.core.entity.Resource;
-import com.star.core.entity.UserInfo;
+import com.star.inf.entity.BlogResource;
+import com.star.inf.entity.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -19,9 +19,10 @@ public interface LogPointer {
      * @param request  当前请求
      * @param response 当前响应
      * @param user     用户
-     * @param resource 访问的资源
+     * @param blogResource 访问的资源
      * @param isAdmin  是否后台
      */
-    void doPoint(HttpServletRequest request, HttpServletResponse response, UserInfo user, Resource resource, boolean isAdmin);
+    void doPoint(HttpServletRequest request, HttpServletResponse response,
+                 UserInfo user, BlogResource blogResource, boolean isAdmin);
 
 }

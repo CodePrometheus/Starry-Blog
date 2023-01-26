@@ -15,7 +15,7 @@
         <i class='iconfont iconbiaoqing' />
       </span>
       <div style='margin-left:auto'>
-        <button @click='cancelReply' class='cancle-btn v-comment-btn'>
+        <button @click='cancelReply' class='cancel-btn v-comment-btn'>
           取消
         </button>
         <button @click='insertReply' class='upload-btn v-comment-btn'>

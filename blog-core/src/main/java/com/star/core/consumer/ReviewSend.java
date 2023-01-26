@@ -1,10 +1,10 @@
 package com.star.core.consumer;
 
 import com.rabbitmq.client.Channel;
-import com.star.core.config.RabbitConfig;
-import com.star.core.entity.Comment;
-import com.star.core.mapper.CommentMapper;
-import com.star.core.util.SensitiveUtils;
+import com.star.common.constant.RabbitmqConst;
+import com.star.common.tool.SensitiveUtils;
+import com.star.inf.entity.Comment;
+import com.star.inf.mapper.CommentMapper;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class ReviewSend {
     @Resource
     private CommentMapper commentMapper;
 
-    @RabbitListener(queues = RabbitConfig.REVIEW_QUEUE_DEAD)
+    @RabbitListener(queues = RabbitmqConst.REVIEW_QUEUE_DEAD)
     @Transactional(rollbackFor = Exception.class)
     public void autoReview(Integer commentId, Channel channel, Message message) throws IOException {
         long tagId = message.getMessageProperties().getDeliveryTag();

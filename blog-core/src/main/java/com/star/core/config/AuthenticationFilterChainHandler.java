@@ -2,11 +2,11 @@ package com.star.core.config;
 
 import com.alibaba.fastjson2.JSON;
 import com.star.common.constant.Result;
-import com.star.core.dto.UserLoginDTO;
-import com.star.core.entity.UserAuth;
-import com.star.core.mapper.UserAuthMapper;
-import com.star.core.util.BeanCopyUtil;
-import com.star.core.util.UserUtil;
+import com.star.common.tool.BeanCopyUtil;
+import com.star.inf.dto.UserLoginDTO;
+import com.star.inf.entity.UserAuth;
+import com.star.inf.mapper.UserAuthMapper;
+import com.star.inf.utils.UserUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -95,7 +95,7 @@ public class AuthenticationFilterChainHandler implements AccessDeniedHandler, Au
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        UserLoginDTO userLoginDTO = BeanCopyUtil.copyObject(UserUtil.getLoginUser(), UserLoginDTO.class);
+        UserLoginDTO userLoginDTO = BeanCopyUtil.copyObject(UserUtils.getLoginUser(), UserLoginDTO.class);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(JSON.toJSONString(Result.success(userLoginDTO)));
         // 更新用户ip，最近登录时间
@@ -120,10 +120,10 @@ public class AuthenticationFilterChainHandler implements AccessDeniedHandler, Au
     @Async
     public void updateUserInfo() {
         UserAuth userAuth = UserAuth.builder()
-                .id(UserUtil.getLoginUser().getId())
-                .ipAddr(UserUtil.getLoginUser().getIpAddr())
-                .ipSource(UserUtil.getLoginUser().getIpSource())
-                .lastLoginTime(UserUtil.getLoginUser().getLastLoginTime()).build();
+                .id(UserUtils.getLoginUser().getId())
+                .ipAddr(UserUtils.getLoginUser().getIpAddr())
+                .ipSource(UserUtils.getLoginUser().getIpSource())
+                .lastLoginTime(UserUtils.getLoginUser().getLastLoginTime()).build();
         userAuthMapper.updateById(userAuth);
     }
 

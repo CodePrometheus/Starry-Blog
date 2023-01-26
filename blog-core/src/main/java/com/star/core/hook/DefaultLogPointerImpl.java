@@ -1,9 +1,10 @@
 package com.star.core.hook;
 
-import com.star.core.entity.Resource;
-import com.star.core.entity.UserInfo;
-import com.star.core.service.OperationLogService;
-import com.star.core.service.VisitLogService;
+import com.star.admin.service.AdminOperationLogService;
+import com.star.admin.service.VisitLogService;
+import com.star.inf.entity.BlogResource;
+import com.star.inf.entity.UserInfo;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -17,23 +18,23 @@ public class DefaultLogPointerImpl implements LogPointer {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultLogPointerImpl.class);
 
-    @jakarta.annotation.Resource
-    private VisitLogService visitLogService;
+    @Resource
+    private VisitLogService visitLogServiceImpl;
 
-    @jakarta.annotation.Resource
-    private OperationLogService operationLogService;
+    @Resource
+    private AdminOperationLogService operationLogServiceImpl;
 
-    public DefaultLogPointerImpl(OperationLogService operationLogService) {
-        this.operationLogService = operationLogService;
+    public DefaultLogPointerImpl(AdminOperationLogService operationLogService) {
+        this.operationLogServiceImpl = operationLogService;
     }
 
     @Override
-    public void doPoint(HttpServletRequest request, HttpServletResponse response, UserInfo user, Resource resource, boolean isAdmin) {
+    public void doPoint(HttpServletRequest request, HttpServletResponse response, UserInfo user, BlogResource blogResource, boolean isAdmin) {
         try {
             if (isAdmin) {
-                operationLogService.pointOperationLog(request, response, user, resource);
+                operationLogServiceImpl.pointOperationLog(request, response, user, blogResource);
             } else {
-                visitLogService.pointVisitLog(request, response, user, resource);
+                visitLogServiceImpl.pointVisitLog(request, response, user, blogResource);
             }
         } catch (Exception ex) {
             logger.error(ex.getMessage());

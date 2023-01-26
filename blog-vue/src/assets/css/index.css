@@ -333,7 +333,7 @@ p {
     resize: none;
     width: 100%;
     border-radius: 4px;
-    background: url(https://www.static.talkxj.com/commentBack.webp) 100% 100% no-repeat;
+    background: url(https://img.mp.sohu.com/upload/20170728/841ccdee13094734a200e05634c9e044.png) 100% 100% no-repeat;
 }
 
 .upload-btn {
@@ -346,7 +346,7 @@ p {
     background-color: #ff7242;
 }
 
-.cancle-btn {
+.cancel-btn {
     background-color: #90939910;
     border-color: #90939950;
     color: #4c4948;

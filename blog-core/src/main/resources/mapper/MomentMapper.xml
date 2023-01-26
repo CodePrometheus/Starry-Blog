@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.star.core.mapper.MomentMapper">
+<mapper namespace="com.star.inf.mapper.MomentMapper">
 
-    <select id="listMomentBack" resultType="com.star.core.dto.MomentDTO">
+    <select id="listMomentBack" resultType="com.star.inf.dto.MomentDTO">
         SELECT
         m.id,
         nickname,
@@ -30,7 +30,7 @@
         LIMIT #{current},#{size}
     </select>
 
-    <select id="getMomentById" resultType="com.star.core.dto.MomentDTO">
+    <select id="getMomentById" resultType="com.star.inf.dto.MomentDTO">
         select m.id,
                nickname,
                moment_content,
@@ -43,7 +43,7 @@
           AND m.status = 1
     </select>
 
-    <select id="getBackMomentById" resultType="com.star.core.dto.MomentDTO">
+    <select id="getBackMomentById" resultType="com.star.inf.dto.MomentDTO">
         select m.id,
                nickname,
                avatar,
@@ -57,7 +57,7 @@
         WHERE m.id = #{momentId}
     </select>
 
-    <select id="listHomeMoments" resultType="com.star.core.dto.MomentDTO">
+    <select id="listHomeMoments" resultType="com.star.inf.dto.MomentDTO">
         select m.id,
                nickname,
                avatar,
