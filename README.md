@@ -64,7 +64,7 @@
 |   Element    |  后台ui框架   |                   [ https://element.eleme.io](https://element.eleme.io/)                   |
 |   Vuetify    |  前台ui框架   |                     [ https://vuetifyjs.com/](https://vuetifyjs.com/)                      |
 |    Axios     | 前端HTTP框架  |             [ https://github.com/axios/axios](https://github.com/axios/axios)              |
-|   Echarts    |   图表框架    |                           [www.echartsjs.com](www.echartsjs.com)                           |
+|   Echarts    |   图表框架    |                      [www.echartsjs.com](https://www.echartsjs.com/)                       |
 | Highlight.js | 代码语法高亮插件  | [https://github.com/highlightjs/highlight.js](https://github.com/highlightjs/highlight.js) |
 | clipboard.js | 现代化的拷贝文字  |                  [http://www.clipboardjs.cn/](http://www.clipboardjs.cn/)                  |
 | animate.css  | 炫酷的CSS动画库 |                      [https://animate.style/](https://animate.style/)                      |
@@ -75,9 +75,6 @@
 项目结构
 
 ~~~markdown
-├── Dockerfile
-├── LICENSE
-├── README.md
 ├── blog-admin # 后台
 ├── blog-common # 公共
 ├── blog-core # 博客
@@ -89,6 +86,9 @@
 ├── es
 ├── images
 ├── lucene
+├── Dockerfile
+├── LICENSE
+├── README.md
 ├── pom.xml
 └── starry-blog.sql
 ~~~
@@ -107,7 +107,7 @@
 
 - 2022/01/08 v6.0 部署
 
-- 2022/01/26 v7.0 大重构
+- 2023/01/26 v7.0 大重构
 
 ### Feature
 
