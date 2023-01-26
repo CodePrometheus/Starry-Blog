@@ -70,6 +70,29 @@
 | animate.css  | 炫酷的CSS动画库 |                      [https://animate.style/](https://animate.style/)                      |
 |    live2d    |    看板娘    |                     [https://www.live2d.com/](https://www.live2d.com/)                     |
 
+###
+
+项目结构
+
+~~~markdown
+├── Dockerfile
+├── LICENSE
+├── README.md
+├── blog-admin # 后台
+├── blog-common # 公共
+├── blog-core # 博客
+├── blog-inf # 前台
+├── blog-spider # Go
+├── blog-vue # 前端
+├── canal
+├── docker-compose.yml
+├── es
+├── images
+├── lucene
+├── pom.xml
+└── starry-blog.sql
+~~~
+
 ### Builder
 
 - 2021/1/1 v1.0 项目初始
@@ -83,6 +106,8 @@
 - 2021/12/19 v5.0 数据同步
 
 - 2022/01/08 v6.0 部署
+
+- 2022/01/26 v7.0 大重构
 
 ### Feature
 
