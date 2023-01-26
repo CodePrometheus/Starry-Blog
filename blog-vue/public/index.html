@@ -10,9 +10,25 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
     <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+    <script src="./china-lantern.min.js"></script>
 </head>
 <body>
 <div id="app"></div>
+<div id="lantern-wrapper" class="lantern-wrapper" no-select></div>
+<script>
+  let lantern = new Lantern('lantern-wrapper', {
+    date: {
+      from: '1-21',
+      to: '2-5',
+    },
+    position: {
+      zIndex: '9999',
+      lanternTop: [10, 150, 150, 10],
+      lanternRL: [0, 0, 0, 0],
+    },
+    content: '新年快乐',
+  });
+</script>
 <script color="122 103 238" count="99" opacity='0.7' pointcolor="0,0,255" src="canvas-nest.js"
         type="text/javascript"
         zindex="-1"></script>
