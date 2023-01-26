@@ -1,32 +1,58 @@
 # Starry-Blog
 
-Spring Boot 3.x + Gin + Vue.js 个人博客项目
+<p align=center>
+  <a href="https://github.com/CodePrometheus/Starry-Blog">
+    <img src="./images/favicon.ico" alt="Starry-Blog | 你的美好，我都记得" style="width:200px;height:200px" target="_blank" />
+  </a>
+</p>
+<p align=center>
+   Spring Boot 3.x + Gin + Vue.js => Starry-Blog | 你的美好，我都记得
+</p>
+<p align="center">
+  <a target="_blank" href="https://github.com/CodePrometheus/Starry-Blog">
+    <img src="https://img.shields.io/hexpm/l/plug.svg"/>
+      <img src="https://img.shields.io/badge/JDK-17+-orange.svg"/>
+      <img src="https://img.shields.io/badge/go-1.19-9370DB.svg"/>
+      <img src="https://img.shields.io/badge/springboot-3.x-ffe411"/>
+      <img src="https://img.shields.io/badge/gin-1.x-BC8F8F"/>
+      <img src="https://img.shields.io/badge/vue-2.x-00BFFF"/>
+      <img src="https://img.shields.io/badge/redis-6.x-20B2AA"/>
+      <img src="https://img.shields.io/badge/elasticsearch-8.x-CD853F"/>
+      <img src="https://img.shields.io/badge/rabbitmq-3.x-FF69B4"/>
+    <img src="https://badgen.net/github/last-commit/CodePrometheus/Starry-Blog" />
+  </a>
+</p>
+
+### Show
+
+![](images/img-1.jpg)
 
 ### Server
 
-|       技术        |       说明        |    版本    |                                            官网                                            |
-|:---------------:|:---------------:|:--------:|:----------------------------------------------------------------------------------------:|
-|   Spring Boot   |      MVC框架      |  3.0.2   |     [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)     |
-| Spring Security |     认证和授权框架     |  3.0.2   | [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security) |
-|      MySQL      |       数据库       |  8.0.28  |                     [https://www.mysql.com/](https://www.mysql.com/)                     |
-|  MyBatis-Plus   |      ORM框架      |  3.5.0   |                   [https://mp.baomidou.com/](https://mp.baomidou.com/)                   |
-|   Swagger-UI    |     文档生产工具      |  3.0.0   | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)  |
-|     Kibana      |    分析和可视化平台     |  7.10.1  |           [https://www.elastic.co/cn/kibana](https://www.elastic.co/cn/kibana)           |
-|  Elasticsearch  |      搜索引擎       |  7.10.1  |  [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch)   |
-|      Beats      |    轻量型数据采集器     |  7.10.1  |           [https://www.elastic.co/cn/beats/](https://www.elastic.co/cn/beats/)           |
-|    Logstash     | 用于接收Beats的数据并处理 |  7.10.1  |         [https://www.elastic.co/cn/logstash](https://www.elastic.co/cn/logstash)         |
-|      Solr       |      搜索引擎       |  8.9.0   |                   [https://solr.apache.org/](https://solr.apache.org/)                   |
-|     Lucene      |      搜索引擎       |  8.9.0   |                 [https://lucene.apache.org/](https://lucene.apache.org/)                 |
-|    RabbitMQ     |      消息队列       |  3.9.7   |                 [ https://www.rabbitmq.com/](https://www.rabbitmq.com/)                  |
-|      Redis      |       缓存        |   6.x    |                          [https://redis.io/](https://redis.io/)                          |
-|      Canal      |      数据同步       |  1.1.5   |          [https://github.com/alibaba/canal/](https://github.com/alibaba/canal/)          |
-|     Docker      |      容器引擎       | 20.10.11 |                    [https://www.docker.com/](https://www.docker.com/)                    |
-| Docker Compose  |      容器编排       |   3.9    |           [https://docs.docker.com/compose/](https://docs.docker.com/compose/)           |
-|      Druid      |     数据库连接池      |  1.2.7   |          [ https://github.com/alibaba/druid](https://github.com/alibaba/druid)           |
-|     Lombok      |    简化对象封装工具     |  1.8.20  |    [ https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok)     |
-|      Nginx      | HTTP和反向代理web服务器 |  1.20.1  |                          [http://nginx.org/](http://nginx.org/)                          |
-|     Hutool      |    Java工具包类库    |  5.7.13  |                    [https://hutool.cn/docs/](https://hutool.cn/docs/)                    |
-|    Ip2region    |    离线IP地址定位库    |  1.7.2   |  [https://github.com/lionsoul2014/ip2region](https://github.com/lionsoul2014/ip2region)  |
+|       技术        |       说明        |    版本    |                                             官网                                             |
+|:---------------:|:---------------:|:--------:|:------------------------------------------------------------------------------------------:|
+|   Spring Boot   |   Java web 框架   |  3.0.2   |      [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)      |
+|       Gin       |    Go web 框架    |  1.8.2   |                      [https://gin-gonic.com/](https://gin-gonic.com/)                      |
+|     Docker      |      容器引擎       | 20.10.11 |                     [https://www.docker.com/](https://www.docker.com/)                     |
+| Docker Compose  |      容器编排       |   3.9    |            [https://docs.docker.com/compose/](https://docs.docker.com/compose/)            |
+|      MySQL      |       数据库       |  8.0.28  |                      [https://www.mysql.com/](https://www.mysql.com/)                      |
+|      Redis      |       缓存        |   6.x    |                           [https://redis.io/](https://redis.io/)                           |
+|    RabbitMQ     |      消息队列       |  3.9.7   |                   [https://www.rabbitmq.com/](https://www.rabbitmq.com/)                   |
+|  Elasticsearch  |      搜索引擎       |  8.5.2   |    [https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch)    |
+|      Canal      |      数据同步       |  1.1.5   |           [https://github.com/alibaba/canal/](https://github.com/alibaba/canal)            |
+|      Solr       |      搜索引擎       |  8.9.0   |                    [https://solr.apache.org/](https://solr.apache.org/)                    |
+|     Lucene      |      搜索引擎       |  8.9.0   |                  [https://lucene.apache.org/](https://lucene.apache.org)                   |
+| Spring Security |     认证和授权框架     |  3.0.2   |  [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security)  |
+|   Swagger-UI    |     文档生产工具      |  3.0.0   |  [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)   |
+|     Kibana      |    分析和可视化平台     |  8.5.2   |            [https://www.elastic.co/cn/kibana](https://www.elastic.co/cn/kibana)            |
+|      Beats      |    轻量型数据采集器     |  8.5.2   |            [https://www.elastic.co/cn/beats/](https://www.elastic.co/cn/beats)             |
+|    Logstash     | 用于接收Beats的数据并处理 |  8.5.2   |          [https://www.elastic.co/cn/logstash](https://www.elastic.co/cn/logstash)          |
+|  MyBatis-Plus   |      ORM框架      |  3.5.x   |                    [https://mp.baomidou.com/](https://mp.baomidou.com/)                    |
+|    Hikaricp     |     数据库连接池      |   5.x    | [https://github.com/brettwooldridge/HikariCP](https://github.com/brettwooldridge/HikariCP) |
+|     Lombok      |    简化对象封装工具     |  1.8.20  |      [https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok)      |
+|      Nginx      | HTTP和反向代理web服务器 |  1.20.1  |                           [http://nginx.org/](http://nginx.org/)                           |
+|     Hutool      |    Java工具包类库    |  5.7.13  |                     [https://hutool.cn/docs/](https://hutool.cn/docs/)                     |
+|    Ip2region    |    离线IP地址定位库    |  2.6.6   |   [https://github.com/lionsoul2014/ip2region](https://github.com/lionsoul2014/ip2region)   |
 
 ### Front
 
@@ -66,12 +92,14 @@ Spring Boot 3.x + Gin + Vue.js 个人博客项目
 
 - docker-compose up 一键启动所有中间件
 
-- 自定义注解，令牌桶流量控制
+- aop + 自定义注解，令牌桶流量控制
 
 - Canal 通过 MQ 保证数据最终一致性
 
-- ELK，日志埋点
+- ELK [ElasticSearch + Beats + Kibana + Logstash]，日志埋点
 
 - 策略模式搜索服务自由切换，Elasticsearch，Solr，Lucene，MySQL
 
 - WebSocket 在线聊天室
+
+- RBAC 权限管理设计
