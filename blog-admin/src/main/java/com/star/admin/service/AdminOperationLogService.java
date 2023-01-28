@@ -61,7 +61,7 @@ public class AdminOperationLogService extends ServiceImpl<OperationLogMapper, Op
      * @param request
      * @param response
      * @param user
-     * @param resource
+     * @param blogResource
      * @throws Exception
      */
     public void pointOperationLog(HttpServletRequest request, HttpServletResponse response,

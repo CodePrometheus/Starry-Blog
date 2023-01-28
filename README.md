@@ -35,6 +35,7 @@
 |       Gin       |    Go web 框架    |  1.8.2   |                      [https://gin-gonic.com/](https://gin-gonic.com/)                      |
 |     Docker      |      容器引擎       | 20.10.11 |                     [https://www.docker.com/](https://www.docker.com/)                     |
 | Docker Compose  |      容器编排       |   3.9    |            [https://docs.docker.com/compose/](https://docs.docker.com/compose/)            |
+|    Portainer    |   Docker可视化管理   |   1.x    |      [https://github.com/portainer/portainer](https://github.com/portainer/portainer)      |
 |      MySQL      |       数据库       |  8.0.28  |                      [https://www.mysql.com/](https://www.mysql.com/)                      |
 |      Redis      |       缓存        |   6.x    |                           [https://redis.io/](https://redis.io/)                           |
 |    RabbitMQ     |      消息队列       |  3.9.7   |                   [https://www.rabbitmq.com/](https://www.rabbitmq.com/)                   |

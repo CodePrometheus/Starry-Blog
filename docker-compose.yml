@@ -46,22 +46,6 @@ services:
       default:
         ipv4_address: 172.69.0.23
 
-  canal-admin:
-    image: canal/canal-admin
-    container_name: canal-admin
-    restart: unless-stopped
-    volumes:
-      - ./canal/admin-logs:/home/admin/canal-admin/logs
-    ports:
-      - "8089:8089"
-    environment:
-      - server.port=8089
-      - canal.adminUser=admin
-      - canal.adminPasswd=admin
-    networks:
-      default:
-        ipv4_address: 172.69.0.28
-
   redis:
     image: redis
     container_name: redis
@@ -97,21 +81,6 @@ services:
       default:
         ipv4_address: 172.69.0.25
 
-  #  kibana:
-  #    image: kibana:8.5.2
-  #    container_name: kibana
-  #    environment:
-  #      ELASTICSEARCH_URL: http://elasticsearch:9200
-  #    links:
-  #      - elasticsearch:elasticsearch
-  #    ports:
-  #      - "5601:5601"
-  #    depends_on:
-  #      - elasticsearch
-  #     networks:
-  #        default:
-  #          ipv4_address: 172.69.0.29
-
   #  solr:
   #    image: solr:latest
   #    container_name: solr
@@ -129,6 +98,48 @@ services:
     networks:
       default:
         ipv4_address: 172.69.0.27
+
+  canal-admin:
+    image: canal/canal-admin
+    container_name: canal-admin
+    volumes:
+      - ./canal/admin-logs:/home/admin/canal-admin/logs
+    ports:
+      - "8089:8089"
+    environment:
+      - server.port=8089
+      - canal.adminUser=admin
+      - canal.adminPasswd=admin
+    networks:
+      default:
+        ipv4_address: 172.69.0.28
+
+  #  kibana:
+  #    image: kibana:8.5.2
+  #    container_name: kibana
+  #    environment:
+  #      ELASTICSEARCH_URL: http://elasticsearch:9200
+  #    links:
+  #      - elasticsearch:elasticsearch
+  #    ports:
+  #      - "5601:5601"
+  #    depends_on:
+  #      - elasticsearch
+  #    networks:
+  #      default:
+  #        ipv4_address: 172.69.0.29
+
+  portainer:
+    image: 6053537/portainer-ce
+    container_name: portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer_data:/data
+    networks:
+      default:
+        ipv4_address: 172.69.0.31
 
 networks:
   default:

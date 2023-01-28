@@ -25,7 +25,7 @@ public class ElasticsearchConfig implements RestClientBuilderCustomizer {
     private String port;
 
     @Bean
-    public ElasticsearchClient client() {
+    public ElasticsearchClient esClient() {
         RestClient clientBuilder = RestClient.builder(new HttpHost(host, Integer.parseInt(port), "http")).build();
         RestClientTransport transport = new RestClientTransport(clientBuilder, new JacksonJsonpMapper());
         return new ElasticsearchClient(transport);
