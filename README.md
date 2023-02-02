@@ -44,6 +44,7 @@
 |      Solr       |      搜索引擎       |  8.9.0   |                    [https://solr.apache.org/](https://solr.apache.org/)                    |
 |     Lucene      |      搜索引擎       |  8.9.0   |                  [https://lucene.apache.org/](https://lucene.apache.org)                   |
 | Spring Security |     认证和授权框架     |  3.0.2   |  [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security)  |
+|       JWT       | JSON Web Token  |  4.2.2   |           [https://github.com/auth0/java-jwt](https://github.com/auth0/java-jwt)           |
 |   Swagger-UI    |     文档生产工具      |  3.0.0   |  [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)   |
 |     Kibana      |    分析和可视化平台     |  8.5.2   |            [https://www.elastic.co/cn/kibana](https://www.elastic.co/cn/kibana)            |
 |      Beats      |    轻量型数据采集器     |  8.5.2   |            [https://www.elastic.co/cn/beats/](https://www.elastic.co/cn/beats)             |
@@ -128,4 +129,4 @@
 
 - WebSocket 在线聊天室
 
-- RBAC 权限管理设计
+- RBAC 权限管理设计，JWT 身份校验

@@ -54,39 +54,39 @@ export default {
     <div class='banner' :style='cover'>
       <h1 class='banner-title'>热搜</h1>
     </div>
-    <v-card class="blog-container">
-      <div class="news-left">
+    <v-card class='blog-container'>
+      <div class='news-left'>
         <ul>
           <li
             :class="item.name === spiderSource[selectedItem].name ? 'active' : ''"
             v-for='item of spiderSource'
-            :key="item.id"
-            @click="getSpiderData(item)"
+            :key='item.id'
+            @click='getSpiderData(item)'
           >
-            <img :src="item.url">
+            <img :src='item.url'>
             {{ item.name }}
           </li>
         </ul>
       </div>
-      <div class="news-right">
-        <div class="title">
-          <img :src="newsActiveUrl">
+      <div class='news-right'>
+        <div class='title'>
+          <img :src='newsActiveUrl'>
           <h2>{{ spiderSource[selectedItem].name }} · 热搜榜</h2>
         </div>
-        <div class="host-list">
+        <div class='host-list'>
           <ul>
             <li
               class='hot-list-item'
               v-for='item of hotList'
               :key='item.id'
             >
-            <span class="hot-list-index">
+            <span class='hot-list-index'>
               {{ item.id }}
             </span>
-              <a :href="item.url" target="_blank">
+              <a :href='item.url' target='_blank'>
                 {{ item.title }}
               </a>
-              <span class="hot-list-des">
+              <span class='hot-list-des'>
               {{ item.des }}
             </span>
             </li>

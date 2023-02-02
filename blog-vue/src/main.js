@@ -36,15 +36,15 @@ Vue.use(Toast)
 Vue.use(live2d)
 Vue.use(AvatarCropper)
 
-Vue.filter('date', function (value) {
+Vue.filter('date', function(value) {
   return moment(value).format('YYYY-MM-DD HH:mm')
 })
 
-Vue.filter('hour', function (value) {
+Vue.filter('hour', function(value) {
   return moment(value).format('HH:mm:ss')
 })
 
-Vue.filter('num', function (value) {
+Vue.filter('num', function(value) {
   if (value >= 1000) {
     return (value / 1000).toFixed(1) + 'k'
   }
@@ -62,20 +62,20 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   window.scrollTo({
     top: 0,
-    behavior: 'instant',
+    behavior: 'instant'
   })
   NProgress.done()
 })
 
 axios.interceptors.response.use(
-  function (response) {
+  function(response) {
     switch (response.data.code) {
       case 5000:
         Vue.prototype.$toast({ type: 'error', message: '系统异常' })
     }
     return response
   },
-  function (error) {
+  function(error) {
     return Promise.reject(error)
   }
 )
@@ -84,5 +84,5 @@ new Vue({
   router,
   store,
   vuetify,
-  render: (h) => h(App),
+  render: (h) => h(App)
 }).$mount('#app')

@@ -84,13 +84,13 @@ export default {
       }
       switch (this.type) {
         case 1:
-          comment.articleId = arr[2];
-          break;
+          comment.articleId = arr[2]
+          break
         case 3:
-          comment.momentId = arr[2];
-          break;
+          comment.momentId = arr[2]
+          break
         default:
-          break;
+          break
       }
       this.commentContent = ''
       this.axios.post('/api/comments', comment).then(({ data }) => {

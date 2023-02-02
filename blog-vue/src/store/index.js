@@ -23,7 +23,7 @@ export default new Vuex.Store({
     commentLikeSet: [],
     momentLikeSet: [],
     blogInfo: {},
-    isBlogRenderComplete: false,
+    isBlogRenderComplete: false
   },
   mutations: {
     login(state, user) {
@@ -102,17 +102,17 @@ export default new Vuex.Store({
     },
     savePageInfo(state, pageList) {
       state.pageList = pageList
-    },
+    }
   },
   actions: {
     setIsBlogRenderComplete({ commit }, ok) {
       commit(SET_IS_BLOG_RENDER_COMPLETE, { ok })
-    },
+    }
   },
   modules: {},
   plugins: [
     createPersistedState({
-      storage: window.sessionStorage,
-    }),
-  ],
+      storage: window.sessionStorage
+    })
+  ]
 })

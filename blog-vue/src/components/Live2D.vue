@@ -14,7 +14,7 @@
                    :backgroundColor='item.backgroundColor'
                    ref='tool'
       >
-        <span class="tab-msg">{{ item.tabMsg }}</span>
+        <span class='tab-msg'>{{ item.tabMsg }}</span>
       </live2dTools>
     </div>
   </div>
