@@ -1,5 +1,6 @@
 package com.star.inf.dto;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -8,22 +9,28 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.star.common.constant.CommonConst.FALSE;
 
 /**
- * 用户登录信息
- *
- * @Author: zzStar
- * @Date: 12-16-2020 20:24
+ * @Author: Starry
+ * @Date: 01-29-2023
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoDTO {
+public class UserDetailsDTO implements UserDetails, Serializable {
 
     /**
      * 点赞评论集合
@@ -128,8 +135,53 @@ public class UserInfoDTO {
     private LocalDateTime lastLoginTime;
 
     /**
-     * token
+     * token 失效时间
      */
-    private String token;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime expireTime;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roleList.stream()
+                // 构建SimpleGrantedAuthority对象
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+    }
+
+    @JSONField(serialize = false)
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @JSONField(serialize = false)
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JSONField(serialize = false)
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.isDisable == FALSE;
+    }
+
+    @JSONField(serialize = false)
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @JSONField(serialize = false)
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }

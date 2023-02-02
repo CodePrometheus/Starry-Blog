@@ -26,13 +26,13 @@ public class AdminUserAuthController {
     private AdminUserAuthService adminUserAuthService;
 
     @ApiOperation(value = "查看后台用户列表")
-    @GetMapping("/admin/users")
+    @GetMapping("/users")
     private Result<PageData<UserBackDTO>> listUsers(ConditionVO condition) {
         return Result.success(adminUserAuthService.listUserBack(condition));
     }
 
     @ApiOperation(value = "修改管理员密码")
-    @PutMapping("/admin/users/password")
+    @PutMapping("/users/password")
     private Result<?> updateAdminPassword(@Valid @RequestBody PasswordVO passwordVO) {
         adminUserAuthService.updateAdminPassword(passwordVO);
         return Result.success();
@@ -45,7 +45,7 @@ public class AdminUserAuthController {
      * @return {@link Result<  UserAreaDTO  >} 用户区域分布
      */
     @ApiOperation(value = "获取用户区域分布")
-    @GetMapping("/admin/user/area")
+    @GetMapping("/user/area")
     public Result<List<UserAreaDTO>> listUserAreas(ConditionVO condition) {
         return Result.success(adminUserAuthService.listUserAreas(condition));
     }

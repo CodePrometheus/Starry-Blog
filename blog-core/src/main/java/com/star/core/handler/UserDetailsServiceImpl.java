@@ -2,8 +2,10 @@ package com.star.core.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.common.exception.StarryException;
+import com.star.common.tool.BeanCopyUtil;
 import com.star.common.tool.IpUtils;
 import com.star.common.tool.RedisUtils;
+import com.star.inf.dto.UserDetailsDTO;
 import com.star.inf.dto.UserInfoDTO;
 import com.star.inf.entity.UserAuth;
 import com.star.inf.entity.UserInfo;
@@ -53,16 +55,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new StarryException("用户名不能为空！");
         }
         // 查询账号是否存在
-        UserAuth user = userAuthMapper.selectOne(new LambdaQueryWrapper<UserAuth>()
+        UserAuth userAuth = userAuthMapper.selectOne(new LambdaQueryWrapper<UserAuth>()
                 .select(UserAuth::getId, UserAuth::getUserInfoId, UserAuth::getUsername,
                         UserAuth::getPassword, UserAuth::getLoginType)
                 .eq(UserAuth::getUsername, username));
-        if (Objects.isNull(user)) {
+        if (Objects.isNull(userAuth)) {
             throw new StarryException("用户名不存在");
         }
 
         // 封装信息
-        return convertLoginUser(user, request);
+        UserInfoDTO userInfoDTO = convertLoginUser(userAuth, request);
+        return BeanCopyUtil.copyObject(userInfoDTO, UserDetailsDTO.class);
     }
 
     /**

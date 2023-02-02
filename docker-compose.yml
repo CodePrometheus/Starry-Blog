@@ -102,6 +102,7 @@ services:
   canal-admin:
     image: canal/canal-admin
     container_name: canal-admin
+    restart: unless-stopped
     volumes:
       - ./canal/admin-logs:/home/admin/canal-admin/logs
     ports:

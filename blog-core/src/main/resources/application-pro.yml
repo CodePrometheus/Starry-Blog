@@ -10,27 +10,38 @@ spring:
 
   # 配置mysql数据库
   datasource:
-    type:
+    type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${localhost}:3306/starry-blog?serverTimezone=GMT%2B8&allowMultiQueries=true
+    url: jdbc:mysql://${default-ip}:3306/starry-blog?serverTimezone=GMT%2B8&allowMultiQueries=true
     username: root
     password: root
 
+  # solr | redis
+  data:
+    solr:
+      host: http://${default-ip}:8983/solr/starry-blog
+
+    redis:
+      host: ${default-ip}
+      port: 6379
+      password:
+
   # es配置
   elasticsearch:
-    host: ${localhost}
+    host: ${default-ip}
     port: 9200
 
   #mq配置
   rabbitmq:
-    host: ${localhost}
+    host: ${default-ip}
     port: 5672
     username: guest
     password: guest
+
   # 邮箱配置
   mail:
     host: smtp.qq.com
-    username: 2413245708@qq.com
+    username:
     password:
     default-encoding: UTF-8
     port: 587
@@ -40,24 +51,16 @@ spring:
       auth: true
       socketFactory:
       class: javax.net.ssl.SSLSocketFactory
+
   # 图片大小限制
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 10MB
+
   # solr配置
   solr:
     core: starry-blog
-
-  # solr | redis
-  data:
-    solr:
-      host: http://${localhost}:8983/solr/starry-blog
-
-    redis:
-      host: ${localhost}
-      port: 6379
-      password:
 
   lucene:
     dir: ./lucene
@@ -77,7 +80,7 @@ swagger:
   application-name: Starry-Blog | 你的美好，我都记得
   application-version: 7.0
   application-description: Starry-Blog | 你的美好，我都记得
-  try-host: http://${localhost}:${server.port}
+  try-host: http://${default-ip}:${server.port}
 
 # Gitee图床配置
 ACCESS_TOKEN:

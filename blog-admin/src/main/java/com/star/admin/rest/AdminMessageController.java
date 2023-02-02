@@ -25,20 +25,20 @@ public class AdminMessageController {
     private AdminMessageService adminMessageService;
 
     @ApiOperation(value = "查看后台留言列表")
-    @GetMapping("/admin/messages")
+    @GetMapping("/messages")
     private Result<PageData<MessageBackDTO>> listMessageBack(ConditionVO condition) {
         return Result.success(adminMessageService.listMessageBack(condition));
     }
 
     @ApiOperation(value = "删除留言")
-    @DeleteMapping("/admin/messages")
+    @DeleteMapping("/messages")
     public Result<?> deleteMessages(@RequestBody List<Integer> messageIdList) {
         adminMessageService.removeByIds(messageIdList);
         return Result.success();
     }
 
     @ApiOperation(value = "审核留言")
-    @PutMapping("/admin/messages/review")
+    @PutMapping("/messages/review")
     public Result<?> updateMessagesReview(@Valid @RequestBody ReviewVO reviewVO) {
         adminMessageService.updateMessagesReview(reviewVO);
         return Result.success();

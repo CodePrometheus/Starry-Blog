@@ -1,5 +1,6 @@
 package com.star.common.tool;
 
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.GeoResults;
@@ -11,7 +12,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,7 +30,63 @@ import java.util.stream.Collectors;
 public class RedisUtils {
 
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<Object, Object> redisTemplate;
+
+    // ========================= Redis Zset Begin =========================
+
+    /**
+     * 获取zset所有分数
+     *
+     * @param articleLikeCount
+     * @return
+     */
+    public Map<Object, Double> zAllScore(String key) {
+        return Objects.requireNonNull(redisTemplate.opsForZSet().rangeWithScores(key, 0, -1))
+                .stream().collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue,
+                        ZSetOperations.TypedTuple::getScore));
+    }
+
+    /**
+     * zset添加分数
+     *
+     * @param key   关键
+     * @param value 价值
+     * @param score 分数
+     * @return {@link Double}
+     */
+    public Double zIncr(String key, Object value, Double score) {
+        return redisTemplate.opsForZSet().incrementScore(key, value, score);
+    }
+
+    /**
+     * 获取zset指定元素分数
+     *
+     * @param key   关键
+     * @param value 价值
+     * @return {@link Double}
+     */
+    public Double zScore(String key, Object value) {
+        return redisTemplate.opsForZSet().score(key, value);
+    }
+
+    /**
+     * zset根据分数排名获取指定元素信息
+     *
+     * @param key   关键
+     * @param start 开始
+     * @param end   结束
+     * @return {@link Map<Object, Double>}
+     */
+    public Map<Object, Double> zReverseRangeWithScore(String key, Long start, Long end) {
+        return redisTemplate.opsForZSet().reverseRangeWithScores(key, start, end)
+                .stream()
+                .collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue, ZSetOperations.TypedTuple::getScore));
+    }
+
+    // ========================= Redis Zset End =========================
+
+
+    // ========================= Redis String Begin =========================
 
     public void set(String key, Object value, long time) {
         redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
@@ -48,7 +104,7 @@ public class RedisUtils {
         return redisTemplate.delete(key);
     }
 
-    public Long del(List<String> keys) {
+    public Boolean del(List<String> keys) {
         return redisTemplate.delete(keys);
     }
 
@@ -71,6 +127,33 @@ public class RedisUtils {
     public Long decr(String key, long delta) {
         return redisTemplate.opsForValue().increment(key, -delta);
     }
+
+    public Boolean bitAdd(String key, int offset, boolean b) {
+        return redisTemplate.opsForValue().setBit(key, offset, b);
+    }
+
+    public Boolean bitGet(String key, int offset) {
+        return redisTemplate.opsForValue().getBit(key, offset);
+    }
+
+    public Long bitCount(String key) {
+        return redisTemplate.execute((RedisCallback<Long>) con -> con.bitCount(key.getBytes()));
+    }
+
+    public List<Long> bitField(String key, int limit, int offset) {
+        return redisTemplate.execute((RedisCallback<List<Long>>) con ->
+                con.bitField(key.getBytes(),
+                        BitFieldSubCommands.create().get(BitFieldSubCommands.BitFieldType.unsigned(limit)).valueAt(offset)));
+    }
+
+    public byte[] bitGetAll(String key) {
+        return redisTemplate.execute((RedisCallback<byte[]>) con -> con.get(key.getBytes()));
+    }
+
+    // ========================= Redis String End =========================
+
+
+    // ========================= Redis Hash Begin =========================
 
     public Object hGet(String key, String hashKey) {
         return redisTemplate.opsForHash().get(key, hashKey);
@@ -114,6 +197,11 @@ public class RedisUtils {
         return redisTemplate.opsForHash().increment(key, hashKey, -delta);
     }
 
+    // ========================= Redis Hash End =========================
+
+
+    // ========================= Redis Set Begin =========================
+
     public Set<Object> sMembers(String key) {
         return redisTemplate.opsForSet().members(key);
     }
@@ -153,6 +241,11 @@ public class RedisUtils {
     public Long sRemove(String key, Object... values) {
         return redisTemplate.opsForSet().remove(key, values);
     }
+
+    // ========================= Redis Set End =========================
+
+
+    // ========================= Redis List Begin =========================
 
     /**
      * 获取List结构中的属性
@@ -204,27 +297,10 @@ public class RedisUtils {
         return redisTemplate.opsForList().remove(key, count, value);
     }
 
-    public Boolean bitAdd(String key, int offset, boolean b) {
-        return redisTemplate.opsForValue().setBit(key, offset, b);
-    }
+    // ========================= Redis List End =========================
 
-    public Boolean bitGet(String key, int offset) {
-        return redisTemplate.opsForValue().getBit(key, offset);
-    }
 
-    public Long bitCount(String key) {
-        return redisTemplate.execute((RedisCallback<Long>) con -> con.bitCount(key.getBytes()));
-    }
-
-    public List<Long> bitField(String key, int limit, int offset) {
-        return redisTemplate.execute((RedisCallback<List<Long>>) con ->
-                con.bitField(key.getBytes(),
-                        BitFieldSubCommands.create().get(BitFieldSubCommands.BitFieldType.unsigned(limit)).valueAt(offset)));
-    }
-
-    public byte[] bitGetAll(String key) {
-        return redisTemplate.execute((RedisCallback<byte[]>) con -> con.get(key.getBytes()));
-    }
+    // ========================= Redis Geo Begin =========================
 
     public Long geoAdd(String key, Double x, Double y, String name) {
         return redisTemplate.opsForGeo().add(key, new Point(x, y), name);
@@ -257,52 +333,6 @@ public class RedisUtils {
                 .hash(key, place);
     }
 
-    /**
-     * 获取zset所有分数
-     *
-     * @param articleLikeCount
-     * @return
-     */
-    public Map<Object, Double> zAllScore(String key) {
-        return Objects.requireNonNull(redisTemplate.opsForZSet().rangeWithScores(key, 0, -1))
-                .stream().collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue,
-                        ZSetOperations.TypedTuple::getScore));
-    }
+    // ========================= Redis Geo End =========================
 
-    /**
-     * zset添加分数
-     *
-     * @param key   关键
-     * @param value 价值
-     * @param score 分数
-     * @return {@link Double}
-     */
-    public Double zIncr(String key, Object value, Double score) {
-        return redisTemplate.opsForZSet().incrementScore(key, value, score);
-    }
-
-    /**
-     * 获取zset指定元素分数
-     *
-     * @param key   关键
-     * @param value 价值
-     * @return {@link Double}
-     */
-    public Double zScore(String key, Object value) {
-        return redisTemplate.opsForZSet().score(key, value);
-    }
-
-    /**
-     * zset根据分数排名获取指定元素信息
-     *
-     * @param key   关键
-     * @param start 开始
-     * @param end   结束
-     * @return {@link Map<Object, Double>}
-     */
-    public Map<Object, Double> zReverseRangeWithScore(String key, Long start, Long end) {
-        return redisTemplate.opsForZSet().reverseRangeWithScores(key, start, end)
-                .stream()
-                .collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue, ZSetOperations.TypedTuple::getScore));
-    }
 }

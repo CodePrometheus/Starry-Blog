@@ -43,6 +43,7 @@
         <hikaricp.version>5.0.1</hikaricp.version>
         <slf4j.version>2.0.6</slf4j.version>
         <logback.version>1.4.5</logback.version>
+        <jwt.version>4.2.2</jwt.version>
     </properties>
 
     <dependencies>
@@ -52,6 +53,12 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${jwt.version}</version>
         </dependency>
 
         <dependency>

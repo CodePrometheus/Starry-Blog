@@ -1,6 +1,8 @@
 package com.star.inf.utils;
 
-import com.star.inf.dto.UserInfoDTO;
+import com.alibaba.fastjson2.JSON;
+import com.star.inf.dto.UserDetailsDTO;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +20,16 @@ public class UserUtils {
      *
      * @return
      */
-    public static UserInfoDTO getLoginUser() {
-        return (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public static UserDetailsDTO getLoginUser() {
+        return (UserDetailsDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public static Integer getUserInfoId() {
         return getLoginUser().getUserInfoId();
+    }
+
+    public static Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
 }

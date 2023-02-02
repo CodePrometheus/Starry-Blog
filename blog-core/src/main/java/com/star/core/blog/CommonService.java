@@ -7,6 +7,7 @@ import com.star.admin.service.AdminRoleService;
 import com.star.common.exception.StarryException;
 import com.star.common.tool.BeanCopyUtil;
 import com.star.core.config.FilterInvocationSecurityMetadataSourceImpl;
+import com.star.core.hook.JwtHooks;
 import com.star.inf.entity.BlogResource;
 import com.star.inf.entity.Role;
 import com.star.inf.entity.RoleMenu;
@@ -14,6 +15,7 @@ import com.star.inf.entity.RoleResource;
 import com.star.inf.mapper.RoleMapper;
 import com.star.inf.service.RoleMenuServiceImpl;
 import com.star.inf.service.RoleResourceServiceImpl;
+import com.star.inf.utils.UserUtils;
 import com.star.inf.vo.ResourceVO;
 import com.star.inf.vo.RoleVO;
 import jakarta.annotation.Resource;
@@ -50,6 +52,9 @@ public class CommonService {
 
     @Resource
     private RoleMenuServiceImpl roleMenuServiceImpl;
+
+    @Resource
+    private JwtHooks jwtHooks;
 
     /**
      * 添加或修改资源
@@ -117,6 +122,15 @@ public class CommonService {
                     .collect(Collectors.toList());
             roleMenuServiceImpl.saveBatch(roleMenuList);
         }
+    }
+
+    /**
+     * 用户登出
+     *
+     * @return
+     */
+    public void logout() {
+        jwtHooks.delLoginUser(UserUtils.getUserInfoId());
     }
 
 }

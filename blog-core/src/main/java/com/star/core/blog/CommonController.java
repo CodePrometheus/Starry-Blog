@@ -34,4 +34,11 @@ public class CommonController {
         return Result.success();
     }
 
+    @ApiOperation("用户登出")
+    @PostMapping("/users/logout")
+    public Result<?> logout() {
+        commonService.logout();
+        return Result.success();
+    }
+
 }
