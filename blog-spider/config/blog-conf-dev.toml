@@ -1,2 +1,7 @@
 [server]
 port="8001"
+
+[mongo]
+addr="192.168.1.101:8081"
+username="root"
+password="root"

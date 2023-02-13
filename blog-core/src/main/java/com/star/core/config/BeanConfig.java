@@ -1,8 +1,8 @@
 package com.star.core.config;
 
-import com.star.core.hook.DefaultLogPointerImpl;
-import com.star.core.hook.LogPointer;
 import com.star.admin.service.AdminOperationLogService;
+import com.star.core.hook.DefaultLogPointerHooks;
+import com.star.core.hook.LogPointer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class BeanConfig {
     @Bean
     @ConditionalOnMissingBean(LogPointer.class)
     public LogPointer logPointer(AdminOperationLogService operationLogService) {
-        return new DefaultLogPointerImpl(operationLogService);
+        return new DefaultLogPointerHooks(operationLogService);
     }
 
 }

@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
  * @Author: zzStar
  * @Date: 01-03-2022 22:18
  */
-public class DefaultLogPointerImpl implements LogPointer {
+public class DefaultLogPointerHooks implements LogPointer {
 
-    private static final Logger logger = LoggerFactory.getLogger(DefaultLogPointerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultLogPointerHooks.class);
 
     @Resource
     private VisitLogService visitLogServiceImpl;
@@ -24,7 +24,7 @@ public class DefaultLogPointerImpl implements LogPointer {
     @Resource
     private AdminOperationLogService operationLogServiceImpl;
 
-    public DefaultLogPointerImpl(AdminOperationLogService operationLogService) {
+    public DefaultLogPointerHooks(AdminOperationLogService operationLogService) {
         this.operationLogServiceImpl = operationLogService;
     }
 
@@ -42,3 +42,4 @@ public class DefaultLogPointerImpl implements LogPointer {
     }
 
 }
+

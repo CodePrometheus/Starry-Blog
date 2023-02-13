@@ -16,11 +16,11 @@ public interface LogPointer {
     /**
      * 埋点操作
      *
-     * @param request  当前请求
-     * @param response 当前响应
-     * @param user     用户
+     * @param request      当前请求
+     * @param response     当前响应
+     * @param user         用户
      * @param blogResource 访问的资源
-     * @param isAdmin  是否后台
+     * @param isAdmin      是否后台
      */
     void doPoint(HttpServletRequest request, HttpServletResponse response,
                  UserInfo user, BlogResource blogResource, boolean isAdmin);

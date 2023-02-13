@@ -1,6 +1,8 @@
 ${AnsiColor.BRIGHT_YELLOW}
 Starry Blog Version: 7.0
+JDK Version: ${java.version}
 Spring Boot Version: ${spring-boot.version}
+
  _____  _                              ______  _
 /  ___|| |                             | ___ \| |
 \ `--. | |_   __ _  _ __  _ __  _   _  | |_/ /| |  ___    __ _
