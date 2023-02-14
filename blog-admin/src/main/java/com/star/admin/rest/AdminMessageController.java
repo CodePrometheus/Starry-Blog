@@ -26,7 +26,7 @@ public class AdminMessageController {
 
     @ApiOperation(value = "查看后台留言列表")
     @GetMapping("/messages")
-    private Result<PageData<MessageBackDTO>> listMessageBack(ConditionVO condition) {
+    public Result<PageData<MessageBackDTO>> listMessageBack(ConditionVO condition) {
         return Result.success(adminMessageService.listMessageBack(condition));
     }
 

@@ -27,20 +27,20 @@ public class AdminCategoryController {
 
     @ApiOperation(value = "查看后台分类列表")
     @GetMapping("/categories")
-    private Result<PageData<CategoryBackDTO>> listCategoryBack(ConditionVO condition) {
+    public Result<PageData<CategoryBackDTO>> listCategoryBack(ConditionVO condition) {
         return Result.success(adminCategoryService.listCategoryBack(condition));
     }
 
     @ApiOperation(value = "添加或修改分类")
     @PostMapping("/categories")
-    private Result<?> saveOrUpdateCategory(@Valid @RequestBody CategoryVO categoryVO) {
+    public Result<?> saveOrUpdateCategory(@Valid @RequestBody CategoryVO categoryVO) {
         adminCategoryService.saveOrUpdateCategory(categoryVO);
         return Result.success();
     }
 
     @ApiOperation(value = "删除分类")
     @DeleteMapping("/categories")
-    private Result<?> deleteCategories(@RequestBody List<Integer> categoryIdList) {
+    public Result<?> deleteCategories(@RequestBody List<Integer> categoryIdList) {
         adminCategoryService.deleteCategory(categoryIdList);
         return Result.success();
     }

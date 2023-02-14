@@ -25,7 +25,7 @@ public class TagController {
 
     @ApiOperation(value = "查看标签列表")
     @GetMapping("/tags")
-    private Result<PageData<TagDTO>> listTags() {
+    public Result<PageData<TagDTO>> listTags() {
         return Result.success(tagService.listTags());
     }
 

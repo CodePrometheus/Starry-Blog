@@ -23,20 +23,20 @@ public class AdminBlogInfoController {
 
     @ApiOperation(value = "查看后台信息")
     @GetMapping("/")
-    private Result<BlogBackInfoDTO> getBlogBackInfo() {
+    public Result<BlogBackInfoDTO> getBlogBackInfo() {
         return Result.success(adminBlogInfoService.getBlogBackInfo());
     }
 
     @ApiOperation(value = "修改关于我信息")
     @PutMapping("/about")
-    private Result<?> updateAbout(@Valid @RequestBody BlogInfoVo blogInfoVo) {
+    public Result<?> updateAbout(@Valid @RequestBody BlogInfoVo blogInfoVo) {
         adminBlogInfoService.updateAbout(blogInfoVo);
         return Result.success();
     }
 
     @ApiOperation(value = "更新网站配置")
     @PutMapping("/website/config")
-    private Result<WebsiteConfigVO> updateWebsiteConfig(@Valid @RequestBody WebsiteConfigVO websiteConfigVO) {
+    public Result<WebsiteConfigVO> updateWebsiteConfig(@Valid @RequestBody WebsiteConfigVO websiteConfigVO) {
         adminBlogInfoService.updateWebsiteConfig(websiteConfigVO);
         return Result.success();
     }

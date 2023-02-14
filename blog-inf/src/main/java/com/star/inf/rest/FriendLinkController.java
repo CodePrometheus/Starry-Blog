@@ -26,7 +26,7 @@ public class FriendLinkController {
 
     @ApiOperation(value = "查看友链列表")
     @GetMapping("/links")
-    private Result<List<FriendLinkDTO>> listFriendLinks() {
+    public Result<List<FriendLinkDTO>> listFriendLinks() {
         return Result.success(friendLinkService.listFriendLinks());
     }
 

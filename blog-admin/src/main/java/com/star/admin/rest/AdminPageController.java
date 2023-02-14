@@ -54,7 +54,7 @@ public class AdminPageController {
     @ApiOperation(value = "上传页面图片")
     @ApiImplicitParam(name = "file", value = "页面图片", required = true, dataType = "MultipartFile", dataTypeClass = MultipartFile.class)
     @PostMapping("/page/images")
-    private Result<String> uploadPageImages(MultipartFile file) {
+    public Result<String> uploadPageImages(MultipartFile file) {
         return Result.success(imageUtil.upload(file, PathConst.PAGE));
     }
 

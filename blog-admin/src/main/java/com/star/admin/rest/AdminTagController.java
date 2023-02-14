@@ -27,20 +27,20 @@ public class AdminTagController {
 
     @ApiOperation(value = "查看后台标签列表")
     @GetMapping("/tags")
-    private Result<PageData<TagBackDTO>> listTagBack(ConditionVO condition) {
+    public Result<PageData<TagBackDTO>> listTagBack(ConditionVO condition) {
         return Result.success(adminTagService.listTagBack(condition));
     }
 
     @ApiOperation(value = "添加或修改标签")
     @PostMapping("/tags")
-    private Result<?> saveOrUpdateTag(@Valid @RequestBody TagVO tagVO) {
+    public Result<?> saveOrUpdateTag(@Valid @RequestBody TagVO tagVO) {
         adminTagService.saveOrUpdateTag(tagVO);
         return Result.success();
     }
 
     @ApiOperation(value = "删除标签")
     @DeleteMapping("/tags")
-    private Result<?> deleteTag(@RequestBody List<Integer> tagIdList) {
+    public Result<?> deleteTag(@RequestBody List<Integer> tagIdList) {
         adminTagService.deleteTag(tagIdList);
         return Result.success();
     }

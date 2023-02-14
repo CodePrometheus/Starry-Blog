@@ -26,7 +26,7 @@ public class AdminCommentController {
 
     @ApiOperation(value = "审核评论")
     @PutMapping("/comments/review")
-    private Result<?> updateCommentsReview(@Valid @RequestBody ReviewVO reviewVO) {
+    public Result<?> updateCommentsReview(@Valid @RequestBody ReviewVO reviewVO) {
         adminCommentService.updateCommentsReview(reviewVO);
         return Result.success();
     }
@@ -40,7 +40,7 @@ public class AdminCommentController {
 
     @ApiOperation(value = "查询后台评论")
     @GetMapping("/comments")
-    private Result<PageData<CommentBackDTO>> listCommentBackDTO(ConditionVO condition) {
+    public Result<PageData<CommentBackDTO>> listCommentBackDTO(ConditionVO condition) {
         return Result.success(adminCommentService.listCommentBackDTO(condition));
     }
 

@@ -25,7 +25,7 @@ public class CategoryController {
 
     @ApiOperation(value = "查看分类列表")
     @GetMapping("/categories")
-    private Result<PageData<CategoryDTO>> listCategories() {
+    public Result<PageData<CategoryDTO>> listCategories() {
         return Result.success(categoryService.listCategories());
     }
 

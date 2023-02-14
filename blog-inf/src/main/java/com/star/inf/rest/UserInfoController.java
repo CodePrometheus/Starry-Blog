@@ -30,7 +30,7 @@ public class UserInfoController {
 
     @ApiOperation(value = "修改用户资料")
     @PutMapping("/users/info")
-    private Result<?> updateUserInfo(@Valid @RequestBody UserInfoVO userInfoVO) {
+    public Result<?> updateUserInfo(@Valid @RequestBody UserInfoVO userInfoVO) {
         userInfoService.updateUserInfo(userInfoVO);
         return Result.success();
     }
@@ -38,7 +38,7 @@ public class UserInfoController {
     @ApiOperation(value = "修改用户头像")
     @ApiImplicitParam(name = "file", value = "用户头像", required = true, dataType = "MultipartFile", dataTypeClass = MultipartFile.class)
     @PostMapping("/users/avatar")
-    private Result<String> updateUserInfo(MultipartFile file) {
+    public Result<String> updateUserInfo(MultipartFile file) {
         return Result.success(userInfoService.updateUserAvatar(file));
     }
 

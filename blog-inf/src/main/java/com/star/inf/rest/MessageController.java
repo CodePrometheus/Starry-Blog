@@ -30,14 +30,14 @@ public class MessageController {
 
     @ApiOperation(value = "添加留言")
     @PostMapping("/messages")
-    private Result<?> saveMessage(@Valid @RequestBody MessageVO messageVO) {
+    public Result<?> saveMessage(@Valid @RequestBody MessageVO messageVO) {
         messageService.saveMessage(messageVO);
         return Result.success();
     }
 
     @ApiOperation(value = "查看留言列表")
     @GetMapping("/messages")
-    private Result<List<MessageDTO>> listMessages() {
+    public Result<List<MessageDTO>> listMessages() {
         return Result.success(messageService.listMessages());
     }
 

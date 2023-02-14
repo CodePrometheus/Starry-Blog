@@ -26,13 +26,13 @@ public class BlogInfoController {
 
     @ApiOperation(value = "查看博客信息")
     @GetMapping("/")
-    private Result<BlogHomeInfoDTO> getBlogHomeInfo() {
+    public Result<BlogHomeInfoDTO> getBlogHomeInfo() {
         return Result.success(blogInfoService.getBlogInfo());
     }
 
     @ApiOperation(value = "查看关于我信息")
     @GetMapping("/about")
-    private Result<String> getAbout() {
+    public Result<String> getAbout() {
         return Result.success(blogInfoService.getAbout());
     }
 
@@ -44,7 +44,7 @@ public class BlogInfoController {
 
     @ApiOperation(value = "获取网站配置")
     @GetMapping("/admin/website/config")
-    private Result<WebsiteConfigVO> getWebsiteConfig() {
+    public Result<WebsiteConfigVO> getWebsiteConfig() {
         return Result.success(blogInfoService.getWebsiteConfig());
     }
 

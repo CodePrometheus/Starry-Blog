@@ -25,14 +25,14 @@ public class AdminUserInfoController {
 
     @ApiOperation(value = "修改用户角色")
     @PutMapping("/users/role")
-    private Result<?> updateUserRole(@Valid @RequestBody UserRoleVO userRoleVO) {
+    public Result<?> updateUserRole(@Valid @RequestBody UserRoleVO userRoleVO) {
         adminUserInfoService.updateUserRole(userRoleVO);
         return Result.success();
     }
 
     @ApiOperation(value = "修改用户禁用状态")
     @PutMapping("/user/disable")
-    private Result<?> updateUserDisable(@Valid @RequestBody UserDisableVO userDisableVO) {
+    public Result<?> updateUserDisable(@Valid @RequestBody UserDisableVO userDisableVO) {
         adminUserInfoService.updateUserDisable(userDisableVO);
         return Result.success();
     }

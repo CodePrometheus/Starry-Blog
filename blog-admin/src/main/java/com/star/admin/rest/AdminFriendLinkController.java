@@ -26,20 +26,20 @@ public class AdminFriendLinkController {
 
     @ApiOperation(value = "查看后台友链列表")
     @GetMapping("/links")
-    private Result<PageData<FriendLinkBackDTO>> listFriendLink(ConditionVO condition) {
+    public Result<PageData<FriendLinkBackDTO>> listFriendLink(ConditionVO condition) {
         return Result.success(adminFriendLinkService.listFriendLink(condition));
     }
 
     @ApiOperation(value = "保存或修改友链")
     @PostMapping("/links")
-    private Result<?> saveOrUpdateFriendLink(@Valid @RequestBody FriendLinkVO friendLinkVO) {
+    public Result<?> saveOrUpdateFriendLink(@Valid @RequestBody FriendLinkVO friendLinkVO) {
         adminFriendLinkService.saveOrUpdateFriendLink(friendLinkVO);
         return Result.success();
     }
 
     @ApiOperation(value = "删除友链")
     @DeleteMapping("/links")
-    private Result<?> deleteFriendLink(@RequestBody List<Integer> linkIdList) {
+    public Result<?> deleteFriendLink(@RequestBody List<Integer> linkIdList) {
         adminFriendLinkService.removeByIds(linkIdList);
         return Result.success();
     }

@@ -27,13 +27,13 @@ public class AdminUserAuthController {
 
     @ApiOperation(value = "查看后台用户列表")
     @GetMapping("/users")
-    private Result<PageData<UserBackDTO>> listUsers(ConditionVO condition) {
+    public Result<PageData<UserBackDTO>> listUsers(ConditionVO condition) {
         return Result.success(adminUserAuthService.listUserBack(condition));
     }
 
     @ApiOperation(value = "修改管理员密码")
     @PutMapping("/users/password")
-    private Result<?> updateAdminPassword(@Valid @RequestBody PasswordVO passwordVO) {
+    public Result<?> updateAdminPassword(@Valid @RequestBody PasswordVO passwordVO) {
         adminUserAuthService.updateAdminPassword(passwordVO);
         return Result.success();
     }

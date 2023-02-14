@@ -34,7 +34,7 @@ public class AdminMomentController {
 
     @ApiOperation(value = "查看后台动态")
     @GetMapping("/moments")
-    private Result<PageData<MomentDTO>> listMomentBack(ConditionVO conditionVO) {
+    public Result<PageData<MomentDTO>> listMomentBack(ConditionVO conditionVO) {
         return Result.success(adminMomentService.listMomentBack(conditionVO));
     }
 

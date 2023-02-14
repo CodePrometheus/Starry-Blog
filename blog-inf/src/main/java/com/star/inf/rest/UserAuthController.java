@@ -26,21 +26,21 @@ public class UserAuthController {
     @ApiOperation(value = "发送邮箱验证码")
     @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", dataTypeClass = String.class)
     @GetMapping("/users/code")
-    private Result<?> sendCode(String username) {
+    public Result<?> sendCode(String username) {
         userAuthService.sendCode(username);
         return Result.success();
     }
 
     @ApiOperation(value = "用户注册")
     @PostMapping("/register")
-    private Result<?> register(@Valid @RequestBody UserVO user) {
+    public Result<?> register(@Valid @RequestBody UserVO user) {
         userAuthService.register(user);
         return Result.success();
     }
 
     @ApiOperation(value = "修改密码")
     @PutMapping("/users/password")
-    private Result<?> updatePassword(@Valid @RequestBody UserVO user) {
+    public Result<?> updatePassword(@Valid @RequestBody UserVO user) {
         userAuthService.updatePassword(user);
         return Result.success();
     }

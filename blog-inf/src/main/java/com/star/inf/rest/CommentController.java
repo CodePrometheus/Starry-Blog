@@ -34,13 +34,13 @@ public class CommentController {
             @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class),
     })
     @GetMapping("/comments")
-    private Result<PageData<CommentDTO>> listComments(CommentVO commentVO) {
+    public Result<PageData<CommentDTO>> listComments(CommentVO commentVO) {
         return Result.success(commentService.listComments(commentVO));
     }
 
     @ApiOperation(value = "添加评论或回复")
     @PostMapping("/comments")
-    private Result<?> saveComment(@Valid @RequestBody CommentVO commentVO) {
+    public Result<?> saveComment(@Valid @RequestBody CommentVO commentVO) {
         commentService.saveComment(commentVO);
         return Result.success();
     }
@@ -48,13 +48,13 @@ public class CommentController {
     @ApiOperation(value = "查询评论下的回复")
     @ApiImplicitParam(name = "commentId", value = "评论id", required = true, dataType = "Integer")
     @GetMapping("/comments/{commentId}/replies")
-    private Result<List<ReplyDTO>> listRepliesByCommentId(@PathVariable("commentId") Integer commentId) {
+    public Result<List<ReplyDTO>> listRepliesByCommentId(@PathVariable("commentId") Integer commentId) {
         return Result.success(commentService.listRepliesByCommentId(commentId));
     }
 
     @ApiOperation(value = "评论点赞")
     @PostMapping("/comments/{commentId}/like")
-    private Result<?> saveCommentList(@PathVariable("commentId") Integer commentId) {
+    public Result<?> saveCommentList(@PathVariable("commentId") Integer commentId) {
         commentService.saveCommentLike(commentId);
         return Result.success();
     }

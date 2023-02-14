@@ -35,20 +35,20 @@ public class AdminArticleController {
 
     @ApiOperation(value = "查看后台文章")
     @GetMapping("/articles")
-    private Result<PageData<ArticleBackDTO>> listArticleBack(ConditionVO conditionVO) {
+    public Result<PageData<ArticleBackDTO>> listArticleBack(ConditionVO conditionVO) {
         return Result.success(adminArticleService.listArticleBack(conditionVO));
     }
 
     @ApiOperation(value = "添加或修改文章")
     @PostMapping("/articles")
-    private Result<?> saveArticle(@Valid @RequestBody ArticleVO articleVO) {
+    public Result<?> saveArticle(@Valid @RequestBody ArticleVO articleVO) {
         adminArticleService.saveOrUpdateArticle(articleVO);
         return Result.success();
     }
 
     @ApiOperation(value = "修改文章置顶状态")
     @PutMapping("/articles/top")
-    private Result<?> updateArticleTop(@Valid @RequestBody TopVO articleTopVO) {
+    public Result<?> updateArticleTop(@Valid @RequestBody TopVO articleTopVO) {
         adminArticleService.updateArticleTop(articleTopVO);
         return Result.success();
     }
@@ -56,20 +56,20 @@ public class AdminArticleController {
     @ApiOperation(value = "上传文章图片")
     @ApiImplicitParam(name = "file", value = "文章图片", required = true, dataType = "MultipartFile", dataTypeClass = MultipartFile.class)
     @PostMapping("/articles/images")
-    private Result<String> saveArticleImages(MultipartFile file) {
+    public Result<String> saveArticleImages(MultipartFile file) {
         return Result.success(imageUtil.upload(file, PathConst.ARTICLE));
     }
 
     @ApiOperation(value = "恢复或删除文章")
     @PutMapping("/articles")
-    private Result<?> updateArticleDelete(@Valid @RequestBody DeleteVO deleteVO) {
+    public Result<?> updateArticleDelete(@Valid @RequestBody DeleteVO deleteVO) {
         adminArticleService.updateArticleDelete(deleteVO);
         return Result.success();
     }
 
     @ApiOperation(value = "物理删除文章")
     @DeleteMapping("/articles")
-    private Result<?> deleteArticles(@RequestBody List<Integer> articleIdList) {
+    public Result<?> deleteArticles(@RequestBody List<Integer> articleIdList) {
         adminArticleService.deleteArticles(articleIdList);
         return Result.success();
     }
@@ -77,7 +77,7 @@ public class AdminArticleController {
     @ApiOperation(value = "根据id查看后台文章")
     @ApiImplicitParam(name = "articleId", value = "文章id", required = true, dataType = "Integer", dataTypeClass = Integer.class)
     @GetMapping("/articles/{articleId}")
-    private Result<ArticleVO> getArticleBackById(@PathVariable("articleId") Integer articleId) {
+    public Result<ArticleVO> getArticleBackById(@PathVariable("articleId") Integer articleId) {
         return Result.success(adminArticleService.getArticleBackById(articleId));
     }
 
