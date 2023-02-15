@@ -12,7 +12,7 @@
   <a target="_blank" href="https://github.com/CodePrometheus/Starry-Blog">
     <img src="https://img.shields.io/hexpm/l/plug.svg"/>
       <img src="https://img.shields.io/badge/JDK-17+-orange.svg"/>
-      <img src="https://img.shields.io/badge/go-1.19-9370DB.svg"/>
+      <img src="https://img.shields.io/badge/go-1.20-9370DB.svg"/>
       <img src="https://img.shields.io/badge/springboot-3.x-ffe411"/>
       <img src="https://img.shields.io/badge/gin-1.x-BC8F8F"/>
       <img src="https://img.shields.io/badge/vue-2.x-00BFFF"/>
@@ -33,6 +33,7 @@
 |:---------------:|:---------------:|:--------:|:------------------------------------------------------------------------------------------:|
 |   Spring Boot   |   Java web 框架   |  3.0.2   |      [https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)      |
 |       Gin       |    Go web 框架    |  1.8.2   |                      [https://gin-gonic.com/](https://gin-gonic.com/)                      |
+|     Thrift      |       RPC       |  0.17.0  |                  [https://thrift.apache.org/](https://thrift.apache.org/)                  |
 |     Docker      |      容器引擎       | 20.10.11 |                     [https://www.docker.com/](https://www.docker.com/)                     |
 | Docker Compose  |      容器编排       |   3.9    |            [https://docs.docker.com/compose/](https://docs.docker.com/compose/)            |
 |    Portainer    |   Docker可视化管理   |   1.x    |      [https://github.com/portainer/portainer](https://github.com/portainer/portainer)      |
@@ -45,6 +46,7 @@
 |     Lucene      |      搜索引擎       |  8.9.0   |                  [https://lucene.apache.org/](https://lucene.apache.org)                   |
 | Spring Security |     认证和授权框架     |  3.0.2   |  [https://spring.io/projects/spring-security](https://spring.io/projects/spring-security)  |
 |       JWT       | JSON Web Token  |  4.2.2   |           [https://github.com/auth0/java-jwt](https://github.com/auth0/java-jwt)           |
+|     Quartz      |     作业调度框架      |  3.0.2   |            [http://www.quartz-scheduler.org/](http://www.quartz-scheduler.org/)            |
 |   Swagger-UI    |     文档生产工具      |  3.0.0   |  [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)   |
 |     Kibana      |    分析和可视化平台     |  8.5.2   |            [https://www.elastic.co/cn/kibana](https://www.elastic.co/cn/kibana)            |
 |      Beats      |    轻量型数据采集器     |  8.5.2   |            [https://www.elastic.co/cn/beats/](https://www.elastic.co/cn/beats)             |
@@ -117,9 +119,9 @@
 
 - MQ 异步更新 Elasticsearch，Solr，Lucene，发送评论通知邮件，评论延迟队列自动审核机制
 
-- docker-compose up 一键启动所有中间件
+- Docker-compose up 一键启动所有中间件
 
-- aop + 自定义注解，令牌桶流量控制
+- Aop + 自定义注解，令牌桶流量控制
 
 - Canal 通过 MQ 保证数据最终一致性
 
@@ -130,3 +132,7 @@
 - WebSocket 在线聊天室
 
 - RBAC 权限管理设计，JWT 身份校验
+
+- Quartz 作业调度框架
+
+- Java，GO 通过 Thrift 跨语言调用
