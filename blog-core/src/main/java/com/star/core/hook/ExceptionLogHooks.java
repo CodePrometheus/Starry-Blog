@@ -18,10 +18,10 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Objects;
+
+import static com.star.common.exception.StarryException.getTrace;
 
 /**
  * 异常监听钩子
@@ -72,14 +72,6 @@ public class ExceptionLogHooks {
         exceptionLog.setIpAddress(ipAddr);
         exceptionLog.setIpSource(IpUtils.getIpSource(ipAddr));
         applicationContext.publishEvent(new ExceptionLogEvent(exceptionLog));
-    }
-
-    private String getTrace(Throwable ta) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        ta.printStackTrace(writer);
-        StringBuffer buffer = stringWriter.getBuffer();
-        return buffer.toString();
     }
 
 }

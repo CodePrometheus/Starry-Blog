@@ -8,6 +8,7 @@
         <module>blog-common</module>
         <module>blog-admin</module>
         <module>blog-inf</module>
+        <module>blog-rpc</module>
     </modules>
 
     <groupId>com.star</groupId>
@@ -44,6 +45,7 @@
         <slf4j.version>2.0.6</slf4j.version>
         <logback.version>1.4.5</logback.version>
         <jwt.version>4.2.2</jwt.version>
+        <thrift.version>0.17.0</thrift.version>
     </properties>
 
     <dependencies>

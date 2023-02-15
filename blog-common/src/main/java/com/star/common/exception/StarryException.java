@@ -4,6 +4,9 @@ import com.star.common.constant.StatusConst;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import static com.star.common.constant.StatusConst.FAIL;
 
 /**
@@ -33,6 +36,14 @@ public class StarryException extends RuntimeException {
     public StarryException(StatusConst statusConst) {
         this.code = statusConst.getCode();
         this.message = statusConst.getDesc();
+    }
+
+    public static String getTrace(Throwable ta) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        ta.printStackTrace(writer);
+        StringBuffer buffer = stringWriter.getBuffer();
+        return buffer.toString();
     }
 
 }
