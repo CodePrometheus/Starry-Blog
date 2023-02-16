@@ -1,10 +1,11 @@
 package main
 
 import (
+	"blog-spider/config"
+	"blog-spider/logger"
+	"blog-spider/middleware/mongo"
 	"blog-spider/router"
 	"context"
-	"github.com/pelletier/go-toml"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,19 +13,18 @@ import (
 )
 
 func main() {
-	config, err := toml.LoadFile("./config/blog-conf-dev.toml")
-	if err != nil {
-		panic(err)
-	}
-	engine := router.InitRouter(config)
+	config.InitConfig()           // 初始化 config
+	logger.InitLogger()           // 初始化日志
+	mongo.InitMongo()             // 初始化 mongo
+	engine := router.InitRouter() // 初始化路由
 
 	srv := &http.Server{
-		Addr:    ":" + config.Get("server.port").(string),
+		Addr:    ":" + config.Conf.System.Port,
 		Handler: engine,
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			logger.Log.Error("listen: %s\n", err)
 		}
 	}()
 
@@ -34,6 +34,6 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown: ", err)
+		logger.Log.Error("Server Shutdown: ", err)
 	}
 }

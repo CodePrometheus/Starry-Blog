@@ -1,11 +1,11 @@
 package zhihu
 
 import (
+	"blog-spider/logger"
 	"blog-spider/model"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +18,7 @@ const (
 func HandleZhihuHot() []model.HotNews {
 	resp, err := http.Get(zhihuUrl)
 	if err != nil {
-		log.Println("err: ", err)
+		logger.Log.Error("err: ", err)
 		return nil
 	}
 	defer resp.Body.Close()

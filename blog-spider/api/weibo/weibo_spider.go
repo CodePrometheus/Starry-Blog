@@ -1,11 +1,11 @@
 package weibo
 
 import (
+	"blog-spider/logger"
 	"blog-spider/model"
 	"context"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/chromedp/chromedp"
-	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -24,7 +24,7 @@ func HandleWeiboHot() []model.HotNews {
 
 	var content string
 	if err := chromedp.Run(ctx, spiderWeibo(&content)); err != nil {
-		log.Println("err: ", err)
+		logger.Log.Error("err: ", err)
 		return nil
 	}
 	return genSearchResp(content)
@@ -33,7 +33,7 @@ func HandleWeiboHot() []model.HotNews {
 func genSearchResp(content string) []model.HotNews {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(content))
 	if err != nil {
-		log.Println("Load the HTML document failed")
+		logger.Log.Error("Load the HTML document failed")
 	}
 	resp := make([]model.HotNews, 0, 50)
 	doc.Find("#pl_top_realtimehot > table > tbody > tr").

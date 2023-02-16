@@ -5,11 +5,10 @@ import (
 	"blog-spider/middleware/cors"
 	"blog-spider/utils/result"
 	"github.com/gin-gonic/gin"
-	"github.com/pelletier/go-toml"
 	"net/http"
 )
 
-func InitRouter(config *toml.Tree) *gin.Engine {
+func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(cors.Cors(), gin.Recovery())
 
