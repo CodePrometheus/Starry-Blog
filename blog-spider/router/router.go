@@ -18,7 +18,7 @@ func InitRouter() *gin.Engine {
 
 	spider := r.Group("/api")
 	{
-		spider.GET("/spider", api.HandleSpider)
+		spider.GET("/spider", api.HandlerSpider)
 	}
 	return r
 }

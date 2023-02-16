@@ -3,13 +3,19 @@ package api
 import (
 	"blog-spider/api/weibo"
 	"blog-spider/api/zhihu"
+	"blog-spider/model"
 	"blog-spider/utils/result"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
-func HandleSpider(c *gin.Context) {
+type Spider interface {
+	DoProcess() []model.HotNews
+	SearchData() []model.HotNews
+}
+
+func HandlerSpider(c *gin.Context) {
 	item, err := strconv.Atoi(c.Query("item"))
 	if err != nil {
 		c.JSON(http.StatusOK, result.ParamCheckErr.AjaxResult(nil))
@@ -17,10 +23,12 @@ func HandleSpider(c *gin.Context) {
 	}
 	switch item {
 	case 0:
-		c.JSON(http.StatusOK, result.SUCCESS.AjaxResult(weibo.HandleWeiboHot()))
+		weiboSpider := weibo.WeiboSpider{}
+		c.JSON(http.StatusOK, result.SUCCESS.AjaxResult(weiboSpider.DoProcess()))
 		return
 	case 1:
-		c.JSON(http.StatusOK, result.SUCCESS.AjaxResult(zhihu.HandleZhihuHot()))
+		zhihuSpider := zhihu.ZhihuSpider{}
+		c.JSON(http.StatusOK, result.SUCCESS.AjaxResult(zhihuSpider.DoProcess()))
 		return
 	default:
 	}

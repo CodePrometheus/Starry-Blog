@@ -1,6 +1,8 @@
 package weibo
 
 import (
+	"blog-spider/constant"
+	"blog-spider/handler"
 	"blog-spider/logger"
 	"blog-spider/model"
 	"context"
@@ -16,7 +18,21 @@ const (
 	realTimeHotID = "#pl_top_realtimehot"
 )
 
-func HandleWeiboHot() []model.HotNews {
+type WeiboSpider struct {
+}
+
+func (weibo *WeiboSpider) DoProcess() []model.HotNews {
+	newsHandler, err := handler.MongoNewsHandler(constant.Weibo)
+	if err != nil {
+		logger.Log.Error("HandlerWeiboHot failed: ", err, ", begin search data")
+		weiboRes := weibo.SearchData()
+		handler.AddMongoData(weiboRes, constant.Weibo)
+		return weiboRes
+	}
+	return newsHandler
+}
+
+func (weibo *WeiboSpider) SearchData() []model.HotNews {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	ctx, cancel = chromedp.NewContext(ctx)

@@ -1,6 +1,8 @@
 package zhihu
 
 import (
+	"blog-spider/constant"
+	"blog-spider/handler"
 	"blog-spider/logger"
 	"blog-spider/model"
 	"encoding/json"
@@ -15,7 +17,22 @@ const (
 	zhihuUrl = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=100"
 )
 
-func HandleZhihuHot() []model.HotNews {
+type ZhihuSpider struct {
+}
+
+func (zhihu *ZhihuSpider) DoProcess() []model.HotNews {
+	newsHandler, err := handler.MongoNewsHandler(constant.Zhihu)
+	if err != nil {
+		logger.Log.Error("HandlerZhihuHot failed: ", err, ", begin search data")
+		zhihuRes := zhihu.SearchData()
+		handler.AddMongoData(zhihuRes, constant.Zhihu)
+		return zhihuRes
+	}
+	return newsHandler
+}
+
+func (zhihu *ZhihuSpider) SearchData() []model.HotNews {
+	var ret []model.HotNews
 	resp, err := http.Get(zhihuUrl)
 	if err != nil {
 		logger.Log.Error("err: ", err)
@@ -26,13 +43,13 @@ func HandleZhihuHot() []model.HotNews {
 		body, _ := io.ReadAll(resp.Body)
 		var list model.HotList
 		if err := json.Unmarshal(body, &list); err == nil {
-			return genResp(list)
+			ret = genSearchResp(list)
 		}
 	}
-	return nil
+	return ret
 }
 
-func genResp(list model.HotList) []model.HotNews {
+func genSearchResp(list model.HotList) []model.HotNews {
 	resp := make([]model.HotNews, 0, 50)
 	for _, v := range list.Data {
 		rankStr := strings.Split(v.RankWithTime, "_")[0]

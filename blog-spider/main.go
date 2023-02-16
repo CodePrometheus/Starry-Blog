@@ -3,7 +3,7 @@ package main
 import (
 	"blog-spider/config"
 	"blog-spider/logger"
-	"blog-spider/middleware/mongo"
+	"blog-spider/middleware/mongodb"
 	"blog-spider/router"
 	"context"
 	"net/http"
@@ -15,7 +15,7 @@ import (
 func main() {
 	config.InitConfig()           // 初始化 config
 	logger.InitLogger()           // 初始化日志
-	mongo.InitMongo()             // 初始化 mongo
+	mongodb.InitMongo()           // 初始化 mongodb
 	engine := router.InitRouter() // 初始化路由
 
 	srv := &http.Server{
