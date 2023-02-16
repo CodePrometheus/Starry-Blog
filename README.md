@@ -39,6 +39,7 @@
 |    Portainer    |   Docker可视化管理   |   1.x    |      [https://github.com/portainer/portainer](https://github.com/portainer/portainer)      |
 |      MySQL      |       数据库       |  8.0.28  |                      [https://www.mysql.com/](https://www.mysql.com/)                      |
 |      Redis      |       缓存        |   6.x    |                           [https://redis.io/](https://redis.io/)                           |
+|     Mongodb     |     文档型数据库      |   6.x    |                    [https://www.mongodb.com/](https://www.mongodb.com/)                    |
 |    RabbitMQ     |      消息队列       |  3.9.7   |                   [https://www.rabbitmq.com/](https://www.rabbitmq.com/)                   |
 |  Elasticsearch  |      搜索引擎       |  8.5.2   |    [https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch)    |
 |      Canal      |      数据同步       |  1.1.5   |           [https://github.com/alibaba/canal/](https://github.com/alibaba/canal)            |
@@ -136,3 +137,5 @@
 - Quartz 作业调度框架
 
 - Java，GO 通过 Thrift 跨语言调用
+
+- Go 爬取各大网站热搜，写入 MongoDB，定时任务更新
