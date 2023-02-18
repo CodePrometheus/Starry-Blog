@@ -19,8 +19,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.star.rpc</groupId>
-            <artifactId>blog-rpc</artifactId>
+            <groupId>com.star.admin</groupId>
+            <artifactId>blog-admin</artifactId>
             <version>7.0</version>
         </dependency>
     </dependencies>

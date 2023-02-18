@@ -12,7 +12,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${default-ip}:3306/starry-blog?serverTimezone=GMT%2B8&allowMultiQueries=true
+    url: jdbc:mysql://${default-ip}:3306/starry-blog?serverTimezone=GMT%2B8&allowMultiQueries=true&useSSL=false
     username: root
     password: root
 

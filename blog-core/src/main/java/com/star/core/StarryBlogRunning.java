@@ -18,8 +18,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 @EnableScheduling
 @SpringBootApplication
-@MapperScan({"com.star.admin", "com.star.common", "com.star.core", "com.star.inf"})
-@ComponentScan(basePackages = {"com.star.admin", "com.star.common", "com.star.core", "com.star.inf"})
+@MapperScan({"com.star.admin", "com.star.common", "com.star.core", "com.star.inf", "com.star.rpc"})
+@ComponentScan(basePackages = {"com.star.admin", "com.star.common", "com.star.core", "com.star.inf", "com.star.rpc"})
 @EnableElasticsearchRepositories(basePackages = "com.star.inf.mapper")
 public class StarryBlogRunning {
 

@@ -45,7 +45,8 @@
         <slf4j.version>2.0.6</slf4j.version>
         <logback.version>1.4.5</logback.version>
         <jwt.version>4.2.2</jwt.version>
-        <thrift.version>0.17.0</thrift.version>
+        <thrift.version>0.18.0</thrift.version>
+        <pool2.version>2.11.1</pool2.version>
     </properties>
 
     <dependencies>

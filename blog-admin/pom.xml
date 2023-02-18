@@ -20,8 +20,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.star.inf</groupId>
             <artifactId>blog-inf</artifactId>
+            <version>7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.star.rpc</groupId>
+            <artifactId>blog-rpc</artifactId>
             <version>7.0</version>
         </dependency>
     </dependencies>

@@ -15,6 +15,7 @@ type config struct {
 	System *System     `mapstructure:"system" json:"system"`
 	Logs   *LogsConfig `mapstructure:"logs" json:"logs"`
 	Mongo  *Mongo      `mapstructure:"mongo" json:"mongo"`
+	Thrift *Thrift     `mapstructure:"thrift" json:"thrift"`
 }
 
 func InitConfig() {
@@ -77,4 +78,9 @@ type Mongo struct {
 	Port     int    `mapstructure:"port" json:"port"`
 	Username string `mapstructure:"username" json:"username"`
 	Password string `mapstructure:"password" json:"password"`
+}
+
+type Thrift struct {
+	Host string `mapstructure:"host" json:"host"`
+	Port string `mapstructure:"port" json:"port"`
 }

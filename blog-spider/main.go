@@ -14,7 +14,7 @@ import (
 
 func main() {
 	config.InitConfig()           // 初始化 config
-	logger.InitLogger()           // 初始化日志
+	logger.InitLogger()           // 初始化 logger
 	mongodb.InitMongo()           // 初始化 mongodb
 	engine := router.InitRouter() // 初始化路由
 

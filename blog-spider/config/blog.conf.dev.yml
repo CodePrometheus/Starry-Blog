@@ -22,3 +22,7 @@ mongo:
   username: "root"
   password: "root"
 
+thrift:
+  host: "localhost"
+  port: "8001"
+
