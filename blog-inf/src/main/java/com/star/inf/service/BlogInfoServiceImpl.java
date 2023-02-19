@@ -120,6 +120,9 @@ public class BlogInfoServiceImpl {
         return websiteConfigVO;
     }
 
+    /**
+     * 访客上报
+     */
     public void report() {
         String ipAddr = IpUtils.getIpAddr(request);
         Map<String, String> userAgentMap = userAgentUtil.parseOsAndBrowser(request);

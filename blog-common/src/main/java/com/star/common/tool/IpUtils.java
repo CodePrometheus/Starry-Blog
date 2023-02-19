@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -35,6 +36,7 @@ public class IpUtils {
     private static final Logger log = LoggerFactory.getLogger(IpUtils.class);
 
     private static Searcher searcher;
+    private static Method method;
 
     /**
      * 在 Nginx 等代理之后获取用户真实 IP 地址
@@ -85,44 +87,39 @@ public class IpUtils {
      */
     public static String getIpSource(String ip) {
         try {
-            String res = searcher.search(ip);
-            if (!StringUtils.isEmpty(res)) {
-                res = res.replace("|0", "");
-                res = res.replace("0|", "");
+            String ipInfo = (String) method.invoke(searcher, ip);
+            if (!StringUtils.isEmpty(ipInfo)) {
+                ipInfo = ipInfo.replace("|0", "");
+                ipInfo = ipInfo.replace("0|", "");
             }
-            return res;
+            return ipInfo;
         } catch (Exception e) {
-            log.error("getIpSource exception: ", e);
+            log.error("getCityInfo exception:", e);
         }
-        return null;
+        return "";
     }
 
     /**
      * 在服务启动时加载 ip2region.db 到内存中
      */
     @PostConstruct
-    public static void initIp2regionResource() {
+    public static void initIp2regionResource() throws Exception {
+        InputStream inputStream = new ClassPathResource("ip2region/ip2region.xdb").getInputStream();
         try {
-            InputStream inputStream = new ClassPathResource("ip2region/ip2region.xdb").getInputStream();
             if (inputStream != null) {
-                byte[] dbBinStr;
-                try {
-                    // 将 ip2region.xdb 转为 ByteArray
-                    dbBinStr = FileCopyUtils.copyToByteArray(inputStream);
-                    // 并发使用，用整个 xdb 数据缓存创建的查询对象可以安全的用于并发，也即可以把这个 searcher 对象做成全局对象去跨线程访问
-                    searcher = Searcher.newWithBuffer(dbBinStr);
-                } catch (Exception e) {
-                    log.error("initIp2regionResource Searcher failed: {}", e);
-                } finally {
-                    try {
-                        inputStream.close();
-                    } catch (Exception e) {
-                        log.error("inputStream.close() failed: {}", e);
-                    }
-                }
+                // 将 ip2region.db 转为 ByteArray
+                byte[] dbBinStr = FileCopyUtils.copyToByteArray(inputStream);
+                // 使用上述的 dbBinStr 创建一个完全基于内存的查询对象
+                searcher = new Searcher(null, null, dbBinStr);
+                // 二进制方式初始化 DBSearcher，需要使用基于内存的查找算法 memorySearch
+                method = searcher.getClass().getMethod("search", String.class);
             }
-        } catch (Exception e) {
-            log.error("initIp2regionResource exception:", e);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (Exception e) {
+                log.error("inputStream.close() failed: {}", e);
+            }
         }
     }
 

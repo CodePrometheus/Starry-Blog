@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 public class CustomAccessDecisionManager implements AccessDecisionManager {
 
     @Override
-    public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+    public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
+            throws AccessDeniedException, InsufficientAuthenticationException {
         // 获取用户权限列表
         List<String> permissionList = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

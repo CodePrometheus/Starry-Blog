@@ -112,10 +112,17 @@ public class AdminResourceService extends ServiceImpl<ResourceMapper, BlogResour
      * @return 资源列表
      */
     public List<ResourceDTO> listResources(ConditionVO condition) {
-        // 查询资源列表
+        // 根据资源名 | 资源 url | 请求方式 | 是否匿名
         List<BlogResource> blogResourceListAll = resourceMapper.selectList(new LambdaQueryWrapper<BlogResource>()
                 .like(StringUtils.isNotBlank(condition.getKeywords()),
-                        BlogResource::getResourceName, condition.getKeywords()));
+                        BlogResource::getResourceName, condition.getKeywords())
+                .or().like(StringUtils.isNotBlank(condition.getKeywords()),
+                        BlogResource::getUrl, condition.getKeywords())
+                .or().like(StringUtils.isNotBlank(condition.getKeywords()),
+                        BlogResource::getRequestMethod, condition.getKeywords())
+                .or().like(Objects.nonNull(condition.getIsAnonymous()),
+                        BlogResource::getIsAnonymous, condition.getIsAnonymous())
+        );
         // 获取所有模块
         List<BlogResource> parentIdList = listResourceParent(blogResourceListAll);
         // 根据parentIdList获取模块下的资源
@@ -139,7 +146,7 @@ public class AdminResourceService extends ServiceImpl<ResourceMapper, BlogResour
     }
 
     /**
-     * 获取所有资源模块，即parent_id
+     * 获取所有资源模块，即 parent_id
      *
      * @param blogResourceList 资源列表
      * @return 资源模块列表
@@ -157,7 +164,8 @@ public class AdminResourceService extends ServiceImpl<ResourceMapper, BlogResour
      */
     public List<LabelOptionDTO> listResourceOption() {
         // 查询资源列表
-        List<BlogResource> blogResourceList = resourceMapper.selectList(new LambdaQueryWrapper<BlogResource>()
+        List<BlogResource> blogResourceList = resourceMapper.selectList(
+                new LambdaQueryWrapper<BlogResource>()
                 .select(BlogResource::getId, BlogResource::getResourceName, BlogResource::getParentId)
                 .eq(BlogResource::getIsAnonymous, FALSE));
         // 获取所有模块

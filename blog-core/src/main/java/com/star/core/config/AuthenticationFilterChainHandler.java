@@ -40,8 +40,8 @@ import java.util.Objects;
  * @Date: 01-24-2023
  */
 @Component
-public class AuthenticationFilterChainHandler extends OncePerRequestFilter implements AccessDeniedHandler, AuthenticationEntryPoint,
-        AuthenticationFailureHandler, AuthenticationSuccessHandler, LogoutSuccessHandler {
+public class AuthenticationFilterChainHandler extends OncePerRequestFilter implements AccessDeniedHandler,
+        AuthenticationEntryPoint, AuthenticationFailureHandler, AuthenticationSuccessHandler, LogoutSuccessHandler {
 
     private static final Logger log = LoggerFactory.getLogger(AuthenticationFilterChainHandler.class);
 
@@ -61,9 +61,12 @@ public class AuthenticationFilterChainHandler extends OncePerRequestFilter imple
      * @param filterChain
      * @throws ServletException
      * @throws IOException
+     * @see OncePerRequestFilter
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        log.info("===AuthenticationFilterChainHandler.doFilterInternal===");
         UserDetailsDTO userDetails = jwtHooks.getUserDetails(request);
         if (Objects.nonNull(userDetails) && Objects.isNull(UserUtils.getAuthentication())) {
             jwtHooks.renewToken(userDetails);
@@ -83,9 +86,12 @@ public class AuthenticationFilterChainHandler extends OncePerRequestFilter imple
      * @param authException that caused the invocation
      * @throws IOException
      * @throws ServletException
+     * @see AuthenticationEntryPoint
      */
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+            throws IOException, ServletException {
+        log.info("===AuthenticationFilterChainHandler.commence===");
         response.setContentType(CONTENT_TYPE);
         response.getWriter().write(JSON.toJSONString(Result.fail("用户未登录")));
     }
@@ -98,9 +104,13 @@ public class AuthenticationFilterChainHandler extends OncePerRequestFilter imple
      * @param accessDeniedException that caused the invocation
      * @throws IOException
      * @throws ServletException
+     * @see AccessDeniedHandler
      */
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
+            throws IOException, ServletException {
+        log.info("===AuthenticationFilterChainHandler.handle===" + " msg: " + JSON.toJSONString(accessDeniedException.getMessage())
+         + " err: " + JSON.toJSONString(accessDeniedException.getCause()));
         response.setContentType(CONTENT_TYPE);
         response.getWriter().write(JSON.toJSONString(Result.fail("权限不足")));
     }
@@ -114,9 +124,12 @@ public class AuthenticationFilterChainHandler extends OncePerRequestFilter imple
      *                 request.
      * @throws IOException
      * @throws ServletException
+     * @see AuthenticationFailureHandler
      */
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                        AuthenticationException e) throws IOException, ServletException {
+        log.info("===AuthenticationFilterChainHandler.onAuthenticationFailure===");
         response.setContentType(CONTENT_TYPE);
         response.getWriter().write(JSON.toJSONString(Result.fail(e.getMessage())));
     }
@@ -130,9 +143,12 @@ public class AuthenticationFilterChainHandler extends OncePerRequestFilter imple
      *                       the authentication process.
      * @throws IOException
      * @throws ServletException
+     * @see AuthenticationSuccessHandler
      */
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
+        log.info("===AuthenticationFilterChainHandler.onAuthenticationSuccess===");
         UserInfoDTO userLoginDTO = BeanCopyUtil.copyObject(UserUtils.getLoginUser(), UserInfoDTO.class);
         // 颁发 token
         if (Objects.nonNull(authentication)) {
@@ -154,9 +170,12 @@ public class AuthenticationFilterChainHandler extends OncePerRequestFilter imple
      * @param authentication
      * @throws IOException
      * @throws ServletException
+     * @see LogoutSuccessHandler
      */
     @Override
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
+                                Authentication authentication) throws IOException, ServletException {
+        log.info("===AuthenticationFilterChainHandler.onLogoutSuccess===");
         response.setContentType(CONTENT_TYPE);
         response.getWriter().write(JSON.toJSONString(Result.success()));
     }

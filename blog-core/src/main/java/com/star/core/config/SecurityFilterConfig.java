@@ -81,8 +81,10 @@ public class SecurityFilterConfig {
      * @throws Exception
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           AuthenticationFilterChainHandler handler) {
+    public SecurityFilterChain filterChain(
+            HttpSecurity http,
+            AuthenticationFilterChainHandler handler
+    ) {
         try {
             // 允许跨域请求的OPTIONS请求
             http.authorizeHttpRequests().requestMatchers(HttpMethod.OPTIONS).permitAll();
@@ -92,6 +94,7 @@ public class SecurityFilterConfig {
                     .successHandler(handler)
                     .failureHandler(handler);
 
+            // 请求校验
             http.authorizeHttpRequests().withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                         @Override
                         public <O extends FilterSecurityInterceptor> O postProcess(O fsi) {
@@ -99,19 +102,27 @@ public class SecurityFilterConfig {
                             fsi.setAccessDecisionManager(accessDecisionManager());
                             return fsi;
                         }
-                    })  // 请求校验
+                    })
                     .anyRequest().permitAll()
 
-                    .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 关闭跨站请求防护
-                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()).and()
-                    .headers().frameOptions().disable().and() // 防止 iframe 内容无法显示
+                    // 关闭跨站请求防护
+                    // .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    // .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                    .and().csrf().disable()
 
-                    .exceptionHandling().authenticationEntryPoint(handler) // 自定义权限拒绝处理类
-                    .accessDeniedHandler(handler).and()
-                    .sessionManagement() // 不会创建 HttpSession
+                    // 防止 iframe 内容无法显示
+                    .headers().frameOptions().disable().and()
+
+                    // 自定义权限拒绝处理类
+                    .exceptionHandling().authenticationEntryPoint(handler)
+                    .accessDeniedHandler(handler)
+
+                    // 不会创建 HttpSession
+                    .and().sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
-                    .addFilterBefore(handler, UsernamePasswordAuthenticationFilter.class);
+
+                    // JWT
+                    .and().addFilterBefore(handler, UsernamePasswordAuthenticationFilter.class);
             return http.build();
         } catch (Exception e) {
             log.error("filterChain failed: ", e);

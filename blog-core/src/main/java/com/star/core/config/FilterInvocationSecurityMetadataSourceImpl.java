@@ -91,7 +91,8 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
         BlogResource blogResource;
         blogResource = resourceMapper.selectOne(new LambdaQueryWrapper<>(BlogResource.builder()
                 .url(url).requestMethod(method).build()));
-        logPointer.doPoint(fi.getRequest(), fi.getResponse(), userInfo, blogResource, fi.getRequest().getRequestURI().contains(ADMIN));
+        logPointer.doPoint(fi.getRequest(), fi.getResponse(), userInfo, blogResource,
+                fi.getRequest().getRequestURI().contains(ADMIN));
 
         // 获取接口角色信息，若为匿名接口则放行，若无对应角色则禁止
         for (ResourceRoleDTO urlRoleDTO : resourceRoleList) {

@@ -94,4 +94,10 @@ public class ConditionVO {
     @ApiModelProperty(name = "endTime", value = "结束时间", dataType = "LocalDateTime")
     private LocalDateTime endTime;
 
+    /**
+     * 匿名
+     */
+    @ApiModelProperty(name = "isAnonymous", value = "匿名", dataType = "Integer")
+    private Integer isAnonymous;
+
 }
