@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.inf.dto.LabelOptionDTO;
 import com.star.inf.dto.ResourceDTO;
 import com.star.inf.entity.BlogResource;
@@ -129,8 +129,8 @@ public class AdminResourceService extends ServiceImpl<ResourceMapper, BlogResour
         Map<Integer, List<BlogResource>> childrenMap = listResourceChildren(blogResourceListAll);
         // 绑定模块下的所有接口
         List<ResourceDTO> resourceList = parentIdList.stream().map(v -> {
-            ResourceDTO resourceDTO = BeanCopyUtil.copyObject(v, ResourceDTO.class);
-            List<ResourceDTO> childrenList = BeanCopyUtil.copyList(childrenMap.get(v.getId()), ResourceDTO.class);
+            ResourceDTO resourceDTO = BeanCopyUtils.copyObject(v, ResourceDTO.class);
+            List<ResourceDTO> childrenList = BeanCopyUtils.copyList(childrenMap.get(v.getId()), ResourceDTO.class);
             resourceDTO.setChildren(childrenList);
             childrenMap.remove(v.getId());
             return resourceDTO;
@@ -138,7 +138,7 @@ public class AdminResourceService extends ServiceImpl<ResourceMapper, BlogResour
         if (!CollectionUtils.isEmpty(childrenMap)) {
             List<BlogResource> childrenList = new ArrayList<>();
             childrenMap.values().forEach(childrenList::addAll);
-            List<ResourceDTO> collect = childrenList.stream().map(v -> BeanCopyUtil.copyObject(v, ResourceDTO.class))
+            List<ResourceDTO> collect = childrenList.stream().map(v -> BeanCopyUtils.copyObject(v, ResourceDTO.class))
                     .collect(Collectors.toList());
             resourceList.addAll(collect);
         }

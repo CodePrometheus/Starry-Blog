@@ -3,7 +3,7 @@ package com.star.admin.service;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.MomentDTO;
 import com.star.inf.dto.PageData;
@@ -78,7 +78,7 @@ public class AdminMomentService extends ServiceImpl<MomentMapper, Moment> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveOrUpdateMoment(MomentVO momentVO) {
-        Moment moment = BeanCopyUtil.copyObject(momentVO, Moment.class);
+        Moment moment = BeanCopyUtils.copyObject(momentVO, Moment.class);
         moment.setUserId(UserUtils.getUserInfoId());
         this.saveOrUpdate(moment);
     }

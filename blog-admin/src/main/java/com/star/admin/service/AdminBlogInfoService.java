@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.RedisUtils;
 import com.star.inf.dto.*;
 import com.star.inf.entity.Article;
@@ -81,7 +81,7 @@ public class AdminBlogInfoService {
         List<CategoryDTO> categoryList = categoryMapper.listCategory();
         // 查询标签数据
         List<Tag> tags = tagMapper.selectList(null);
-        List<TagDTO> tagList = BeanCopyUtil.copyList(tags, TagDTO.class);
+        List<TagDTO> tagList = BeanCopyUtils.copyList(tags, TagDTO.class);
         // 查询redis访问量前五的文章
         Map<Object, Double> articleMap = redisUtils.zReverseRangeWithScore(ARTICLE_VIEWS_COUNT, 0L, 4L);
         BlogBackInfoDTO backInfo = BlogBackInfoDTO.builder()

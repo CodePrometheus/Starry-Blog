@@ -15,6 +15,9 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import static com.star.common.constant.CommonConst.PROVINCE;
+import static com.star.common.constant.CommonConst.UNKNOWN;
+
 /**
  * ip2region总体分为两个大版本：
  * <p>
@@ -121,6 +124,23 @@ public class IpUtils {
                 log.error("inputStream.close() failed: {}", e);
             }
         }
+    }
+
+    /**
+     * 省份
+     *
+     * @param ipSource
+     * @return
+     */
+    public static String getIpProvince(String ipSource) {
+        if (StringUtils.isBlank(ipSource)) {
+            return UNKNOWN;
+        }
+        String[] strings = ipSource.split("\\|");
+        if (strings.length > 1 && strings[1].endsWith(PROVINCE)) {
+            return StringUtils.substringBefore(strings[1], PROVINCE);
+        }
+        return strings[0];
     }
 
 }

@@ -2,7 +2,7 @@ package com.star.inf.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.inf.dto.PageData;
 import com.star.inf.dto.TagDTO;
 import com.star.inf.entity.Tag;
@@ -27,7 +27,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements IServ
      */
     public PageData<TagDTO> listTags() {
         List<Tag> tagList = tagMapper.selectList(null);
-        List<TagDTO> tags = BeanCopyUtil.copyList(tagList, TagDTO.class);
+        List<TagDTO> tags = BeanCopyUtils.copyList(tagList, TagDTO.class);
         // 查询标签数量
         Long count = tagMapper.selectCount(null);
         return new PageData<>(tags, count);

@@ -3,7 +3,7 @@ package com.star.admin.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.PageData;
 import com.star.inf.dto.TagBackDTO;
@@ -81,7 +81,7 @@ public class AdminTagService extends ServiceImpl<TagMapper, Tag> {
                 && !existTag.getId().equals(tagVO.getId())) {
             throw new StarryException("标签名已存在");
         }
-        Tag tag = BeanCopyUtil.copyObject(tagVO, Tag.class);
+        Tag tag = BeanCopyUtils.copyObject(tagVO, Tag.class);
         this.saveOrUpdate(tag);
     }
 
@@ -95,7 +95,7 @@ public class AdminTagService extends ServiceImpl<TagMapper, Tag> {
         List<Tag> tagList = tagMapper.selectList(new LambdaQueryWrapper<Tag>()
                 .like(StringUtils.isNotBlank(condition.getKeywords()), Tag::getTagName, condition.getKeywords())
                 .orderByDesc(Tag::getUpdateTime));
-        return BeanCopyUtil.copyList(tagList, TagDTO.class);
+        return BeanCopyUtils.copyList(tagList, TagDTO.class);
     }
 
 }

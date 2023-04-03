@@ -2,7 +2,7 @@ package com.star.admin.service;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.RedisUtils;
 import com.star.inf.entity.BlogPage;
 import com.star.inf.mapper.PageMapper;
@@ -36,7 +36,7 @@ public class AdminPageService extends ServiceImpl<PageMapper, BlogPage> {
      */
     @Transactional(rollbackFor = SecurityException.class)
     public void saveOrUpdatePage(PageVO pageVO) {
-        BlogPage page = BeanCopyUtil.copyObject(pageVO, BlogPage.class);
+        BlogPage page = BeanCopyUtils.copyObject(pageVO, BlogPage.class);
         this.saveOrUpdate(page);
         // 删除缓存
         redisUtils.del(PAGE_COVER);
@@ -66,7 +66,7 @@ public class AdminPageService extends ServiceImpl<PageMapper, BlogPage> {
             pageVOList = JSON.parseObject(pageList.toString(), List.class);
         } else {
             // 否则查数据库
-            pageVOList = BeanCopyUtil.copyList(pageMapper.selectList(null), PageVO.class);
+            pageVOList = BeanCopyUtils.copyList(pageMapper.selectList(null), PageVO.class);
             redisUtils.set(PAGE_COVER, JSON.toJSONString(pageVOList));
         }
         return pageVOList;

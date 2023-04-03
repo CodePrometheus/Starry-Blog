@@ -81,6 +81,11 @@ type Mongo struct {
 }
 
 type Thrift struct {
+	Client Addr `mapstructure:"client" json:"client"`
+	Server Addr `mapstructure:"server" json:"server"`
+}
+
+type Addr struct {
 	Host string `mapstructure:"host" json:"host"`
 	Port string `mapstructure:"port" json:"port"`
 }

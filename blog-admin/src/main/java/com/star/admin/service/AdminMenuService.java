@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.inf.dto.LabelOptionDTO;
 import com.star.inf.dto.MenuDTO;
 import com.star.inf.dto.UserMenuDTO;
@@ -57,9 +57,9 @@ public class AdminMenuService extends ServiceImpl<MenuMapper, Menu> implements I
         Map<Integer, List<Menu>> childrenMenu = listChildrenMenu(menuListAll);
         // 组装目录菜单数据
         List<MenuDTO> menuList = parentMenu.stream().map(item -> {
-                    MenuDTO menuDTO = BeanCopyUtil.copyObject(item, MenuDTO.class);
+                    MenuDTO menuDTO = BeanCopyUtils.copyObject(item, MenuDTO.class);
                     // 获取目录下的菜单排序
-                    List<MenuDTO> list = BeanCopyUtil.copyList(childrenMenu.get(item.getId()), MenuDTO.class).stream()
+                    List<MenuDTO> list = BeanCopyUtils.copyList(childrenMenu.get(item.getId()), MenuDTO.class).stream()
                             .sorted(Comparator.comparing(MenuDTO::getOrderNum))
                             .collect(Collectors.toList());
                     menuDTO.setChildren(list);
@@ -71,7 +71,7 @@ public class AdminMenuService extends ServiceImpl<MenuMapper, Menu> implements I
         if (CollectionUtils.isNotEmpty(childrenMenu)) {
             List<Menu> childrenList = new ArrayList<>();
             childrenMenu.values().forEach(childrenList::addAll);
-            List<MenuDTO> collect = childrenList.stream().map(v -> BeanCopyUtil.copyObject(v, MenuDTO.class))
+            List<MenuDTO> collect = childrenList.stream().map(v -> BeanCopyUtils.copyObject(v, MenuDTO.class))
                     .sorted(Comparator.comparing(MenuDTO::getOrderNum))
                     .collect(Collectors.toList());
             menuList.addAll(collect);
@@ -160,7 +160,7 @@ public class AdminMenuService extends ServiceImpl<MenuMapper, Menu> implements I
      */
     @Transactional(rollbackFor = SecurityException.class)
     public void saveOrUpdateMenu(MenuVO menuVO) {
-        Menu menu = BeanCopyUtil.copyObject(menuVO, Menu.class);
+        Menu menu = BeanCopyUtils.copyObject(menuVO, Menu.class);
         this.saveOrUpdate(menu);
     }
 
@@ -201,11 +201,11 @@ public class AdminMenuService extends ServiceImpl<MenuMapper, Menu> implements I
             List<Menu> children = childrenMenu.get(item.getId());
             if (CollectionUtils.isNotEmpty(children)) {
                 // 多级菜单处理
-                userMenuDTO = BeanCopyUtil.copyObject(item, UserMenuDTO.class);
+                userMenuDTO = BeanCopyUtils.copyObject(item, UserMenuDTO.class);
                 list = children.stream()
                         .sorted(Comparator.comparing(Menu::getOrderNum))
                         .map(menu -> {
-                            UserMenuDTO menuDTO = BeanCopyUtil.copyObject(menu, UserMenuDTO.class);
+                            UserMenuDTO menuDTO = BeanCopyUtils.copyObject(menu, UserMenuDTO.class);
                             menuDTO.setHidden(menu.getIsHidden().equals(TRUE));
                             return menuDTO;
                         }).collect(Collectors.toList());

@@ -7,7 +7,6 @@ import jakarta.servlet.ServletRequestEvent;
 import jakarta.servlet.ServletRequestListener;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import static com.star.common.constant.RedisConst.*;
@@ -37,12 +36,6 @@ public class ServletRequestListenerHandler implements ServletRequestListener {
         }
         // 将ip存入redis，统计每日用户量
         redisUtils.set(IP_SET, ipAddr);
-    }
-
-    @Scheduled(cron = " 0 1 0 * * ?")
-    private void clear() {
-        // 清空redis中的ip
-        redisUtils.del(IP_SET);
     }
 
 }

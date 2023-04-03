@@ -5,6 +5,7 @@ import (
 	"blog-spider/logger"
 	"blog-spider/middleware/mongodb"
 	"blog-spider/router"
+	"blog-spider/rpc/cron"
 	"context"
 	"net/http"
 	"os"
@@ -17,6 +18,8 @@ func main() {
 	logger.InitLogger()           // 初始化 logger
 	mongodb.InitMongo()           // 初始化 mongodb
 	engine := router.InitRouter() // 初始化路由
+
+	go cron.HandlerCronToMongo()
 
 	srv := &http.Server{
 		Addr:    ":" + config.Conf.System.Port,

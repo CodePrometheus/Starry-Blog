@@ -2,7 +2,7 @@ package com.star.inf.service;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.IpUtils;
 import com.star.common.tool.RedisUtils;
 import com.star.common.tool.UserAgentUtil;
@@ -94,7 +94,7 @@ public class BlogInfoServiceImpl {
             pageVOList = JSON.parseObject(pageList.toString(), List.class);
         } else {
             // 否则查数据库
-            pageVOList = BeanCopyUtil.copyList(pageMapper.selectList(null), PageVO.class);
+            pageVOList = BeanCopyUtils.copyList(pageMapper.selectList(null), PageVO.class);
             redisUtils.set(PAGE_COVER, JSON.toJSONString(pageVOList));
         }
         return pageVOList;
@@ -136,10 +136,8 @@ public class BlogInfoServiceImpl {
             // 统计游客地域分布
             String ipSource = IpUtils.getIpSource(ipAddr);
             if (StringUtils.isNotBlank(ipSource)) {
-                ipSource = ipSource.substring(0, 2)
-                        .replaceAll(PROVINCE, "")
-                        .replaceAll(CITY, "");
-                redisUtils.hIncr(VISITOR_AREA, ipSource, 1L);
+                String ipProvince = IpUtils.getIpProvince(ipSource);
+                redisUtils.hIncr(VISITOR_AREA, ipProvince, 1L);
             } else {
                 redisUtils.hIncr(VISITOR_AREA, UNKNOWN, 1L);
             }

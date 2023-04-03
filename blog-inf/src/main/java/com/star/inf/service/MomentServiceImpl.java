@@ -47,6 +47,8 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
     private MomentMapper momentMapper;
 
     /**
+     * 查看首页动态
+     *
      * @return
      */
     public List<String> listHomeMoments() {
@@ -63,6 +65,8 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
     }
 
     /**
+     * 根据id查看动态
+     *
      * @param momentId
      * @return
      */
@@ -79,6 +83,8 @@ public class MomentServiceImpl extends ServiceImpl<MomentMapper, Moment> impleme
     }
 
     /**
+     * 查询前台动态
+     *
      * @return
      */
     public PageData<MomentDTO> listMoments() {

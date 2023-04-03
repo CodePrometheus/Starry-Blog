@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.admin.entity.ExceptionLog;
 import com.star.admin.entity.ExceptionLogEvent;
 import com.star.admin.mapper.ExceptionLogMapper;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.PageData;
 import com.star.inf.vo.ConditionVO;
@@ -45,7 +45,7 @@ public class AdminExceptionService extends ServiceImpl<ExceptionLogMapper, Excep
         Page<ExceptionLog> exceptionLogPage = this.page(page, new LambdaQueryWrapper<ExceptionLog>()
                 .like(StringUtils.isNotBlank(conditionVO.getKeywords()), ExceptionLog::getOptDesc, conditionVO.getKeywords())
                 .orderByDesc(ExceptionLog::getId));
-        List<ExceptionLog> exceptionLogs = BeanCopyUtil.copyList(exceptionLogPage.getRecords(), ExceptionLog.class);
+        List<ExceptionLog> exceptionLogs = BeanCopyUtils.copyList(exceptionLogPage.getRecords(), ExceptionLog.class);
         return new PageData<>(exceptionLogs, exceptionLogPage.getTotal());
     }
 

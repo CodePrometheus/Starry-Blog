@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
 
 import java.lang.reflect.Constructor;
 import java.net.ServerSocket;
@@ -24,10 +25,10 @@ public class ThriftRunner implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(ThriftRunner.class);
 
-    @Resource(name = "serviceMap")
+    @Resource
     private Map<Integer, Map<String, Object>> serviceMap;
 
-    @Resource(name = "connPoolMap")
+    @Resource
     private Map<String, TSocketPool> connPoolMap;
 
     @Override
@@ -39,6 +40,7 @@ public class ThriftRunner implements ApplicationRunner {
         }
     }
 
+    @Bean
     public void destroy() {
         for (String key : connPoolMap.keySet()) {
             TSocketPool pool = connPoolMap.get(key);
@@ -88,10 +90,10 @@ class ServeThread extends Thread {
             tArgs.processor(multiplexedProcessor);
             tArgs.protocolFactory(factory);
             TThreadPoolServer tServer = new TThreadPoolServer(tArgs);
-            logger.info("{}端口服务已启动...", port);
+            logger.info("Starry-Thrift-Srv 已启动, 端口: {}", port);
             tServer.serve();
         } catch (Exception e) {
-            logger.error("Thrift服务端启动失败，端口{}：{},", port, e);
+            logger.error("Starry-Thrift 服务端启动失败，端口{}：{},", port, e);
         }
     }
 

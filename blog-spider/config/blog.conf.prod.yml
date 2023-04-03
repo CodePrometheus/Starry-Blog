@@ -23,5 +23,9 @@ mongo:
   password: "root"
 
 thrift:
-  host: "localhost"
-  port: "8001"
+  client:
+    host: "localhost"
+    port: "8001"
+  server:
+    host: "localhost"
+    port: "9000"

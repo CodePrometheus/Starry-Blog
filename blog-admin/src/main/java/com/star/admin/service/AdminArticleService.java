@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.constant.RabbitmqConst;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.common.tool.RedisUtils;
 import com.star.inf.dto.ArticleBackDTO;
@@ -110,7 +110,7 @@ public class AdminArticleService extends ServiceImpl<ArticleMapper, Article> {
         // 保存文章分类
         Category category = saveArticleCategory(articleVO);
         // 保存或修改文章
-        Article article = BeanCopyUtil.copyObject(articleVO, Article.class);
+        Article article = BeanCopyUtils.copyObject(articleVO, Article.class);
         if (Objects.nonNull(category)) {
             article.setCategoryId(category.getId());
         }
@@ -252,7 +252,7 @@ public class AdminArticleService extends ServiceImpl<ArticleMapper, Article> {
         List<String> tagNameList = articleTagIds.stream().map(v ->
                         tagMapper.selectOne(new LambdaQueryWrapper<Tag>().eq(Tag::getId, v.getTagId())).getTagName())
                 .collect(Collectors.toList());
-        ArticleVO articleVO = BeanCopyUtil.copyObject(article, ArticleVO.class);
+        ArticleVO articleVO = BeanCopyUtils.copyObject(article, ArticleVO.class);
         articleVO.setCategoryName(categoryName);
         articleVO.setTagNameList(tagNameList);
         return articleVO;

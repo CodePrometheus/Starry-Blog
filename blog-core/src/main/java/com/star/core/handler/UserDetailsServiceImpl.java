@@ -2,7 +2,7 @@ package com.star.core.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.IpUtils;
 import com.star.common.tool.RedisUtils;
 import com.star.inf.dto.UserDetailsDTO;
@@ -65,7 +65,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         // 封装信息
         UserInfoDTO userInfoDTO = convertLoginUser(userAuth, request);
-        return BeanCopyUtil.copyObject(userInfoDTO, UserDetailsDTO.class);
+        return BeanCopyUtils.copyObject(userInfoDTO, UserDetailsDTO.class);
     }
 
     /**

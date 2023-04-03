@@ -2,7 +2,7 @@ package com.star.core.config;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.core.hook.LogPointer;
 import com.star.inf.dto.ResourceRoleDTO;
 import com.star.inf.entity.BlogResource;
@@ -87,7 +87,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
 
         // Log
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserInfo userInfo = BeanCopyUtil.copyObject(authentication.getPrincipal(), UserInfo.class);
+        UserInfo userInfo = BeanCopyUtils.copyObject(authentication.getPrincipal(), UserInfo.class);
         BlogResource blogResource;
         blogResource = resourceMapper.selectOne(new LambdaQueryWrapper<>(BlogResource.builder()
                 .url(url).requestMethod(method).build()));

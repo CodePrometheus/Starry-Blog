@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.IpUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.OperationLogDTO;
@@ -51,7 +51,7 @@ public class AdminOperationLogService extends ServiceImpl<OperationLogMapper, Op
                 like(StringUtils.isNotBlank(condition.getKeywords()),
                         OperationLog::getOptMethod, condition.getKeywords()).or().like(StringUtils.isNotBlank(condition.getKeywords()),
                         OperationLog::getOptDesc, condition.getKeywords()).orderByDesc(OperationLog::getCreateTime));
-        List<OperationLogDTO> operationLogList = BeanCopyUtil.copyList(operationLog.getRecords(), OperationLogDTO.class);
+        List<OperationLogDTO> operationLogList = BeanCopyUtils.copyList(operationLog.getRecords(), OperationLogDTO.class);
         return new PageData<>(operationLogList, operationLog.getTotal());
     }
 

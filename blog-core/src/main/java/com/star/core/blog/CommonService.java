@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.star.admin.service.AdminResourceService;
 import com.star.admin.service.AdminRoleService;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.core.config.FilterInvocationSecurityMetadataSourceImpl;
 import com.star.core.hook.JwtHooks;
 import com.star.inf.entity.BlogResource;
@@ -64,7 +64,7 @@ public class CommonService {
     @Transactional(rollbackFor = SecurityException.class)
     public void saveOrUpdateResource(ResourceVO resourceVO) {
         // 更新资源信息
-        BlogResource blogResource = BeanCopyUtil.copyObject(resourceVO, BlogResource.class);
+        BlogResource blogResource = BeanCopyUtils.copyObject(resourceVO, BlogResource.class);
         adminResourceService.saveOrUpdate(blogResource);
         // 重新加载角色资源信息
         metadataSource.clearDataSource();

@@ -55,7 +55,7 @@ public class VisitLogService extends ServiceImpl<VisitLogMapper, VisitLog> {
                 .or().like(StringUtils.isNotBlank(condition.getKeywords()), VisitLog::getVisitDesc, condition.getKeywords())
                 .or().like(StringUtils.isNotBlank(condition.getKeywords()), VisitLog::getContent, condition.getKeywords())
                 .orderByDesc(VisitLog::getCreateTime));
-        List<VisitLogDTO> visitLogList = BeanCopyUtil.copyList(visitLog.getRecords(), VisitLogDTO.class);
+        List<VisitLogDTO> visitLogList = BeanCopyUtils.copyList(visitLog.getRecords(), VisitLogDTO.class);
         return new PageData<>(visitLogList, visitLog.getTotal());
     }
 

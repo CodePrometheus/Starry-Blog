@@ -13,32 +13,22 @@ import java.util.Map;
  * @Author: Starry
  * @Date: 02-18-2023
  */
-@Configuration
+// @Configuration
 public class ThriftConfig {
 
-    @Bean
-    public ThriftClientProcessor createClientProcessor() {
-        return new ThriftClientProcessor();
-    }
-
-    @Bean
-    public ThriftServerProcessor createServerProcessor() {
-        return new ThriftServerProcessor();
-    }
-
-    @Bean(name = "serviceMap")
-    public Map<Integer, Map<String, Object>> creatServiceMap() {
-        return new HashMap<>();
-    }
-
-    @Bean(destroyMethod = "destroy")
-    public ThriftRunner createRunner() {
-        return new ThriftRunner();
-    }
-
-    @Bean(name = "connPoolMap")
-    public Map<String, TSocketPool> createTransportMap() {
-        return new HashMap<>();
-    }
+    // @Bean(name = "serviceMap")
+    // public Map<Integer, Map<String, Object>> creatServiceMap() {
+    //     return new HashMap<>();
+    // }
+    //
+    // @Bean(destroyMethod = "destroy")
+    // public ThriftRunner createRunner() {
+    //     return new ThriftRunner();
+    // }
+    //
+    // @Bean(name = "connPoolMap")
+    // public Map<String, TSocketPool> createTransportMap() {
+    //     return new HashMap<>();
+    // }
 
 }

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.IpUtils;
 import com.star.inf.dto.MessageDTO;
 import com.star.inf.entity.Message;
@@ -44,7 +44,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         Integer isMessageReview = blogInfoServiceImpl.getWebsiteConfig().getIsMessageReview();
         String ipAddr = IpUtils.getIpAddr(request);
         String ipSource = IpUtils.getIpSource(ipAddr);
-        Message message = BeanCopyUtil.copyObject(messageVO, Message.class);
+        Message message = BeanCopyUtils.copyObject(messageVO, Message.class);
         message.setIpAddress(ipAddr);
         message.setIpSource(ipSource);
         message.setIsReview(isMessageReview == TRUE ? FALSE : TRUE);
@@ -58,7 +58,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
         List<Message> messageList = messageMapper.selectList(new LambdaQueryWrapper<Message>()
                 .select(Message::getId, Message::getNickname, Message::getAvatar, Message::getMessageContent, Message::getTime)
                 .eq(Message::getIsReview, TRUE));
-        return BeanCopyUtil.copyList(messageList, MessageDTO.class);
+        return BeanCopyUtils.copyList(messageList, MessageDTO.class);
     }
 
 }

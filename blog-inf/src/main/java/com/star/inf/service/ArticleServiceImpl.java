@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.common.tool.RedisUtils;
 import com.star.inf.dto.*;
@@ -78,7 +78,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .eq(Article::getIsDelete, FALSE));
 
         // 拷贝dto集合
-        List<ArchiveDTO> archiveList = BeanCopyUtil.copyList(articlePage.getRecords(), ArchiveDTO.class);
+        List<ArchiveDTO> archiveList = BeanCopyUtils.copyList(articlePage.getRecords(), ArchiveDTO.class);
         return new PageData<>(archiveList, articlePage.getTotal());
     }
 
@@ -146,15 +146,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     .eq(Article::getStatus, PUBLIC.getStatus())
                     .orderByDesc(Article::getCreateTime)
                     .last(LAST_SQL_FIVE));
-            return BeanCopyUtil.copyList(articleList, ArticleRecommendDTO.class);
+            return BeanCopyUtils.copyList(articleList, ArticleRecommendDTO.class);
         }).whenComplete((v, t) -> article.setNewestArticleList(v));
         CompletableFuture.allOf(newestArticleList, recommendArticleList).join();
 
         // 查询上一篇下一篇文章
         Article lastArticle = getLastArticle(articleId);
         Article nextArticle = getNextArticle(articleId);
-        article.setLastArticle(BeanCopyUtil.copyObject(lastArticle, ArticlePaginationDTO.class));
-        article.setNextArticle(BeanCopyUtil.copyObject(nextArticle, ArticlePaginationDTO.class));
+        article.setLastArticle(BeanCopyUtils.copyObject(lastArticle, ArticlePaginationDTO.class));
+        article.setNextArticle(BeanCopyUtils.copyObject(nextArticle, ArticlePaginationDTO.class));
 
         // 封装点赞量和浏览量封装
         Double viewCount = redisUtils.zScore(ARTICLE_VIEWS_COUNT, articleId);

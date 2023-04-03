@@ -1,7 +1,7 @@
 package com.star.inf.search;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.inf.dto.ArticleSearchDTO;
 import com.star.inf.entity.Article;
 import com.star.inf.mapper.ArticleMapper;
@@ -50,7 +50,7 @@ public class ElasticSearchUtil {
     @Async
     public void save(Article article) {
         ArticleSearchDTO articleSearch = new ArticleSearchDTO();
-        BeanCopyUtil.copyObject(article, ArticleSearchDTO.class);
+        BeanCopyUtils.copyObject(article, ArticleSearchDTO.class);
         elasticsearchMapper.save(articleSearch);
     }
 

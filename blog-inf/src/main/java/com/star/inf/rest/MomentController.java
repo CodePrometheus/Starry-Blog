@@ -32,7 +32,7 @@ public class MomentController {
         return Result.success(momentService.listHomeMoments());
     }
 
-    @ApiOperation(value = "查询动态")
+    @ApiOperation(value = "查询前台动态")
     @GetMapping("/moments")
     public Result<PageData<MomentDTO>> listMoments() {
         return Result.success(momentService.listMoments());

@@ -3,7 +3,7 @@ package com.star.admin.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.FriendLinkBackDTO;
 import com.star.inf.dto.PageData;
@@ -40,7 +40,7 @@ public class AdminFriendLinkService extends ServiceImpl<LinkMapper, FriendLink> 
                 .like(StringUtils.isNotBlank(condition.getKeywords()), FriendLink::getLinkName,
                         condition.getKeywords()));
         // 转换DTO
-        List<FriendLinkBackDTO> friendLinkBackDTOList = BeanCopyUtil.copyList(friendLinkPage.getRecords(), FriendLinkBackDTO.class);
+        List<FriendLinkBackDTO> friendLinkBackDTOList = BeanCopyUtils.copyList(friendLinkPage.getRecords(), FriendLinkBackDTO.class);
         return new PageData<>(friendLinkBackDTOList, friendLinkPage.getTotal());
     }
 
@@ -51,7 +51,7 @@ public class AdminFriendLinkService extends ServiceImpl<LinkMapper, FriendLink> 
      */
     @Transactional(rollbackFor = SecurityException.class)
     public void saveOrUpdateFriendLink(FriendLinkVO friendLinkVO) {
-        FriendLink friendLink = BeanCopyUtil.copyObject(friendLinkVO, FriendLink.class);
+        FriendLink friendLink = BeanCopyUtils.copyObject(friendLinkVO, FriendLink.class);
         this.saveOrUpdate(friendLink);
     }
 

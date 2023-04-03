@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.CategoryBackDTO;
 import com.star.inf.dto.CategoryOptionDTO;
@@ -46,7 +46,7 @@ public class AdminCategoryService extends ServiceImpl<CategoryMapper, Category> 
                 StringUtils.isNotBlank(condition.getKeywords()), Category::getCategoryName,
                 condition.getKeywords()
         ).orderByDesc(Category::getUpdateTime));
-        return BeanCopyUtil.copyList(categoryList, CategoryOptionDTO.class);
+        return BeanCopyUtils.copyList(categoryList, CategoryOptionDTO.class);
     }
 
     /**

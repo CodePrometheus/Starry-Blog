@@ -17,12 +17,16 @@ logs:
   compress: false
 
 mongo:
-  host: "192.168.1.101"
+  host: "192.168.70.101"
   port: 27017
   username: "root"
   password: "root"
 
 thrift:
-  host: "localhost"
-  port: "8001"
+  client:
+    host: "localhost"
+    port: "9000"
+  server:
+    host: "localhost"
+    port: "9001"
 

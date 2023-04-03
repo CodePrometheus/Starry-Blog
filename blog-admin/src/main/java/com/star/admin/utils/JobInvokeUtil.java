@@ -58,6 +58,7 @@ public class JobInvokeUtil {
             method.invoke(bean, getMethodParamsValue(methodParams));
         } else {
             Method method = bean.getClass().getDeclaredMethod(methodName);
+            System.out.println("method = " + method + " methodName = " + methodName);
             method.invoke(bean);
         }
     }

@@ -1,4 +1,4 @@
-package main
+package tests
 
 import (
 	"blog-spider/logger"
@@ -7,19 +7,20 @@ import (
 	"github.com/apache/thrift/lib/go/thrift"
 	"log"
 	"os"
+	"testing"
 )
 
-func main() {
+func TestThriftClient(t *testing.T) {
 	transportFactory := thrift.NewTBufferedTransportFactory(1024)
 	thrift.NewTBinaryProtocolFactoryConf(&thrift.TConfiguration{})
-	transport := thrift.NewTSocketConf("127.0.0.1:8989", &thrift.TConfiguration{})
+	transport := thrift.NewTSocketConf("127.0.0.1:9000", &thrift.TConfiguration{})
 	transportFactory.GetTransport(transport)
 	protocolTransport := thrift.NewTBinaryProtocolTransport(transport)
 	protocol := thrift.NewTMultiplexedProtocol(protocolTransport, "helloService")
 	c := hello.NewHelloServiceClient(thrift.NewTStandardClient(protocol, protocol))
 
 	if err := transport.Open(); err != nil {
-		logger.Log.Error("Error opening socket to 127.0.0.1:8989, err: ", err)
+		logger.Log.Error("Error opening socket to 127.0.0.1:9000, err: ", err)
 		os.Exit(1)
 	}
 	defer transport.Close()

@@ -12,7 +12,7 @@ public class ScheduleConst {
 
     public static final int NORMAL = 1;
 
-    public static final int PAUSE = 1;
+    public static final int PAUSE = 0;
 
     public static final int MISFIRE_DEFAULT = 0;
 

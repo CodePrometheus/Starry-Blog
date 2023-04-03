@@ -3,7 +3,7 @@ package com.star.admin.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.PageData;
 import com.star.inf.dto.RoleDTO;
@@ -55,7 +55,7 @@ public class AdminRoleService extends ServiceImpl<RoleMapper, Role> {
         // 获取用户角色选项
         List<Role> roleList = roleMapper.selectList(new LambdaQueryWrapper<Role>()
                 .select(Role::getId, Role::getRoleName));
-        return BeanCopyUtil.copyList(roleList, UserRoleDTO.class);
+        return BeanCopyUtils.copyList(roleList, UserRoleDTO.class);
     }
 
 

@@ -2,23 +2,26 @@ package com.star.admin.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.admin.domain.dto.JobDTO;
 import com.star.admin.domain.vo.JobRunVO;
-import com.star.admin.domain.vo.JobSearchVO;
 import com.star.admin.domain.vo.JobStatusVO;
 import com.star.admin.domain.vo.JobVO;
+import com.star.admin.entity.JobLog;
 import com.star.admin.entity.ScheduleJob;
 import com.star.admin.mapper.JobMapper;
 import com.star.admin.utils.CronUtils;
 import com.star.admin.utils.ScheduleUtils;
 import com.star.common.constant.ScheduleConst;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.PageData;
+import com.star.inf.vo.ConditionVO;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -29,7 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Starry
@@ -77,7 +81,7 @@ public class AdminJobService extends ServiceImpl<JobMapper, ScheduleJob> {
     @Transactional(rollbackFor = Exception.class)
     public void saveJob(JobVO jobVO) {
         checkCronIsValid(jobVO);
-        ScheduleJob scheduleJob = BeanCopyUtil.copyObject(jobVO, ScheduleJob.class);
+        ScheduleJob scheduleJob = BeanCopyUtils.copyObject(jobVO, ScheduleJob.class);
         int insert = jobMapper.insert(scheduleJob);
         if (insert > 0) {
             ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
@@ -93,7 +97,7 @@ public class AdminJobService extends ServiceImpl<JobMapper, ScheduleJob> {
     public void updateJob(JobVO jobVO) {
         checkCronIsValid(jobVO);
         ScheduleJob jobInfo = jobMapper.selectById(jobVO.getId());
-        ScheduleJob job = BeanCopyUtil.copyObject(jobVO, ScheduleJob.class);
+        ScheduleJob job = BeanCopyUtils.copyObject(jobVO, ScheduleJob.class);
         int update = jobMapper.updateById(job);
         if (update > 0) {
             updateSchedulerJob(job, jobInfo.getJobGroup());
@@ -118,7 +122,7 @@ public class AdminJobService extends ServiceImpl<JobMapper, ScheduleJob> {
     @Transactional(rollbackFor = Exception.class)
     public void deleteJobs(List<Integer> jobIds) {
         List<ScheduleJob> jobs = jobMapper.selectList(new LambdaQueryWrapper<ScheduleJob>().in(ScheduleJob::getId, jobIds));
-        int delete = jobMapper.delete(new LambdaQueryWrapper<ScheduleJob>().in(ScheduleJob::getId, jobs));
+        int delete = jobMapper.delete(new LambdaQueryWrapper<ScheduleJob>().in(ScheduleJob::getId, jobIds));
         if (delete > 0) {
             jobs.forEach(job -> {
                 try {
@@ -138,7 +142,7 @@ public class AdminJobService extends ServiceImpl<JobMapper, ScheduleJob> {
      */
     public JobDTO getJobById(Integer jobId) {
         ScheduleJob scheduleJob = jobMapper.selectById(jobId);
-        JobDTO jobDTO = BeanCopyUtil.copyObject(scheduleJob, JobDTO.class);
+        JobDTO jobDTO = BeanCopyUtils.copyObject(scheduleJob, JobDTO.class);
         jobDTO.setNextValidTime(CronUtils.getNextExecution(jobDTO.getCronExpression()));
         return jobDTO;
     }
@@ -146,14 +150,21 @@ public class AdminJobService extends ServiceImpl<JobMapper, ScheduleJob> {
     /**
      * 获取任务列表
      *
-     * @param jobSearchVO
+     * @param conditionVO
      * @return
      */
     @SneakyThrows
-    public PageData<JobDTO> listJobs(JobSearchVO jobSearchVO) {
-        CompletableFuture<Long> asyncCount = CompletableFuture.supplyAsync(() -> jobMapper.countJobs(jobSearchVO));
-        List<JobDTO> jobDTOList = jobMapper.listJobs(PageUtils.getLimitCurrent(), PageUtils.getSize(), jobSearchVO);
-        return new PageData<>(jobDTOList, asyncCount.get());
+    public PageData<JobDTO> listJobs(ConditionVO conditionVO) {
+        Page<ScheduleJob> page = new Page<>(PageUtils.getCurrent(), PageUtils.getSize());
+        // JobName || JobGroup || JobStatus
+        Page<ScheduleJob> jobPage = this.page(page, new LambdaQueryWrapper<ScheduleJob>()
+                .like(StringUtils.isNotBlank(conditionVO.getKeywords()), ScheduleJob::getJobName, conditionVO.getKeywords())
+                .eq(StringUtils.isNotBlank(conditionVO.getKeywords()), ScheduleJob::getJobGroup, conditionVO.getKeywords())
+                .eq(Objects.nonNull(conditionVO.getStatus()), ScheduleJob::getStatus, conditionVO.getStatus())
+                .orderByDesc(ScheduleJob::getCreateTime)
+        );
+        List<JobDTO> jobDTOList = BeanCopyUtils.copyList(jobPage.getRecords(), JobDTO.class);
+        return new PageData<>(jobDTOList, jobPage.getTotal());
     }
 
     /**
@@ -190,6 +201,8 @@ public class AdminJobService extends ServiceImpl<JobMapper, ScheduleJob> {
      */
     @SneakyThrows
     public void runJob(JobRunVO jobRunVO) {
+        System.out.println("getId() = " + jobRunVO.getId() + " getJobGroup(): " + jobRunVO.getJobGroup());
+        System.out.println("runJob = " + ScheduleUtils.getJobKey(jobRunVO.getId(), jobRunVO.getJobGroup()));
         scheduler.triggerJob(ScheduleUtils.getJobKey(jobRunVO.getId(), jobRunVO.getJobGroup()));
     }
 
@@ -199,7 +212,11 @@ public class AdminJobService extends ServiceImpl<JobMapper, ScheduleJob> {
      * @return
      */
     public List<String> listJobGroups() {
-        return jobMapper.listJobGroups();
+        return jobMapper.selectList(new LambdaQueryWrapper<ScheduleJob>()
+                        .select(ScheduleJob::getJobGroup)).stream()
+                .map(ScheduleJob::getJobGroup)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
 }

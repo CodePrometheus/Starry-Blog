@@ -2,12 +2,13 @@ package com.star.admin.rest;
 
 import com.star.admin.domain.dto.JobDTO;
 import com.star.admin.domain.vo.JobRunVO;
-import com.star.admin.domain.vo.JobSearchVO;
 import com.star.admin.domain.vo.JobStatusVO;
 import com.star.admin.domain.vo.JobVO;
 import com.star.admin.service.AdminJobService;
 import com.star.common.constant.Result;
 import com.star.inf.dto.PageData;
+import com.star.inf.vo.ConditionVO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
  * @Author: Starry
  * @Date: 02-15-2023
  */
+@Api(tags = "定时任务模块")
 @RestController
 @RequestMapping("admin")
 public class AdminJobController {
@@ -54,8 +56,8 @@ public class AdminJobController {
 
     @ApiOperation("获取任务列表")
     @GetMapping("/jobs")
-    public Result<PageData<JobDTO>> listJobs(JobSearchVO jobSearchVO) {
-        return Result.success(adminJobService.listJobs(jobSearchVO));
+    public Result<PageData<JobDTO>> listJobs(ConditionVO conditionVO) {
+        return Result.success(adminJobService.listJobs(conditionVO));
     }
 
     @ApiOperation("更改任务的状态")

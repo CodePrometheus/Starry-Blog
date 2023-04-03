@@ -20,6 +20,6 @@ public @interface ThriftServer {
     String serviceName();
 
     // 端口
-    int port();
+    String port();
 
 }

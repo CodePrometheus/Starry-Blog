@@ -5,8 +5,6 @@
     <select id="listMomentBack" resultType="com.star.inf.dto.MomentDTO">
         SELECT
         m.id,
-        nickname,
-        avatar,
         moment_content,
         images,
         m.like_count,
@@ -32,7 +30,6 @@
 
     <select id="getMomentById" resultType="com.star.inf.dto.MomentDTO">
         select m.id,
-               nickname,
                moment_content,
                images,
                avatar,
@@ -45,8 +42,6 @@
 
     <select id="getBackMomentById" resultType="com.star.inf.dto.MomentDTO">
         select m.id,
-               nickname,
-               avatar,
                moment_content,
                images,
                m.is_top,
@@ -59,8 +54,6 @@
 
     <select id="listHomeMoments" resultType="com.star.inf.dto.MomentDTO">
         select m.id,
-               nickname,
-               avatar,
                moment_content,
                images,
                m.is_top,

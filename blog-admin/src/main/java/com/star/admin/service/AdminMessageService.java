@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.star.common.exception.StarryException;
-import com.star.common.tool.BeanCopyUtil;
+import com.star.common.tool.BeanCopyUtils;
 import com.star.common.tool.PageUtils;
 import com.star.inf.dto.MessageBackDTO;
 import com.star.inf.dto.PageData;
@@ -46,7 +46,7 @@ public class AdminMessageService extends ServiceImpl<MessageMapper, Message> {
                 .orderByDesc(Message::getUpdateTime);
         Page<Message> messagePage = messageMapper.selectPage(page, messagePageQuery);
         // 转换DTO
-        List<MessageBackDTO> messageBackDTOList = BeanCopyUtil.copyList(messagePage.getRecords(), MessageBackDTO.class);
+        List<MessageBackDTO> messageBackDTOList = BeanCopyUtils.copyList(messagePage.getRecords(), MessageBackDTO.class);
         return new PageData<>(messageBackDTOList, messagePage.getTotal());
     }
 

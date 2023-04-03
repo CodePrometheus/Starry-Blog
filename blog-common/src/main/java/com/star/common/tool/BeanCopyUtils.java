@@ -1,5 +1,6 @@
 package com.star.common.tool;
 
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * @Author: zzStar
  * @Date: 12-19-2020 13:44
  */
-public class BeanCopyUtil {
+public class BeanCopyUtils {
 
     /**
      * 根据现有对象的属性创建目标对象，并赋值
@@ -26,7 +27,7 @@ public class BeanCopyUtil {
         try {
             temp = target.newInstance();
             if (null != source) {
-                org.springframework.beans.BeanUtils.copyProperties(source, temp);
+                BeanUtils.copyProperties(source, temp);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,7 +48,7 @@ public class BeanCopyUtil {
         List<T> list = new ArrayList<>();
         if (null != source && source.size() > 0) {
             for (Object obj : source) {
-                list.add(BeanCopyUtil.copyObject(obj, target));
+                list.add(BeanCopyUtils.copyObject(obj, target));
             }
         }
         return list;

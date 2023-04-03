@@ -27,6 +27,7 @@ public abstract class AbstractQuartzJob implements Job {
     private static final Logger log = LoggerFactory.getLogger(AbstractQuartzJob.class);
 
     private static final ThreadLocal<Date> THREAD_LOCAL = new ThreadLocal<>();
+    private static final int Exception_Max_len = 1800;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -88,6 +89,9 @@ public abstract class AbstractQuartzJob implements Job {
             jobLog.setExceptionInfo(getTrace(e));
         } else {
             jobLog.setStatus(ONE);
+        }
+        if (jobLog.getExceptionInfo().length() > Exception_Max_len) {
+            jobLog.setExceptionInfo(jobLog.getExceptionInfo().substring(0, Exception_Max_len));
         }
         SpringUtil.getBean(JobLogMapper.class).insert(jobLog);
     }

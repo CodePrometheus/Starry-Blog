@@ -1,3 +1,5 @@
+// thrift -r -gen go hello.thrift
+
 namespace go hello
 
 struct HelloReq {
